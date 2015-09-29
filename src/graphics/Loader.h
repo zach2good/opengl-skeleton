@@ -16,7 +16,7 @@
 #include <string>
 #include <iostream>
 
-#include <graphics\RawModel.h>
+#include <graphics\models\RawModel.h>
 
 class Loader
 {

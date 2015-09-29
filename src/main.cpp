@@ -4,6 +4,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <ctime>
+#include <vector>
 
 #include <SDL.h>
 
@@ -22,13 +24,22 @@ int main(int argc, char *argv[])
 
 	DebugUi debugUi = DebugUi(window.getWindow());
 
+	srand(time(0));
+	//std::vector<Entity> entities;
+
+	//Loader loader = Loader();
+	//RawModel mBox = OBJLoader::LoadObjModel("model", loader);
+	//ModelTexture mtBox(loader.LoadTexture("model"));
+	//TexturedModel tmBox(mBox, mtBox);
+	//Entity entity = Entity(tmBox, glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
+	//entities.push_back();
+
 	// Main loop
 	bool running = true;
 	SDL_Event e;
 	while (!window.isCloseRequested()) {
 
 		// Poll inputs
-		// TODO: Move to input manager
 		while (SDL_PollEvent(&e)) {
 			debugUi.processEvents(e);
 			if (e.type == SDL_QUIT || e.key.keysym.sym == SDLK_ESCAPE) {
@@ -36,13 +47,17 @@ int main(int argc, char *argv[])
 			}
 		}
 
+		// Update
+		//camera.Update();
+
+		// Render 
 		debugUi.prepare();
 		window.clear();
 
-		// Render
-		// TODO: Split out into Renderer: renderer.render();
-		//glBindVertexArray(vaoHandle);
-		//glDrawArrays(GL_TRIANGLES, 0, 3);
+		//for (Entity& e : entities)
+		//	renderer.ProcessEntity(e);
+
+		//renderer.Render(light, camera);
 
 		debugUi.render();
 
