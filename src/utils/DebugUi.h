@@ -8,9 +8,8 @@
 #include <GL\GL.h>
 #include <GL\GLU.h>
 
-#include <graphic\imgui\imconfig.h>
-#include <graphic\imgui\imgui.h>
-#include <graphic\imgui\imgui_impl_sdl.h>
+#include <graphics\imgui\imgui.h>
+#include <graphics\imgui\imgui_impl_sdl.h>
 
 class DebugUi
 {

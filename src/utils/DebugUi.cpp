@@ -4,6 +4,9 @@ DebugUi::DebugUi(SDL_Window* window)
 {
 	m_Window = window;
 	ImGui_ImplSdl_Init(m_Window);
+
+	ImGuiIO& io = ImGui::GetIO();
+	io.IniFilename = NULL;
 }
 
 DebugUi::~DebugUi()
@@ -15,10 +18,6 @@ void DebugUi::prepare()
 {
 	ImGui_ImplSdl_NewFrame(m_Window);
 	static bool opened = false;
-
-	ImGuiIO& io = ImGui::GetIO();
-
-	io.IniFilename = NULL;
 
 	ImGui::SetNextWindowPos(ImVec2(10, 10), 0);
 	ImGui::Begin("Debug Window", &opened, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoSavedSettings);

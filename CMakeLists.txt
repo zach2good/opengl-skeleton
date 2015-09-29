@@ -28,11 +28,29 @@ set(SOURCE_FILES
 
 src/main.cpp 
 
-src/graphic/imgui/imgui.h
-src/graphic/imgui/imgui.cpp
-src/graphic/imgui/imgui_draw.cpp
-src/graphic/imgui/imgui_impl_sdl.h
-src/graphic/imgui/imgui_impl_sdl.cpp
+src/graphics/imgui/imgui.h
+src/graphics/imgui/imgui.cpp
+src/graphics/imgui/imgui_draw.cpp
+src/graphics/imgui/imgui_impl_sdl.h
+src/graphics/imgui/imgui_impl_sdl.cpp
+
+src/graphics/stb/stb_image.h
+
+src/graphics/Shader.h
+src/graphics/Shader.cpp
+src/graphics/ShaderManager.h
+src/graphics/ShaderManager.cpp
+
+src/graphics/RawModel.h
+src/graphics/RawModel.cpp
+src/graphics/Loader.h
+src/graphics/Loader.cpp
+
+src/graphics/Window.h
+src/graphics/Window.cpp
+
+src/graphics/Renderer.h
+src/graphics/Renderer.cpp
 
 src/utils/DebugUi.h
 src/utils/DebugUi.cpp
