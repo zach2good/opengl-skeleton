@@ -3,7 +3,7 @@
 DebugUi::DebugUi(SDL_Window* window)
 {
 	m_Window = window;
-	ImGui_ImplSdl_Init(m_Window);
+	ImGui_ImplSdlOgl3_Init(m_Window);
 
 	ImGuiIO& io = ImGui::GetIO();
 	io.IniFilename = NULL;
@@ -11,12 +11,12 @@ DebugUi::DebugUi(SDL_Window* window)
 
 DebugUi::~DebugUi()
 {
-	ImGui_ImplSdl_Shutdown();
+	ImGui_ImplSdlOgl3_Shutdown();
 }
 
 void DebugUi::prepare()
 {
-	ImGui_ImplSdl_NewFrame(m_Window);
+	ImGui_ImplSdlOgl3_NewFrame(m_Window);
 	static bool opened = false;
 
 	ImGui::SetNextWindowPos(ImVec2(10, 10), 0);
@@ -45,11 +45,12 @@ void DebugUi::prepare()
 	ImGui::Text("GLEW_VERSION: %s \n", glewGetString(GLEW_VERSION));
 
 	ImGui::End();
+
 }
 
 void DebugUi::processEvents(SDL_Event e)
 {
-	ImGui_ImplSdl_ProcessEvent(&e);
+	ImGui_ImplSdlOgl3_ProcessEvent(&e);
 }
 
 void DebugUi::render()

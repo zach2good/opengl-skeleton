@@ -23,6 +23,11 @@ include_directories(lib/glew/include lib/glew/src)
 # glm
 include_directories(lib/glm)
 
+# glm
+include_directories(lib/soil/src)
+add_subdirectory(lib/soil)
+
+
 # reference source
 set(SOURCE_FILES 
 
@@ -34,8 +39,8 @@ src/entities/Light.h
 src/graphics/imgui/imgui.h
 src/graphics/imgui/imgui.cpp
 src/graphics/imgui/imgui_draw.cpp
-src/graphics/imgui/imgui_impl_sdl.h
-src/graphics/imgui/imgui_impl_sdl.cpp
+src/graphics/imgui/imgui_impl_sdlogl3.h
+src/graphics/imgui/imgui_impl_sdlogl3.cpp
 
 src/graphics/models/RawModel.h
 src/graphics/models/TexturedModel.h
@@ -45,16 +50,20 @@ src/graphics/shaders/ShaderProgram.cpp
 src/graphics/shaders/BasicShader.h
 src/graphics/shaders/BasicShader.cpp
 
-src/graphics/stb/stb_image.h
-
 src/graphics/textures/ModelTexture.h
+src/graphics/textures/Texture.h
+src/graphics/textures/Texture.cpp
 
+src/graphics/BasicRenderer.h
+src/graphics/BasicRenderer.cpp
+src/graphics/EntityRenderer.h
+src/graphics/EntityRenderer.cpp
 src/graphics/Loader.h
 src/graphics/Loader.cpp
-
-src/graphics/Renderer.h
-src/graphics/Renderer.cpp
-
+src/graphics/MasterRenderer.h
+src/graphics/MasterRenderer.cpp
+src/graphics/OBJLoader.h
+src/graphics/OBJLoader.cpp
 src/graphics/Window.h
 src/graphics/Window.cpp
 
@@ -71,4 +80,4 @@ include_directories(src)
 
 # executables
 add_executable(main ${SOURCE_FILES})
-target_link_libraries(main SDL2-static SDL2main libglew_static)
+target_link_libraries(main SDL2-static SDL2main libglew_static SOIL)

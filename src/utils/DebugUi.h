@@ -9,7 +9,7 @@
 #include <GL\GLU.h>
 
 #include <graphics\imgui\imgui.h>
-#include <graphics\imgui\imgui_impl_sdl.h>
+#include <graphics\imgui\imgui_impl_sdlogl3.h>
 
 class DebugUi
 {

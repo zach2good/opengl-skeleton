@@ -56,7 +56,7 @@ void BasicShader::LoadUseUpNormal(bool useUpNormal)
 void BasicShader::BindAttributes()
 {
 	BindAttribute(0, "position");
-	BindAttribute(1, "texCoords");
+	BindAttribute(1, "textureCoords");
 	BindAttribute(2, "normal");
 }
 

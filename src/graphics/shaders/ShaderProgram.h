@@ -11,8 +11,9 @@ public:
 	ShaderProgram(const std::string& fileName);
 	virtual ~ShaderProgram();
 
-	inline void Use() { glUseProgram(m_programID); }
-	inline void UnUse() { glUseProgram(0); }
+	inline void Bind() { glUseProgram(m_programID); }
+	inline void Unbind() { glUseProgram(0); }
+	inline GLuint GetId() { return m_programID; }
 private:
 	GLuint m_programID;
 	GLuint m_vertexShaderID;

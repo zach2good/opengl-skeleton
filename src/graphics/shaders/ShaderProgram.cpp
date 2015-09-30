@@ -39,7 +39,7 @@ ShaderProgram::ShaderProgram(const std::string& fileName)
 ShaderProgram::~ShaderProgram()
 {
 	// Make sure we are not using this shader
-	UnUse();
+	Unbind();
 	// Detach the shaders from the program
 	glDetachShader(m_programID, m_vertexShaderID);
 	glDetachShader(m_programID, m_fragmentShaderID);

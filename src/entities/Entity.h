@@ -2,7 +2,7 @@
 #define ENTITY_H
 
 #include <glm\glm.hpp>
-#include "graphics\TexturedModel.h"
+#include "graphics\models\TexturedModel.h"
 
 class Entity
 {
