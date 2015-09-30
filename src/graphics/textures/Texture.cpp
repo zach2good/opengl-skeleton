@@ -2,7 +2,7 @@
 
 Texture::Texture(const char* filename)
 {
-	unsigned char* image = SOIL_load_image(filename, &m_Width, &m_Height, &m_Channels, SOIL_LOAD_RGB);
+	unsigned char* image = SOIL_load_image(filename, &m_Width, &m_Height, &m_Channels, SOIL_LOAD_AUTO);
 
 	if (image)
 	{

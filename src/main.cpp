@@ -163,12 +163,14 @@ int main(int argc, char *argv[])
 		trans = glm::scale(trans, glm::vec3(1.0, 1.0, 1.0));
 
 
-		// Clear / Prepare
-		glEnable(GL_DEPTH_TEST);
+		// Clear / 3D Prepare
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+		glEnable(GL_DEPTH_TEST);
+		glEnable(GL_BLEND);
 		
+	
 		// Bind Textures using texture units
 		// 1
 		glActiveTexture(GL_TEXTURE0);
@@ -222,9 +224,13 @@ int main(int argc, char *argv[])
 
 		// Render 2D
 
+		if (wireframe) { glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); }
+
 		debugUi.prepare();
 
 		debugUi.render();
+
+		if (wireframe) { glPolygonMode(GL_FRONT_AND_BACK, GL_LINES); }
 
 		window.swap();
 	}
