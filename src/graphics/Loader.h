@@ -5,7 +5,6 @@
 #include <string>
 #include <GL\glew.h>
 #include <glm\glm.hpp>
-#include "graphics/models/RawModel.h"
 
 class Loader
 {
@@ -13,10 +12,6 @@ public:
 	Loader();
 	virtual ~Loader();
 
-	RawModel LoadToVAO(std::vector<glm::vec3> vertices);
-	RawModel LoadToVAO(std::vector<glm::vec3> vertices, std::vector<int> indices);
-	RawModel LoadToVAO(std::vector<glm::vec3> vertices, std::vector<glm::vec2> textureCoords, std::vector<int> indices);
-	RawModel LoadToVAO(std::vector<glm::vec3> vertices, std::vector<glm::vec2> textures, std::vector<glm::vec3> normals, std::vector<int> indices);
 	GLuint LoadTexture(const std::string& fileName, bool repeat = false);
 	inline void UnbindVAO() { glBindVertexArray(0); }
 private:

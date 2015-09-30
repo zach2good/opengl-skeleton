@@ -20,6 +20,7 @@ void DebugUi::prepare()
 	static bool opened = false;
 
 	ImGui::SetNextWindowPos(ImVec2(10, 10), 0);
+	ImGui::SetNextWindowSize(ImVec2(250, 300), 0);
 	ImGui::Begin("Debug Window", &opened, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoSavedSettings);
 
 	static ImVector<float> values;
@@ -39,10 +40,19 @@ void DebugUi::prepare()
 	static int values_offset = 0;
 	ImGui::PlotLines("##Lines", values.Data, values.Size, values_offset, "", -1.0f, 100.0f, ImVec2(0, 80));
 
-	ImGui::Text("GL_VERSION: %s \n", glGetString(GL_VERSION));
-	ImGui::Text("GL_VENDOR: %s \n", glGetString(GL_VENDOR));
-	ImGui::Text("GL_SHADING_LANGUAGE_VERSION: %s \n", glGetString(GL_SHADING_LANGUAGE_VERSION));
-	ImGui::Text("GLEW_VERSION: %s \n", glewGetString(GLEW_VERSION));
+	if (ImGui::CollapsingHeader("OpenGL Information"))
+	{
+		ImGui::Text("GL_VERSION: %s \n", glGetString(GL_VERSION));
+		ImGui::Text("GL_VENDOR: %s \n", glGetString(GL_VENDOR));
+		ImGui::Text("GL_SHADING_LANGUAGE_VERSION: %s \n", glGetString(GL_SHADING_LANGUAGE_VERSION));
+		ImGui::Text("GLEW_VERSION: %s \n", glewGetString(GLEW_VERSION));
+	}
+	if (ImGui::CollapsingHeader("Controls"))
+	{
+		ImGui::Text("W/A/S/D: Movement");
+		ImGui::Text("Q/E: Up/Down");
+		ImGui::Text(",/.: Wireframe On/Off");
+	}
 
 	ImGui::End();
 

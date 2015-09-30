@@ -42,26 +42,18 @@ src/graphics/imgui/imgui_draw.cpp
 src/graphics/imgui/imgui_impl_sdlogl3.h
 src/graphics/imgui/imgui_impl_sdlogl3.cpp
 
-src/graphics/models/RawModel.h
-src/graphics/models/TexturedModel.h
+src/graphics/models/Mesh.h
+src/graphics/models/Mesh.cpp
 
 src/graphics/shaders/ShaderProgram.h
 src/graphics/shaders/ShaderProgram.cpp
-src/graphics/shaders/BasicShader.h
-src/graphics/shaders/BasicShader.cpp
 
-src/graphics/textures/ModelTexture.h
 src/graphics/textures/Texture.h
-src/graphics/textures/Texture.cpp
 
 src/graphics/BasicRenderer.h
 src/graphics/BasicRenderer.cpp
-src/graphics/EntityRenderer.h
-src/graphics/EntityRenderer.cpp
 src/graphics/Loader.h
 src/graphics/Loader.cpp
-src/graphics/MasterRenderer.h
-src/graphics/MasterRenderer.cpp
 src/graphics/OBJLoader.h
 src/graphics/OBJLoader.cpp
 src/graphics/Window.h
