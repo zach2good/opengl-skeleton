@@ -69,8 +69,12 @@ src/utils/DebugUi.cpp
 src/main.cpp 
 )
 
+# link source files
 include_directories(src)
 
 # executables
 add_executable(main ${SOURCE_FILES})
 target_link_libraries(main SDL2-static SDL2main libglew_static SOIL)
+
+# Copy resource files to bin directory
+file(COPY ${PROJECT_SOURCE_DIR}/res DESTINATION ${PROJECT_SOURCE_DIR}/bin/)
