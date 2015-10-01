@@ -11,8 +11,8 @@ list(APPEND CMAKE_CXX_FLAGS "-std=c++14")
 add_definitions(-Wall)
 
 # sdl2
-add_subdirectory(lib/sdl2)
-include_directories(lib/sdl2/include)
+add_subdirectory(lib/sdl)
+include_directories(lib/sdl/include)
 
 # glew
 add_definitions(-DGLEW_STATIC)

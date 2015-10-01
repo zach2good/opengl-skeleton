@@ -7,5 +7,6 @@
 [submodule "lib/glm"]
 	path = lib/glm
 	url = https://github.com/zach2good/glm.git
-
-
+[submodule "lib/soil"]
+	path = lib/soil
+	url = https://github.com/zach2good/SOIL.git
