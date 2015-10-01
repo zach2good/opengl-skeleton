@@ -31,9 +31,10 @@ add_subdirectory(lib/soil)
 # reference source
 set(SOURCE_FILES 
 
+src/entities/Entity.h
 src/entities/Camera.h
 src/entities/Camera.cpp
-src/entities/Entity.h
+src/entities/Transformation.h
 src/entities/Light.h
 src/entities/Cube.h
 

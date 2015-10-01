@@ -9,6 +9,7 @@ class Texture
 {
 public:
 	Texture(const char* filename, const char* type = "texture_diffuse")
+		: m_Type(type)
 	{
 		unsigned char* image = SOIL_load_image(filename, &m_Width, &m_Height, &m_Channels, SOIL_LOAD_AUTO);
 

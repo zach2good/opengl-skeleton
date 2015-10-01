@@ -20,11 +20,14 @@
 #include <utils\DebugUi.h>
 #include <utils\Maths.h>
 
-#include<entities\Entity.h>
-#include<graphics\Loader.h>
-#include<graphics\OBJLoader.h>
+#include <entities\Transformation.h>
+#include <graphics\Loader.h>
+#include <graphics\OBJLoader.h>
 #include <graphics\shaders\ShaderProgram.h>
+#include <graphics\models\Mesh.h>
+#include <graphics\BasicRenderer.h>
 
+#include <entities\Entity.h>
 #include <entities\Camera.h>
 #include <entities\Light.h>
 #include <entities\Cube.h>
@@ -52,13 +55,22 @@ int main(int argc, char *argv[])
 	Window window = Window("OpenGL Skeleton", WIDTH, HEIGHT);
 	DebugUi debugUi = DebugUi(window.getWindow());
 	Camera camera = Camera().Position = glm::vec3(0.0, 0.0, 5.0);
-
 	ShaderProgram shader = ShaderProgram("../res/shaders/basicShader");
-
+	BasicRenderer renderer = BasicRenderer();
 	Cube cube = Cube();
 
+	// Vertices
+
+
+	// Textures
 	Texture texture1 = Texture("../res/models/container.jpg");
 	Texture texture2 = Texture("../res/models/face.jpg");
+
+	Mesh m = OBJLoader::LoadFromFile("../res/models/dragon.obj", "../res/models/dragon.png");
+	Transformation t = Transformation();
+	t.SetPosition(glm::vec3(0.0f, 0.0f, -10.0f));
+
+	Entity entity = Entity(m, t);	
 
 	// Main loop
 	bool running = true;
@@ -119,12 +131,7 @@ int main(int argc, char *argv[])
 		glm::mat4 trans = Maths::CreateTransformMatrix(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), glm::vec3(0, 0, 0));
 
 		// Clear / 3D Prepare
-		// masterRenderer.prepare();
-		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-		glEnable(GL_DEPTH_TEST);
-		glEnable(GL_BLEND);
+		renderer.Prepare();
 		
 		/*
 			All of below would be handled by Master Renderer and any internal Renderers (Entity Renderer, Water Renderer etc.)
@@ -181,6 +188,10 @@ int main(int argc, char *argv[])
 			glDrawArrays(GL_TRIANGLES, 0, 36);
 		}
 		glBindVertexArray(0);
+
+		renderer.Submit(entity);
+
+		renderer.Render();
 
 		shader.Unbind();
 
