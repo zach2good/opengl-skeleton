@@ -35,6 +35,12 @@ void Window::init()
 	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 2);
 	glEnable(GL_MULTISAMPLE);
 
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	SDL_DisplayMode current;
 	SDL_GetCurrentDisplayMode(0, &current);
 

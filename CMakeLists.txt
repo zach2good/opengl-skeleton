@@ -35,6 +35,7 @@ src/entities/Camera.h
 src/entities/Camera.cpp
 src/entities/Entity.h
 src/entities/Light.h
+src/entities/Cube.h
 
 src/graphics/imgui/imgui.h
 src/graphics/imgui/imgui.cpp
