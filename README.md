@@ -3,10 +3,10 @@ OpenGL Skeleton
 
 A no-fuss skeleton app for creating OpenGL applications with SDL2, GLEW, GLM, SOIL and Imgui.
 
-1. Clone
-'''
+1. Clone repo and submodules
+```
 git clone --recursive --progress -v "https://github.com/zach2good/opengl-skeleton.git"
-'''
+```
 
 2. Point CMake at it.
 
