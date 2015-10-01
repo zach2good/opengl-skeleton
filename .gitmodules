@@ -1,0 +1,12 @@
+[submodule "lib/sdl"]
+	path = lib/sdl
+	url = https://github.com/zach2good/SDL.git
+[submodule "lib/glew"]
+	path = lib/glew
+	url = https://github.com/zach2good/glew-cmake.git
+[submodule "lib/glm"]
+	path = lib/glm
+	url = https://github.com/zach2good/glm.git
+[submodule "lib/soil"]
+	path = lib/soil
+	url = https://github.com/zach2good/SOIL.git
