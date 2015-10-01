@@ -8,7 +8,16 @@
 
 #include <stdio.h>
 
+
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
+#include <utils\Maths.h>
+
 #include <entities\Entity.h>
+#include <entities\Camera.h>
+#include <graphics\shaders\ShaderProgram.h>
 
 class BasicRenderer
 {
@@ -17,9 +26,12 @@ public:
 	~BasicRenderer();
 
 	void Prepare();
-	void Submit(Entity e);
-	void Render();
+	void Submit(Entity entity);
+	void Render(Camera camera);
 
 private:
-
+	ShaderProgram shader = ShaderProgram("../res/shaders/basicShader");
+	Entity entity;
+	int WIDTH = 1280;
+	int HEIGHT = 720;
 };

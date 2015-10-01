@@ -34,39 +34,19 @@
 
 #include <graphics\textures\Texture.h>
 
-#define WIDTH 800
-#define HEIGHT 600
-
-glm::vec3 cubePositions[10] = {
-	glm::vec3(0.0f,  0.0f,  0.0f),
-	glm::vec3(2.0f,  5.0f, -15.0f),
-	glm::vec3(-1.5f, -2.2f, -2.5f),
-	glm::vec3(-3.8f, -2.0f, -12.3f),
-	glm::vec3(2.4f, -0.4f, -3.5f),
-	glm::vec3(-1.7f,  3.0f, -7.5f),
-	glm::vec3(1.3f, -2.0f, -2.5f),
-	glm::vec3(1.5f,  2.0f, -2.5f),
-	glm::vec3(1.5f,  0.2f, -1.5f),
-	glm::vec3(-1.3f,  1.0f, -1.5f)
-};
+#define WIDTH 1280
+#define HEIGHT 720
 
 int main(int argc, char *argv[])
 {
 	Window window = Window("OpenGL Skeleton", WIDTH, HEIGHT);
 	DebugUi debugUi = DebugUi(window.getWindow());
-	Camera camera = Camera().Position = glm::vec3(0.0, 0.0, 5.0);
-	ShaderProgram shader = ShaderProgram("../res/shaders/basicShader");
+	Camera camera = Camera().Position = glm::vec3(0.0, 4.0, 5.0);
+	
 	BasicRenderer renderer = BasicRenderer();
-	Cube cube = Cube();
-
-	// Vertices
 
 
-	// Textures
-	Texture texture1 = Texture("../res/models/container.jpg");
-	Texture texture2 = Texture("../res/models/face.jpg");
-
-	Mesh m = OBJLoader::LoadFromFile("../res/models/dragon.obj", "../res/models/dragon.png");
+	Mesh m = OBJLoader::LoadFromFile("../res/models/dragon.obj", "../res/models/face.png");
 	Transformation t = Transformation();
 	t.SetPosition(glm::vec3(0.0f, 0.0f, -10.0f));
 
@@ -126,74 +106,14 @@ int main(int argc, char *argv[])
 		glPolygonMode(GL_FRONT_AND_BACK, (wireframe) ? GL_LINE : GL_FILL);
 
 		// Update
-		float timeVar = SDL_GetTicks() / 1000.0f;
-
-		glm::mat4 trans = Maths::CreateTransformMatrix(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), glm::vec3(0, 0, 0));
+		float timeVar = SDL_GetTicks() / 100.0f;
 
 		// Clear / 3D Prepare
 		renderer.Prepare();
 		
-		/*
-			All of below would be handled by Master Renderer and any internal Renderers (Entity Renderer, Water Renderer etc.)
-			Proposed Workflow:
-				-MasterRenderer.Prepare(Camera);
-				-Foreach Entity
-					-MasterRenderer.Submit(Entity);
-				-MasterRenderer.Render();
-		*/
-
-		// Shader
-		shader.Bind();
-	
-		// Bind Textures using texture units
-		// 1
-		glActiveTexture(GL_TEXTURE0);
-		texture1.BindTexture();
-		glUniform1i(glGetUniformLocation(shader.GetId(), "ourTexture1"), 0);
-		// 2
-		glActiveTexture(GL_TEXTURE1);
-		texture2.BindTexture();
-		glUniform1i(glGetUniformLocation(shader.GetId(), "ourTexture2"), 1);  	
-
-		// Create camera transformation
-		glm::mat4 view;
-		view = camera.GetViewMatrix();
-		glm::mat4 projection;
-		projection = glm::perspective(camera.Zoom, (float)WIDTH / (float)HEIGHT, 0.1f, 1000.0f);
-
-		// Get the uniform locations
-		GLint modelLoc = glGetUniformLocation(shader.GetId(), "model");
-		GLint viewLoc = glGetUniformLocation(shader.GetId(), "view");
-		GLint projLoc = glGetUniformLocation(shader.GetId(), "projection");
-
-		// Pass the matrices to the shader
-		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-		glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
-
-
-		// Draw
-		glBindVertexArray(cube.VAO);
-		for (GLuint i = 0; i < 10; i++)
-		{
-			// Calculate the model matrix for each object and pass it to shader before drawing
-			glm::mat4 model;
-			model = glm::translate(model, cubePositions[i]);
-			GLfloat angle = 20.0f * i;
-
-			if (i == 0) angle = timeVar;
-
-			model = glm::rotate(model, angle, glm::vec3(1.0f, 0.3f, 0.5f));
-			glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-
-			glDrawArrays(GL_TRIANGLES, 0, 36);
-		}
-		glBindVertexArray(0);
-
-		renderer.Submit(entity);
-
-		renderer.Render();
-
-		shader.Unbind();
+		// Render 3D
+		renderer.Submit(entity);	
+		renderer.Render(camera);
 
 		// Render 2D
 		if (wireframe) { glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); }

@@ -18,6 +18,7 @@ class Mesh {
 		std::vector<GLuint> indices;
 		std::vector<Texture> textures;
 
+		Mesh() {}
 		Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices, std::vector<Texture> textures)
 		{
 			this->vertices = vertices;
@@ -30,6 +31,7 @@ class Mesh {
 			glGenBuffers(1, &this->EBO);
 
 			glBindVertexArray(this->VAO);
+
 			// Load data into vertex buffers
 			glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
 
