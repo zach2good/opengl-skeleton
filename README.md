@@ -1,9 +1,14 @@
 OpenGL Skeleton 
 ===
 
-A no-fuss skeleton app for creating OpenGL applications with SDL2, GLEW, GLM, SOIL and Imgui. All sources included. 
+A no-fuss skeleton app for creating OpenGL applications with SDL2, GLEW, GLM, SOIL and Imgui.
 
-<b>Just point CMake at it and generate your project files</b>.
+1. Clone
+'''
+git clone --recursive --progress -v "https://github.com/zach2good/opengl-skeleton.git"
+'''
+
+2. Point CMake at it.
 
 TODO
 ===
