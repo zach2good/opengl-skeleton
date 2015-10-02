@@ -1,6 +1,7 @@
 #pragma once
 
 #include <glm\glm.hpp>
+#include <glm\gtx\transform.hpp>
 
 class Transformation
 {
@@ -19,6 +20,24 @@ public:
 	inline void SetPosition(glm::vec3 position) { m_position = position; }
 	inline void SetRotation(glm::vec3 rotation) { m_rotation = rotation; }
 	inline void SetScale(glm::vec3 scale) { m_scale = scale; }
+
+	inline glm::mat4 GetTransformationMatrix()
+	{
+		// Create transformation matrix
+		glm::mat4 transMatrix = glm::translate(m_position);
+
+		// Create rotation matrix
+		glm::mat4 rotMatrix =
+			glm::rotate(m_rotation.z, glm::vec3(0, 0, 1)) *
+			glm::rotate(m_rotation.y, glm::vec3(0, 1, 0)) *
+			glm::rotate(m_rotation.x, glm::vec3(1, 0, 0));
+
+		// Create scale matrix
+		glm::mat4 scaleMatrix = glm::scale(m_scale);
+
+		// Return total transform matrix
+		return transMatrix * rotMatrix * scaleMatrix;
+	}
 
 private:
 	glm::vec3 m_position;

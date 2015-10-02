@@ -6,7 +6,6 @@ BasicRenderer::BasicRenderer()
 
 BasicRenderer::~BasicRenderer()
 {
-
 }
 
 void BasicRenderer::Prepare()
@@ -33,12 +32,17 @@ void BasicRenderer::Render(Camera camera)
 	entity.m_Mesh.textures.at(0).BindTexture();
 	glUniform1i(glGetUniformLocation(shader.GetId(), "texture"), 0);
 
-	// Create camera transformation
+	// Get Camera ViewMatrix
 	glm::mat4 view;
 	view = camera.GetViewMatrix();
-	glm::mat4 projection;
 
+	// Get ProjectionMatrix
+	glm::mat4 projection;
 	projection = glm::perspective(camera.Zoom, (float)WIDTH / (float)HEIGHT, 0.1f, 1000.0f);
+
+	// Get ModelMatrix
+	glm::mat4 model;
+	model = entity.m_Transformation.GetTransformationMatrix();
 
 	// Get the uniform locations
 	GLint modelLoc = glGetUniformLocation(shader.GetId(), "model");
@@ -48,16 +52,10 @@ void BasicRenderer::Render(Camera camera)
 	// Pass the matrices to the shader
 	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
+	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 
 	//Render Entity
-	glBindVertexArray(entity.m_Mesh.VBO);
-
-	glm::mat4 model;
-	glm::vec3 pos = entity.m_Transformation.GetPosition();
-	glm::vec3 rot = entity.m_Transformation.GetRotation();
-	glm::vec3 sca = entity.m_Transformation.GetScale();
-	model = Maths::CreateTransformMatrix(pos, rot, sca);
-	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+	glBindVertexArray(entity.m_Mesh.VAO);
 
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);

@@ -42,20 +42,19 @@ int main(int argc, char *argv[])
 	Window window = Window("OpenGL Skeleton", WIDTH, HEIGHT);
 	DebugUi debugUi = DebugUi(window.getWindow());
 	Camera camera = Camera().Position = glm::vec3(0.0, 4.0, 5.0);
-	
+
 	BasicRenderer renderer = BasicRenderer();
 
-
-	Mesh m = OBJLoader::LoadFromFile("../res/models/dragon.obj", "../res/models/face.png");
+	Mesh m = OBJLoader::LoadFromFile("../res/models/dragon.obj", "../res/models/dragon.png");
 	Transformation t = Transformation();
 	t.SetPosition(glm::vec3(0.0f, 0.0f, -10.0f));
 
-	Entity entity = Entity(m, t);	
+	Entity entity = Entity(m, t);
 
 	// Main loop
 	bool running = true;
 	bool wireframe = false;
-	
+
 	while (!window.isCloseRequested()) {
 
 		// Determine deltaTime
@@ -64,7 +63,6 @@ int main(int argc, char *argv[])
 		// Poll inputs
 		SDL_Event e;
 		while (SDL_PollEvent(&e)) {
-
 			if (e.type == SDL_QUIT || e.key.keysym.sym == SDLK_ESCAPE) {
 				window.requestClose();
 			}
@@ -96,6 +94,7 @@ int main(int argc, char *argv[])
 			}
 
 			if (e.type == SDL_MOUSEMOTION) {
+
 				// TODO: Buggy, fix
 				//int x, y;
 				//SDL_GetRelativeMouseState(&x, &y);
@@ -110,9 +109,9 @@ int main(int argc, char *argv[])
 
 		// Clear / 3D Prepare
 		renderer.Prepare();
-		
+
 		// Render 3D
-		renderer.Submit(entity);	
+		renderer.Submit(entity);
 		renderer.Render(camera);
 
 		// Render 2D
@@ -120,7 +119,6 @@ int main(int argc, char *argv[])
 		debugUi.prepare();
 		debugUi.render();
 		if (wireframe) { glPolygonMode(GL_FRONT_AND_BACK, GL_LINES); }
-
 
 		window.swap();
 	}
