@@ -31,10 +31,10 @@ public:
 	{
 		//Generate Position
 		std::vector<glm::vec3> pos = std::vector<glm::vec3>();
-		pos.push_back(glm::vec3(-0.5, -0.5, 0.0));
-		pos.push_back(glm::vec3(0.5, -0.5, 0.0));
-		pos.push_back(glm::vec3(0.5, 0.5, 0));
-		pos.push_back(glm::vec3(-0.5, 0.5, 0));
+		pos.push_back(glm::vec3(-0.5, 0.0, -0.5));
+		pos.push_back(glm::vec3(0.5, 0.0, -0.5));
+		pos.push_back(glm::vec3(-0.5, 0.0, 0.5));
+		pos.push_back(glm::vec3(0.5, 0.0, 0.5));
 
 		//Generate Color
 		std::vector<glm::vec4> col = std::vector<glm::vec4>();
@@ -45,17 +45,17 @@ public:
 
 		//Generate Normal
 		std::vector<glm::vec3> norm = std::vector<glm::vec3>();
-		norm.push_back(glm::vec3(-0.5, -0.5, 0.0));
-		norm.push_back(glm::vec3(0.5, -0.5, 0.0));
-		norm.push_back(glm::vec3(0.5, 0.5, 0.0));
-		norm.push_back(glm::vec3(-0.5, 0.5, 0.0));
+		norm.push_back(glm::vec3(0.0, 1.0, 0.0));
+		norm.push_back(glm::vec3(0.0, 1.0, 0.0));
+		norm.push_back(glm::vec3(0.0, 1.0, 0.0));
+		norm.push_back(glm::vec3(0.0, 1.0, 0.0));
 
 		//Generate TexCoords
 		std::vector<glm::vec2> tex = std::vector<glm::vec2>();
-		tex.push_back(glm::vec2(-0.5, -0.5));
-		tex.push_back(glm::vec2(0.5, -0.5));
-		tex.push_back(glm::vec2(0.5, 0.5));
-		tex.push_back(glm::vec2(-0.5, 0.5));
+		tex.push_back(glm::vec2(0.0, 0.0));
+		tex.push_back(glm::vec2(1.0, 0.0));
+		tex.push_back(glm::vec2(1.0, 1.0));
+		tex.push_back(glm::vec2(0.0, 1.0));
 
 		//Generate Vertices
 		std::vector<VertexFormat> vertices = std::vector<VertexFormat>();
