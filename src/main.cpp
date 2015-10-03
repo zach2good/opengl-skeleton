@@ -31,6 +31,7 @@
 #include <entities\Camera.h>
 #include <entities\Light.h>
 #include <entities\Cube.h>
+#include <entities\Quad.h>
 
 #include <graphics\textures\Texture.h>
 
@@ -58,6 +59,8 @@ int main(int argc, char *argv[])
 	t.ChangeScale(glm::vec3(3, 3, 3));
 	t.ChangeRotation(glm::vec3(0, 180, 0));
 	Entity entity2 = Entity(m, t);
+
+	Quad quad = Quad();
 
 	// Main loop
 	bool running = true;
