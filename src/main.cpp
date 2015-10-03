@@ -45,11 +45,19 @@ int main(int argc, char *argv[])
 
 	BasicRenderer renderer = BasicRenderer();
 
+	// Raw Assets
 	Mesh m = OBJLoader::LoadFromFile("../res/models/dragon.obj", "../res/models/dragon.png");
 	Transformation t = Transformation();
-	t.SetPosition(glm::vec3(0.0f, 0.0f, -10.0f));
 
+	//Entity 1
+	t.SetPosition(glm::vec3(0.0f, 0.0f, -10.0f));
 	Entity entity = Entity(m, t);
+
+	//Entity 2
+	t.ChangePosition(glm::vec3(0, 0, -15));
+	t.ChangeScale(glm::vec3(3, 3, 3));
+	t.ChangeRotation(glm::vec3(0, 180, 0));
+	Entity entity2 = Entity(m, t);
 
 	// Main loop
 	bool running = true;
@@ -112,6 +120,8 @@ int main(int argc, char *argv[])
 
 		// Render 3D
 		renderer.Submit(entity);
+		renderer.Submit(entity2);
+
 		renderer.Render(camera);
 
 		// Render 2D

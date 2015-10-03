@@ -8,6 +8,7 @@
 
 #include <stdio.h>
 
+#include <vector>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -32,6 +33,9 @@ public:
 private:
 	ShaderProgram shader = ShaderProgram("../res/shaders/basicShader");
 	Entity entity;
+	std::vector<Entity> entities;
 	int WIDTH = 1280;
 	int HEIGHT = 720;
+
+	void RenderSingle(Camera camera, Entity entity);
 };

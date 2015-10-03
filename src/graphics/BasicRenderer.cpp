@@ -19,10 +19,20 @@ void BasicRenderer::Prepare()
 
 void BasicRenderer::Submit(Entity _e)
 {
-	entity = _e;
+	entities.push_back(_e);
 }
 
 void BasicRenderer::Render(Camera camera)
+{
+	for each (Entity entity in entities)
+	{
+		RenderSingle(camera, entity);
+	}
+
+	entities.clear();
+}
+
+void BasicRenderer::RenderSingle(Camera camera, Entity entity)
 {
 	shader.Bind();
 
