@@ -24,72 +24,84 @@ public:
 class Quad {
 public:
 
-	GLuint VBO;
-	GLuint VAO;
+	GLuint VAO = NULL;
+	GLuint VBO = NULL;
+	GLuint EBO = NULL;
 
 	Quad::Quad()
 	{
-		//Generate Position
-		std::vector<glm::vec3> pos = std::vector<glm::vec3>();
-		pos.push_back(glm::vec3(-0.5, 0.0, -0.5));
-		pos.push_back(glm::vec3(0.5, 0.0, -0.5));
-		pos.push_back(glm::vec3(-0.5, 0.0, 0.5));
-		pos.push_back(glm::vec3(0.5, 0.0, 0.5));
+		float quadData[] = {
+			-0.5f, -0.5f, 0.0f, // pos
+			0.0f, 1.0f, 0.0f, 1.0f, // color
+			0.0f, 1.0f, 0.0f,   // normal (up in Y direction)
+			0.0f, 0.0f,         // tex
 
-		//Generate Color
-		std::vector<glm::vec4> col = std::vector<glm::vec4>();
-		col.push_back(glm::vec4(0.0, 0.0, 1.0, 1.0));
-		col.push_back(glm::vec4(0.0, 0.0, 1.0, 1.0));
-		col.push_back(glm::vec4(0.0, 0.0, 1.0, 1.0));
-		col.push_back(glm::vec4(0.0, 0.0, 1.0, 1.0));
+			-0.5f, 0.5f, 0.0f,
+			1.0f, 1.0f, 0.0f, 1.0f,
+			0.0f, 1.0f, 0.0f,
+			0.0f, 1.0f,
 
-		//Generate Normal
-		std::vector<glm::vec3> norm = std::vector<glm::vec3>();
-		norm.push_back(glm::vec3(0.0, 1.0, 0.0));
-		norm.push_back(glm::vec3(0.0, 1.0, 0.0));
-		norm.push_back(glm::vec3(0.0, 1.0, 0.0));
-		norm.push_back(glm::vec3(0.0, 1.0, 0.0));
+			0.5f, 0.5f, 0.0f,
+			0.0f, 0.0f, 1.0f, 1.0f,
+			0.0f, 1.0f, 0.0f,
+			1.0f, 1.0f,
 
-		//Generate TexCoords
-		std::vector<glm::vec2> tex = std::vector<glm::vec2>();
-		tex.push_back(glm::vec2(0.0, 0.0));
-		tex.push_back(glm::vec2(1.0, 0.0));
-		tex.push_back(glm::vec2(1.0, 1.0));
-		tex.push_back(glm::vec2(0.0, 1.0));
+			0.5f, -0.5f, 0.0f,
+			1.0f, 0.0f, 1.0f, 1.0f,
+			0.0f, 1.0f, 0.0f,
+			1.0f, 0.0f
+		};
 
-		//Generate Vertices
-		std::vector<VertexFormat> vertices = std::vector<VertexFormat>();
-		for (int i = 0; i < 4; i++)
-		{
-			VertexFormat vert = VertexFormat(pos.at(i), col.at(i), norm.at(i), tex.at(i));
-			vertices.push_back(vert);
-		}
+		int elements[] = {
+			0, 1, 2,
+			2, 3, 0
+		};
 
-		// Pass to OpenGL
+		const GLsizei STRIDE = sizeof(float) * 12;
+
+		// VAO
 		glGenVertexArrays(1, &VAO);
-		glGenBuffers(1, &VBO);
-
 		glBindVertexArray(VAO);
 
+		// EBO
+		glGenBuffers(1, &EBO);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elements), elements, GL_STATIC_DRAW);
+
+		//  VBO
+		glGenBuffers(1, &VBO);
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, STRIDE * 4, quadData, GL_STATIC_DRAW);
 
-		// Position attribute
+		// Pos
 		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexFormat), (void*)0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, STRIDE, (const void *)0);
 
-		// Color attribute
+		// Col
 		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(VertexFormat), (void*)(offsetof(VertexFormat, VertexFormat::Color)));
+		glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, STRIDE, (const void *)(sizeof(float) * 3));
 
-		// Normal attribute
+		// Norm
 		glEnableVertexAttribArray(2);
-		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(VertexFormat), (void*)(offsetof(VertexFormat, VertexFormat::Normal)));
+		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, STRIDE, (const void *)(sizeof(float) * 7));
 
-		// TexCoord attribute
+		// Tex
 		glEnableVertexAttribArray(3);
-		glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(VertexFormat), (void*)(offsetof(VertexFormat, VertexFormat::TexCoords)));
+		glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, STRIDE, (const void *)(sizeof(float) * 10));
 
-		glBindVertexArray(0); // Unbind VAO
+		// Unbind
+		glBindVertexArray(0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	}
+
+	void Quad::Draw()
+	{
+		glBindVertexArray(VAO);
+		glBindBuffer(GL_ARRAY_BUFFER, VBO);
+
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+		glBindVertexArray(0);
 	}
 };
