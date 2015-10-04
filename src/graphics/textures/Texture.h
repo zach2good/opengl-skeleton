@@ -8,8 +8,7 @@
 class Texture
 {
 public:
-	Texture(const char* filename, const char* type = "texture_diffuse")
-		: m_Type(type)
+	Texture(const char* filename)
 	{
 		unsigned char* image = SOIL_load_image(filename, &m_Width, &m_Height, &m_Channels, SOIL_LOAD_AUTO);
 
@@ -37,16 +36,25 @@ public:
 		else {
 			printf("Error loading: %s \n", filename);
 			m_Error = -1;
-		}	
+		}
 	}
 
 	inline GLuint GetTextureID() { return m_textureID; }
-	inline const char* GetType() { return m_Type; }
-	inline void BindTexture() { glBindTexture(GL_TEXTURE_2D, m_textureID); }
+
+	inline void Bind()
+	{
+		Bind(0);
+	}
+
+	inline void Bind(int samplerSlot)
+	{
+		assert(samplerSlot >= 0 || samplerSlot <= 31);
+		glActiveTexture(GL_TEXTURE0 + samplerSlot);
+		glBindTexture(GL_TEXTURE_2D, m_textureID);
+	}
 
 private:
 	GLuint m_textureID;
-	const char* m_Type;
 
 	int m_Error = 0;
 

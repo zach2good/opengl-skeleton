@@ -14,6 +14,12 @@ public:
 	inline void Bind() { glUseProgram(m_programID); }
 	inline void Unbind() { glUseProgram(0); }
 	inline GLuint GetId() { return m_programID; }
+
+	inline void SetUniformf(const char* name, float value)
+	{
+		glUniform1f(GetUniformLocation(name), value);
+	}
+
 private:
 	GLuint m_programID;
 	GLuint m_vertexShaderID;

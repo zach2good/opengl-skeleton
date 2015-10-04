@@ -59,6 +59,7 @@ src/graphics/Loader.h
 src/graphics/Loader.cpp
 src/graphics/OBJLoader.h
 src/graphics/OBJLoader.cpp
+src/graphics/Vertex.h
 src/graphics/Window.h
 src/graphics/Window.cpp
 

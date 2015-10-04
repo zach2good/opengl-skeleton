@@ -36,12 +36,6 @@ void BasicRenderer::RenderSingle(Camera camera, Entity entity)
 {
 	shader.Bind();
 
-	// Bind Textures using texture units
-	// 1
-	glActiveTexture(GL_TEXTURE0);
-	entity.m_Mesh.textures.at(0).BindTexture();
-	glUniform1i(glGetUniformLocation(shader.GetId(), "texture"), 0);
-
 	// Get Camera ViewMatrix
 	glm::mat4 view;
 	view = camera.GetViewMatrix();
