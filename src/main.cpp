@@ -44,15 +44,16 @@ int main(int argc, char *argv[])
 {
 	Window window = Window("OpenGL Skeleton", WIDTH, HEIGHT);
 	DebugUi debugUi = DebugUi(window.getWindow());
-	Camera camera = Camera().Position = glm::vec3(0.0, 2.0, 15.0);
+	Camera camera = Camera().Position = glm::vec3(0.0, 0.0, 12.0);
 	glm::lookAt(camera.Position, glm::vec3(), camera.Up);
 	ShaderProgram shader = ShaderProgram("../res/shaders/basicShader");
-	Mesh mesh = Mesh("../res/models/box.obj");
-	Texture tex = Texture("../res/models/codntainer.jpg");
-	Light light = Light(glm::vec3(5, 5, 5), glm::vec3(1, 1, 1));
+	Mesh mesh = Mesh("../res/models/head/head.obj");
+	Texture tex = Texture("../res/models/head/lambertian.jpg");
+	Light light = Light(glm::vec3(15, 15, 30), glm::vec3(1, 1, 1));
 	Transformation trans = Transformation();
+	trans.SetScale(glm::vec3(20, 20, 20));
 	
-
+	//TODO:
 	//Model(mesh, tex);
 	//Entity(model, trans);
 
@@ -116,6 +117,7 @@ int main(int argc, char *argv[])
 		// Clear / 3D Prepare
 		window.clear();
 
+		//TODO: Break out into Renderer class
 		// Render 3D
 		shader.Bind();
 
