@@ -1,7 +1,7 @@
 OpenGL Skeleton 
 ===
 
-A no-fuss skeleton app for creating OpenGL applications with SDL2, GLEW, GLM, SOIL and Imgui.
+A no-fuss skeleton app for creating OpenGL applications with SDL2, GLEW, GLM, ASSIMP, SOIL and Imgui.
 
 1) Clone repo and submodules
 ```
