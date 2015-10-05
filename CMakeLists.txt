@@ -29,9 +29,7 @@ include_directories(lib/soil/src)
 add_subdirectory(lib/soil)
 
 # assimp
-add_definitions(-DBUILD_STATIC_LIB=ON)
-add_definitions(-DASSIMP_BUILD_STATIC=ON)
-add_definitions(-DASSIMP_BUILD_STATIC_LIB=ON)
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "Do not build DLL" FORCE)
 set(ASSIMP_BUILD_ASSIMP_TOOLS OFF CACHE BOOL "Do not build the tools" FORCE)
 set(ASSIMP_BUILD_TESTS OFF CACHE BOOL "Do not build the tests" FORCE)
 add_subdirectory(lib/assimp)
