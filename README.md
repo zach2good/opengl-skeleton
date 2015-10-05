@@ -18,13 +18,3 @@ TODO
 
 ![Screenshot](screenshot.png)
 
-Troubleshooting
-===
-
-When doing your CMake build if you are faced with this error:<br>
-![Error1](err1.png)
-
-Click through it and <b>untick "DirectX"</b>.<br>
-![Error2](err2.png)
-
-You will then be able to continue your build.<br>
