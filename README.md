@@ -7,9 +7,9 @@ A no-fuss skeleton app for creating OpenGL applications with SDL2, GLEW, GLM, SO
 ```
 git clone --recursive --progress -v "https://github.com/zach2good/opengl-skeleton.git"
 ```
-2) Point CMake at it.
-3) ???
-4) Profit.
+2) Point CMake at it.<br>
+3) ???<br>
+4) Profit.<br>
 
 TODO
 ===

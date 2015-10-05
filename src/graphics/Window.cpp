@@ -33,13 +33,6 @@ void Window::init()
 
 	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
 	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 2);
-	glEnable(GL_MULTISAMPLE);
-
-	glEnable(GL_CULL_FACE);
-	glCullFace(GL_BACK);
-
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	SDL_DisplayMode current;
 	SDL_GetCurrentDisplayMode(0, &current);
@@ -75,6 +68,16 @@ void Window::init()
 	printf("GL_SHADING_LANGUAGE_VERSION: %s \n", glGetString(GL_SHADING_LANGUAGE_VERSION));
 	printf("GLEW_VERSION: %s \n", glewGetString(GLEW_VERSION));
 
+	glEnable(GL_DEPTH_TEST);
+
+	glEnable(GL_MULTISAMPLE);
+
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	isRunning = true;
 }
 
@@ -100,7 +103,7 @@ void Window::clear()
 	// Clear
 	glViewport(0, 0, WIDTH, HEIGHT);
 	glClearColor(0.2, 0.2, 0.2, 1.0);
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void Window::swap()

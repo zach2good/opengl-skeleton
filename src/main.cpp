@@ -110,8 +110,7 @@ int main(int argc, char *argv[])
 		trans.ChangeRotation(glm::vec3(0, glm::radians(timeVar), 0));
 
 		// Clear / 3D Prepare
-		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	
+		window.clear();
 
 		// Render 3D
 		shader.Bind();
@@ -119,7 +118,6 @@ int main(int argc, char *argv[])
 		// Model
 		glm::mat4 model;
 		model = trans.GetTransformationMatrix();
-		
 
 		// View
 		glm::mat4 view;
@@ -141,7 +139,7 @@ int main(int argc, char *argv[])
 		shader.SetUniformf("reflectivity", tex.reflectivity);
 
 		//Texture 
-		//tex.Bind();
+		tex.Bind();
 
 		//Render
 		mesh.render();
