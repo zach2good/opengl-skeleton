@@ -27,7 +27,6 @@ void Window::init()
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 
-	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 	SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
 
@@ -54,7 +53,8 @@ void Window::init()
 		printf("Context Error");
 	}
 
-	SDL_GL_SetSwapInterval(1);
+	// Limit framerate to help screen tearing
+	//SDL_GL_SetSwapInterval(1);
 
 	// Start GLEW
 	glewExperimental = GL_TRUE;
@@ -68,10 +68,12 @@ void Window::init()
 	printf("GL_SHADING_LANGUAGE_VERSION: %s \n", glGetString(GL_SHADING_LANGUAGE_VERSION));
 	printf("GLEW_VERSION: %s \n", glewGetString(GLEW_VERSION));
 
+	// Enable 3D
 	glEnable(GL_DEPTH_TEST);
 
 	glEnable(GL_MULTISAMPLE);
 
+	// Face Culling
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
 

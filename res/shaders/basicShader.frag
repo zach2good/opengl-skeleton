@@ -30,7 +30,7 @@ void main()
 	vec3 reflectedLightDirection = reflect(lightDirection, unitNormal);
 
 	float specularFactor = dot(reflectedLightDirection, unitVectorToCamera);
-	specularFactor = max(specularFactor, 0.0);
+	specularFactor = max(specularFactor, 0.15);
 	float dampedFactor = pow(specularFactor, shineDamper);
 	vec3 finalSpecular = dampedFactor * reflectivity * lightColor;
 

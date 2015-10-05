@@ -26,6 +26,9 @@ public:
 	SDL_Window* getWindow();
 	SDL_GLContext getContext();
 
+	inline int getWidth() { return WIDTH; }
+	inline int getHeight() { return HEIGHT; }
+
 private:
 	SDL_Window *m_Window;
 	SDL_GLContext m_Context;

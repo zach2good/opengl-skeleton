@@ -133,7 +133,7 @@ Mesh::Mesh(const char *filename)
 	Assimp::Importer importer;
 	const aiScene *scene = importer.ReadFile(filename, aiProcessPreset_TargetRealtime_Fast);
 	if(!scene) {
-		printf("Unable to laod mesh: %s\n", importer.GetErrorString());
+		printf("Unable to load mesh: %s\n", importer.GetErrorString());
 	}
 
 	for(int i = 0; i < scene->mNumMeshes; ++i) {

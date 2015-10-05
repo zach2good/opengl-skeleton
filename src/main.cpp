@@ -37,22 +37,19 @@
 
 #include <assimp\Importer.hpp>
 
-#define WIDTH 1280
-#define HEIGHT 720
-
 int main(int argc, char *argv[])
 {
-	Window window = Window("OpenGL Skeleton", WIDTH, HEIGHT);
+	Window window = Window("OpenGL Skeleton", 1280, 720);
 	DebugUi debugUi = DebugUi(window.getWindow());
-	Camera camera = Camera().Position = glm::vec3(0.0, 0.0, 12.0);
+	Camera camera = Camera();
+	camera.Position = glm::vec3(0.0, 0.0, 12.0);
 	glm::lookAt(camera.Position, glm::vec3(), camera.Up);
 	ShaderProgram shader = ShaderProgram("../res/shaders/basicShader");
-	Mesh mesh = Mesh("../res/models/head/head.obj");
-	Texture tex = Texture("../res/models/head/lambertian.jpg");
+	Mesh mesh = Mesh("../res/models/box.obj");
+	Texture tex = Texture("../res/models/box.jpg");
 	Light light = Light(glm::vec3(15, 15, 30), glm::vec3(1, 1, 1));
 	Transformation trans = Transformation();
-	trans.SetScale(glm::vec3(20, 20, 20));
-	
+
 	//TODO:
 	//Model(mesh, tex);
 	//Entity(model, trans);
@@ -72,14 +69,18 @@ int main(int argc, char *argv[])
 			if (e.type == SDL_QUIT || e.key.keysym.sym == SDLK_ESCAPE) {
 				window.requestClose();
 			}
-
 			if (e.key.keysym.sym == SDLK_PERIOD) {
 				wireframe = true;
 			}
 			if (e.key.keysym.sym == SDLK_COMMA) {
 				wireframe = false;
 			}
-
+			if (e.key.keysym.sym == SDLK_r) {
+				trans.ChangeRotation(glm::vec3(0, glm::radians(100.0f), 0));
+			}
+			if (e.key.keysym.sym == SDLK_t) {
+				trans.ChangeRotation(glm::vec3(0, glm::radians(-100.0f), 0));
+			}
 			if (e.key.keysym.sym == SDLK_a) {
 				camera.ProcessKeyboard(LEFT, deltaTime);
 			}
@@ -98,8 +99,7 @@ int main(int argc, char *argv[])
 			if (e.key.keysym.sym == SDLK_e) {
 				camera.ProcessKeyboard(DOWN, deltaTime);
 			}
-
-			if (e.type == SDL_MOUSEMOTION) {
+			if (e.type == SDL_MOUSEBUTTONDOWN) {
 
 				// TODO: Buggy, fix
 				//int x, y;
@@ -112,8 +112,7 @@ int main(int argc, char *argv[])
 
 		// Update
 		float timeVar = SDL_GetTicks() / 100.0f;
-		trans.ChangeRotation(glm::vec3(0, glm::radians(timeVar), 0));
-
+		
 		// Clear / 3D Prepare
 		window.clear();
 
@@ -131,7 +130,7 @@ int main(int argc, char *argv[])
 
 		// Projection
 		glm::mat4 projection;
-		projection = glm::perspective(camera.Zoom, (float)WIDTH / (float)HEIGHT, 0.1f, 1000.0f);
+		projection = glm::perspective(camera.Zoom, (float) window.getWidth() / (float) window.getHeight(), 0.1f, 1000.0f);
 
 		// Send to Shader
 		shader.SetUniform4fv("model", model);
@@ -150,7 +149,7 @@ int main(int argc, char *argv[])
 		//Render
 		mesh.render();
 
-		//tex.UnBind();
+		tex.UnBind();
 
 		shader.Unbind();
 
