@@ -24,9 +24,9 @@ public:
 class Quad {
 public:
 
-	GLuint VAO = NULL;
-	GLuint VBO = NULL;
-	GLuint EBO = NULL;
+	GLuint VAO;
+	GLuint VBO;
+	GLuint EBO;
 
 	Quad::Quad()
 	{

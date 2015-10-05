@@ -31,11 +31,11 @@ public:
 	void Render(Camera camera);
 
 private:
-	ShaderProgram shader = ShaderProgram("../res/shaders/basicShader");
+	ShaderProgram shader;
 	Entity entity;
 	std::vector<Entity> entities;
-	int WIDTH = 1280;
-	int HEIGHT = 720;
+	int WIDTH;
+	int HEIGHT;
 
 	void RenderSingle(Camera camera, Entity entity);
 };

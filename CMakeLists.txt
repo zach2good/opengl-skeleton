@@ -11,6 +11,7 @@ list(APPEND CMAKE_CXX_FLAGS "-std=c++14")
 add_definitions(-Wall)
 
 # sdl2
+option(DIRECTX "" OFF)
 add_subdirectory(lib/sdl)
 include_directories(lib/sdl/include)
 
@@ -28,6 +29,11 @@ include_directories(lib/soil/src)
 add_subdirectory(lib/soil)
 
 # assimp
+add_definitions(-DBUILD_STATIC_LIB=ON)
+add_definitions(-DASSIMP_BUILD_STATIC=ON)
+add_definitions(-DASSIMP_BUILD_STATIC_LIB=ON)
+set(ASSIMP_BUILD_ASSIMP_TOOLS OFF CACHE BOOL "Do not build the tools" FORCE)
+set(ASSIMP_BUILD_TESTS OFF CACHE BOOL "Do not build the tests" FORCE)
 add_subdirectory(lib/assimp)
 include_directories(lib/assimp/include)
 

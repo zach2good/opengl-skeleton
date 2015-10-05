@@ -6,10 +6,5 @@
 class Entity
 {
 public:
-	Entity() {}
-	Entity(Mesh mesh, Transformation tran)
-		: m_Mesh(mesh), m_Transformation(tran) {}
 
-	Transformation m_Transformation;
-	Mesh m_Mesh;
 };

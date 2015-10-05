@@ -8,6 +8,9 @@
 class Texture
 {
 public:
+	float shineDamper = 10.0f;
+	float reflectivity = 1.2f;
+
 	Texture(const char* filename)
 	{
 		unsigned char* image = SOIL_load_image(filename, &m_Width, &m_Height, &m_Channels, SOIL_LOAD_AUTO);
@@ -53,10 +56,16 @@ public:
 		glBindTexture(GL_TEXTURE_2D, m_textureID);
 	}
 
+	inline void UnBind()
+	{
+		glActiveTexture(0);
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+
 private:
 	GLuint m_textureID;
 
-	int m_Error = 0;
+	int m_Error;
 
 	int m_Width;
 	int m_Height;

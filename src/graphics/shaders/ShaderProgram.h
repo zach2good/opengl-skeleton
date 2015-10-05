@@ -4,6 +4,8 @@
 #include <string>
 #include <GL\glew.h>
 #include <glm\glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 class ShaderProgram
 {
@@ -18,6 +20,18 @@ public:
 	inline void SetUniformf(const char* name, float value)
 	{
 		glUniform1f(GetUniformLocation(name), value);
+	}
+
+	inline void SetUniform3fv(const char* name, glm::vec3 value)
+	{
+		GLint location = glGetUniformLocation(GetId(), name);
+		glUniform3f(location, value.x, value.y, value.z);
+	}
+
+	inline void SetUniform4fv(const char* name, glm::mat4 value)
+	{
+		GLint location = glGetUniformLocation(GetId(), name);
+		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(value));
 	}
 
 private:

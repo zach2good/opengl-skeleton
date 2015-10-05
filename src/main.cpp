@@ -35,6 +35,8 @@
 
 #include <graphics\textures\Texture.h>
 
+#include <assimp\Importer.hpp>
+
 #define WIDTH 1280
 #define HEIGHT 720
 
@@ -43,24 +45,12 @@ int main(int argc, char *argv[])
 	Window window = Window("OpenGL Skeleton", WIDTH, HEIGHT);
 	DebugUi debugUi = DebugUi(window.getWindow());
 	Camera camera = Camera().Position = glm::vec3(0.0, 4.0, 5.0);
+	ShaderProgram shader = ShaderProgram("../res/shaders/basicShader");
+	Mesh mesh = Mesh("../res/models/dragon.obj");
+	Texture tex = Texture("../res/models/dragon.png");
+	Light light = Light(glm::vec3(1, 0, 5), glm::vec3(1, 0, 0));
 
-	BasicRenderer renderer = BasicRenderer();
-
-	// Raw Assets
-	Mesh m = OBJLoader::LoadFromFile("../res/models/dragon.obj", "../res/models/dragon.png");
-	Transformation t = Transformation();
-
-	//Entity 1
-	t.SetPosition(glm::vec3(0.0f, 0.0f, -10.0f));
-	Entity entity = Entity(m, t);
-
-	//Entity 2
-	t.ChangePosition(glm::vec3(0, 0, -15));
-	t.ChangeScale(glm::vec3(3, 3, 3));
-	t.ChangeRotation(glm::vec3(0, 180, 0));
-	Entity entity2 = Entity(m, t);
-
-	Quad quad = Quad();
+	Transformation trans = Transformation();
 
 	// Main loop
 	bool running = true;
@@ -116,16 +106,49 @@ int main(int argc, char *argv[])
 		glPolygonMode(GL_FRONT_AND_BACK, (wireframe) ? GL_LINE : GL_FILL);
 
 		// Update
-		float timeVar = SDL_GetTicks() / 100.0f;
+		float timeVar = SDL_GetTicks() / 2000.0f;
+		trans.ChangeRotation(glm::vec3(0, glm::radians(timeVar), 0));
 
 		// Clear / 3D Prepare
-		renderer.Prepare();
+		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	
 
 		// Render 3D
-		renderer.Submit(entity);
-		renderer.Submit(entity2);
+		shader.Bind();
 
-		renderer.Render(camera);
+		// Model
+		glm::mat4 model;
+		model = trans.GetTransformationMatrix();
+		
+
+		// View
+		glm::mat4 view;
+		view = camera.GetViewMatrix();
+
+		// Projection
+		glm::mat4 projection;
+		projection = glm::perspective(camera.Zoom, (float)WIDTH / (float)HEIGHT, 0.1f, 1000.0f);
+
+		// Send to Shader
+		shader.SetUniform4fv("model", model);
+		shader.SetUniform4fv("view", view);
+		shader.SetUniform4fv("projection", projection);
+
+		shader.SetUniform3fv("lightPosition", light.GetPosition());
+		shader.SetUniform3fv("lightColor", light.GetColor());
+
+		shader.SetUniformf("shineDamper", tex.shineDamper);
+		shader.SetUniformf("reflectivity", tex.reflectivity);
+
+		//Texture 
+		//tex.Bind();
+
+		//Render
+		mesh.render();
+
+		tex.UnBind();
+
+		shader.Unbind();
 
 		// Render 2D
 		if (wireframe) { glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); }
