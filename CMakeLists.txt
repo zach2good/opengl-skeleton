@@ -23,10 +23,13 @@ include_directories(lib/glew/include lib/glew/src)
 # glm
 include_directories(lib/glm)
 
-# glm
+# soil
 include_directories(lib/soil/src)
 add_subdirectory(lib/soil)
 
+# assimp
+add_subdirectory(lib/assimp)
+include_directories(lib/assimp/include)
 
 # reference source
 set(SOURCE_FILES 
@@ -77,7 +80,7 @@ include_directories(src)
 
 # executables
 add_executable(main ${SOURCE_FILES})
-target_link_libraries(main SDL2-static SDL2main libglew_static SOIL)
+target_link_libraries(main SDL2-static SDL2main libglew_static SOIL assimp)
 
 # Copy resource files to bin directory
 file(COPY ${PROJECT_SOURCE_DIR}/res DESTINATION ${PROJECT_SOURCE_DIR}/bin/)
