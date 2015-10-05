@@ -44,7 +44,7 @@ Mesh::MeshEntry::MeshEntry(aiMesh *mesh) {
 		glBindBuffer(GL_ARRAY_BUFFER, vbo[TEXCOORD_BUFFER]);
 		glBufferData(GL_ARRAY_BUFFER, 2 * mesh->mNumVertices * sizeof(GLfloat), texCoords, GL_STATIC_DRAW);
 
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, NULL);
 		glEnableVertexAttribArray (1);
 
 		delete texCoords;

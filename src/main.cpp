@@ -44,13 +44,17 @@ int main(int argc, char *argv[])
 {
 	Window window = Window("OpenGL Skeleton", WIDTH, HEIGHT);
 	DebugUi debugUi = DebugUi(window.getWindow());
-	Camera camera = Camera().Position = glm::vec3(0.0, 4.0, 5.0);
+	Camera camera = Camera().Position = glm::vec3(0.0, 2.0, 15.0);
+	glm::lookAt(camera.Position, glm::vec3(), camera.Up);
 	ShaderProgram shader = ShaderProgram("../res/shaders/basicShader");
-	Mesh mesh = Mesh("../res/models/dragon.obj");
-	Texture tex = Texture("../res/models/dragon.png");
-	Light light = Light(glm::vec3(1, 0, 5), glm::vec3(1, 0, 0));
-
+	Mesh mesh = Mesh("../res/models/box.obj");
+	Texture tex = Texture("../res/models/codntainer.jpg");
+	Light light = Light(glm::vec3(5, 5, 5), glm::vec3(1, 1, 1));
 	Transformation trans = Transformation();
+	
+
+	//Model(mesh, tex);
+	//Entity(model, trans);
 
 	// Main loop
 	bool running = true;
@@ -106,7 +110,7 @@ int main(int argc, char *argv[])
 		glPolygonMode(GL_FRONT_AND_BACK, (wireframe) ? GL_LINE : GL_FILL);
 
 		// Update
-		float timeVar = SDL_GetTicks() / 2000.0f;
+		float timeVar = SDL_GetTicks() / 100.0f;
 		trans.ChangeRotation(glm::vec3(0, glm::radians(timeVar), 0));
 
 		// Clear / 3D Prepare
@@ -144,7 +148,7 @@ int main(int argc, char *argv[])
 		//Render
 		mesh.render();
 
-		tex.UnBind();
+		//tex.UnBind();
 
 		shader.Unbind();
 
