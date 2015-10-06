@@ -38,13 +38,13 @@ include_directories(lib/assimp/include)
 # reference source
 set(SOURCE_FILES 
 
-src/entities/Entity.h
 src/entities/Camera.h
 src/entities/Camera.cpp
-src/entities/Transformation.h
-src/entities/Light.h
 src/entities/Cube.h
+src/entities/Entity.h
+src/entities/Light.h
 src/entities/Quad.h
+src/entities/Transformation.h
 
 src/graphics/imgui/imgui.h
 src/graphics/imgui/imgui.cpp
@@ -54,19 +54,19 @@ src/graphics/imgui/imgui_impl_sdlogl3.cpp
 
 src/graphics/models/Mesh.h
 src/graphics/models/Mesh.cpp
+src/graphics/models/Model.cpp
 
 src/graphics/shaders/ShaderProgram.h
 src/graphics/shaders/ShaderProgram.cpp
 
 src/graphics/textures/Texture.h
+src/graphics/textures/Texture.cpp
+src/graphics/textures/Material.cpp
 
 src/graphics/BasicRenderer.h
 src/graphics/BasicRenderer.cpp
-src/graphics/Loader.h
-src/graphics/Loader.cpp
 src/graphics/OBJLoader.h
 src/graphics/OBJLoader.cpp
-src/graphics/Vertex.h
 src/graphics/Window.h
 src/graphics/Window.cpp
 
@@ -75,6 +75,13 @@ src/utils/Maths.cpp
 
 src/utils/DebugUi.h
 src/utils/DebugUi.cpp
+
+res/shaders/basicShader.frag
+res/shaders/basicShader.vert
+res/shaders/lampShader.frag
+res/shaders/lampShader.vert
+res/shaders/waterShader.frag
+res/shaders/waterShader.vert
 
 src/main.cpp 
 )

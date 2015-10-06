@@ -21,7 +21,6 @@
 #include <utils\Maths.h>
 
 #include <entities\Transformation.h>
-#include <graphics\Loader.h>
 #include <graphics\OBJLoader.h>
 #include <graphics\shaders\ShaderProgram.h>
 #include <graphics\models\Mesh.h>
@@ -45,13 +44,14 @@ int main(int argc, char *argv[])
 	camera.Position = glm::vec3(0.0, 0.0, 12.0);
 	glm::lookAt(camera.Position, glm::vec3(), camera.Up);
 	ShaderProgram shader = ShaderProgram("../res/shaders/basicShader");
-	Mesh mesh = Mesh("../res/models/box.obj");
+	Mesh mesh = Mesh("../res/models/dragon.obj");
 	Texture tex = Texture("../res/models/box.jpg");
 	Light light = Light(glm::vec3(15, 15, 30), glm::vec3(1, 1, 1));
 	Transformation trans = Transformation();
 
 	//TODO:
-	//Model(mesh, tex);
+	//Material mat(tex);
+	//Model(mesh, mat);
 	//Entity(model, trans);
 
 	// Main loop
