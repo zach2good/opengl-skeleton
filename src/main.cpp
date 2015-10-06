@@ -112,6 +112,7 @@ int main(int argc, char *argv[])
 
 		// Update
 		float timeVar = SDL_GetTicks() / 100.0f;
+		//trans.ChangePosition(glm::vec3(0, 0, -timeVar/1000.0f));
 		
 		// Clear / 3D Prepare
 		window.clear();
@@ -142,6 +143,14 @@ int main(int argc, char *argv[])
 
 		shader.SetUniformf("shineDamper", tex.shineDamper);
 		shader.SetUniformf("reflectivity", tex.reflectivity);
+
+		// Face Culling
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_BACK);
+		if (tex.hasTransparency)
+		{
+			glDisable(GL_CULL_FACE);
+		}
 
 		//Texture 
 		tex.Bind();

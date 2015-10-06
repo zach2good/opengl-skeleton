@@ -6,13 +6,16 @@ in vec3 surfaceNormal;
 in vec3 toLightVector;
 in vec3 toCameraVector;
 
+// Output
 out vec4 FragColor;
 
 // Texture sampler
 uniform sampler2D texture;
 
+// Light
 uniform vec3 lightColor;
 
+// Material
 uniform float shineDamper;
 uniform float reflectivity;
 
@@ -36,4 +39,4 @@ void main()
 
 
 	FragColor = vec4(diffuse, 1.0) * texture2D(texture, TexCoord) + vec4(finalSpecular, 1.0);
-}
+}													;
