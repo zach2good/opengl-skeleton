@@ -39,7 +39,6 @@ include_directories(lib/assimp/include)
 set(SOURCE_FILES 
 
 src/entities/Camera.h
-src/entities/Camera.cpp
 src/entities/Cube.h
 src/entities/Entity.h
 src/entities/Light.h
