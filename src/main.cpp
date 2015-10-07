@@ -33,6 +33,9 @@
 #include <entities\Quad.h>
 
 #include <graphics\textures\Texture.h>
+#include <graphics\textures\Material.h>
+
+#include <graphics\models\Model.h>
 
 #include <assimp\Importer.hpp>
 
@@ -40,19 +43,20 @@ int main(int argc, char *argv[])
 {
 	Window window = Window("OpenGL Skeleton", 1280, 720);
 	DebugUi debugUi = DebugUi(window.getWindow());
+
 	Camera camera = Camera();
 	camera.Position = glm::vec3(0.0, 0.0, 12.0);
 	glm::lookAt(camera.Position, glm::vec3(), camera.Up);
+
 	ShaderProgram shader = ShaderProgram("../res/shaders/basicShader");
-	Mesh mesh = Mesh("../res/models/dragon.obj");
+
 	Texture tex = Texture("../res/models/box.jpg");
-	Light light = Light(glm::vec3(15, 15, 30), glm::vec3(1, 1, 1));
+	Material mat = Material(tex);
+	Mesh mesh = Mesh("../res/models/box.obj");
+
 	Transformation trans = Transformation();
 
-	//TODO:
-	//Material mat(tex);
-	//Model(mesh, mat);
-	//Entity(model, trans);
+	Light light = Light(glm::vec3(15, 15, 30), glm::vec3(1, 1, 1));	
 
 	// Main loop
 	bool running = true;
@@ -117,7 +121,6 @@ int main(int argc, char *argv[])
 		// Clear / 3D Prepare
 		window.clear();
 
-		//TODO: Break out into Renderer class
 		// Render 3D
 		shader.Bind();
 
@@ -141,24 +144,25 @@ int main(int argc, char *argv[])
 		shader.SetUniform3fv("lightPosition", light.GetPosition());
 		shader.SetUniform3fv("lightColor", light.GetColor());
 
-		shader.SetUniformf("shineDamper", tex.shineDamper);
-		shader.SetUniformf("reflectivity", tex.reflectivity);
+		shader.SetUniform3fv("color", mat.m_Color);
+
+		shader.SetUniformf("shineDamper", mat.m_Texture.shineDamper);
+		shader.SetUniformf("reflectivity", mat.m_Texture.reflectivity);
 
 		// Face Culling
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_BACK);
-		if (tex.hasTransparency)
+		if (mat.m_Texture.hasTransparency)
 		{
 			glDisable(GL_CULL_FACE);
 		}
 
-		//Texture 
-		tex.Bind();
+		if (mat.m_Texture.GetTextureID() != NULL)
+		{
+			mat.m_Texture.Bind();
+		}
 
-		//Render
 		mesh.render();
-
-		tex.UnBind();
 
 		shader.Unbind();
 

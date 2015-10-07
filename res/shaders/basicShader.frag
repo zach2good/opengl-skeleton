@@ -1,6 +1,6 @@
 #version 330 core
 
-//In/Out
+// In
 in vec2 TexCoord;
 in vec3 surfaceNormal;
 in vec3 toLightVector;
@@ -16,8 +16,10 @@ uniform sampler2D texture;
 uniform vec3 lightColor;
 
 // Material
+uniform vec3 color;
 uniform float shineDamper;
 uniform float reflectivity;
+
 
 void main()
 {
@@ -26,7 +28,7 @@ void main()
 
 	float nDotl = dot(unitNormal, unitLightVector);
 	float brightness = max(nDotl, 0.0);
-	vec3 diffuse = brightness *  lightColor;
+	vec3 diffuse = brightness *  lightColor * color;
 
 	vec3 unitVectorToCamera = normalize(toCameraVector);
 	vec3 lightDirection = -unitLightVector;

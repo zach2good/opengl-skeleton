@@ -8,7 +8,7 @@
 class Texture
 {
 public:
-	float shineDamper = 0.02f;
+	float shineDamper = 0.12f;
 	float reflectivity = 0.02f;
 	bool hasTransparency = false;
 

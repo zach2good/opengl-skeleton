@@ -54,14 +54,13 @@ src/graphics/imgui/imgui_impl_sdlogl3.cpp
 
 src/graphics/models/Mesh.h
 src/graphics/models/Mesh.cpp
-src/graphics/models/Model.cpp
+src/graphics/models/Model.h
 
 src/graphics/shaders/ShaderProgram.h
 src/graphics/shaders/ShaderProgram.cpp
 
 src/graphics/textures/Texture.h
-src/graphics/textures/Texture.cpp
-src/graphics/textures/Material.cpp
+src/graphics/textures/Material.h
 
 src/graphics/BasicRenderer.h
 src/graphics/BasicRenderer.cpp
