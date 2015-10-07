@@ -1,7 +1,7 @@
 OpenGL Skeleton 
 ===
 
-A no-fuss skeleton app for creating OpenGL applications with SDL2, GLEW, GLM, ASSIMP, SOIL and Imgui.
+A no-fuss skeleton for creating OpenGL applications with SDL2, GLEW, GLM, ASSIMP, SOIL and Imgui.
 
 1) Clone repo and submodules
 ```
@@ -15,6 +15,9 @@ TODO
 ===
 * Work through basic examples in books and online to build functionality
 * Make robust basic functionality (Default shaders, test scene, OBJ Loader etc.)
+* MD5 Models and Animations
+* Billboarding quads
+* Remake Wolfenstein 3D 
 
 ![Screenshot](screenshot.png)
 
