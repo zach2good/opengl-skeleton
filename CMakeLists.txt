@@ -18,27 +18,32 @@ else()
     endif()
 endif()
 
-include_directories(Skeleton/Headers/
-                    Skeleton/lib/assimp/include/
-                    Skeleton/lib/glad/include/
-                    Skeleton/lib/sdl/include/
-                    Skeleton/lib/glm/
-                    Skeleton/lib/stb/)
+include_directories(include/
+                    lib/assimp/include/
+                    lib/glad/include/
+                    lib/sdl/include/
+                    lib/glm/
+                    lib/stb/)
 
-file(GLOB VENDORS_SOURCES Skeleton/lib//glad/src/glad.c)
+file(GLOB VENDORS_SOURCES lib/glad/src/glad.c)
 
-file(GLOB PROJECT_HEADERS Skeleton/Headers/*.hpp
-						  Skeleton/Headers/*.h)
+file(GLOB PROJECT_HEADERS include/*.hpp
+						              include/*.h
+                          include/*/*.hpp
+                          include/*/*.h)
 
-file(GLOB PROJECT_SOURCES Skeleton/Sources/*.cpp)
+file(GLOB PROJECT_SOURCES src/*.cpp
+                          src/*/*.cpp
+                          src/*/*/*.cpp
+                          src/*/*/*/*.cpp)
 
-file(GLOB PROJECT_SHADERS Skeleton/Shaders/*.comp
-                          Skeleton/Shaders/*.frag
-                          Skeleton/Shaders/*.geom
-                          Skeleton/Shaders/*.vert)
+file(GLOB PROJECT_SHADERS res/shaders/*.comp
+                          res/shaders/*.frag
+                          res/shaders/*.geom
+                          res/shaders/*.vert)
 
 file(GLOB PROJECT_CONFIGS CMakeLists.txt
-                          Readme.md
+                          README.md
                          .gitattributes
                          .gitignore
                          .gitmodules)

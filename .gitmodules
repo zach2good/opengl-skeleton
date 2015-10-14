@@ -7,3 +7,10 @@
 [submodule "lib/assimp"]
 	path = lib/assimp
 	url = https://github.com/zach2good/assimp.git
+[submodule "lib/stb"]
+	path = lib/stb
+	url = https://github.com/zach2good/stb.git
+[submodule "lib/glad"]
+	path = lib/glad
+	url = https://github.com/zach2good/glad.git
+	branch = c

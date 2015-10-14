@@ -1,181 +1,71 @@
 #if defined(_MSC_VER) && !defined(_CRT_SECURE_NO_WARNINGS)
 #define _CRT_SECURE_NO_WARNINGS
 #endif
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <ctime>
-
+// System Headers
 #include <SDL.h>
 
-#include <GL\glew.h>
-#include <GL\GL.h>
-#include <GL\GLU.h>
-
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
-#include <graphics\Window.h>
-#include <utils\DebugUi.h>
-#include <utils\Maths.h>
-
-#include <entities\Transformation.h>
-#include <graphics\OBJLoader.h>
-#include <graphics\shaders\ShaderProgram.h>
-#include <graphics\models\Mesh.h>
-#include <graphics\BasicRenderer.h>
-
-#include <entities\Entity.h>
-#include <entities\Camera.h>
-#include <entities\Light.h>
-#include <entities\Cube.h>
-#include <entities\Quad.h>
-
-#include <graphics\textures\Texture.h>
-#include <graphics\textures\Material.h>
-
-#include <graphics\models\Model.h>
-
-#include <assimp\Importer.hpp>
+// Standard Headers
+#include <cstdio>
+#include <cstdlib>
 
 int main(int argc, char *argv[])
 {
-	Window window = Window("OpenGL Skeleton", 1280, 720);
-	DebugUi debugUi = DebugUi(window.getWindow());
+	//Start SDL
+	if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
+		printf("SDL Error");
+		return EXIT_FAILURE;
+	}
 
-	Camera camera = Camera();
-	camera.Position = glm::vec3(0.0, 0.0, 12.0);
-	glm::lookAt(camera.Position, glm::vec3(), camera.Up);
+	// Start a Window
+	SDL_Window* m_Window = SDL_CreateWindow("OpenGL Skeleton",
+		SDL_WINDOWPOS_UNDEFINED,
+		SDL_WINDOWPOS_UNDEFINED,
+		mWidth, mHeight,
+		SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
 
-	ShaderProgram shader = ShaderProgram("../res/shaders/basicShader");
+	if (!m_Window) {
+		printf("Window Error");
+		return EXIT_FAILURE;
+	}
 
-	Texture tex = Texture("../res/models/box.jpg");
-	Material mat = Material(tex);
-	Mesh mesh = Mesh("../res/models/box.obj");
+	// Start OpenGL Context
+	SDL_GLContext m_Context = SDL_GL_CreateContext(m_Window);
+	if (!m_Context) {
+		printf("Context Error");
+		return EXIT_FAILURE;
+	}
 
-	Transformation trans = Transformation();
+	// Load GLAD Extentions
+	if (!gladLoadGL()) {
+		printf("GLAD Error");
+		return EXIT_FAILURE;
+	}
 
-	Light light = Light(glm::vec3(15, 15, 30), glm::vec3(1, 1, 1));	
+	// Print Info
+	printf("GL_VERSION: %s \n", glGetString(GL_VERSION));
+	printf("GL_VENDOR: %s \n", glGetString(GL_VENDOR));
+	printf("GL_SHADING_LANGUAGE_VERSION: %s \n", glGetString(GL_SHADING_LANGUAGE_VERSION));
 
-	// Main loop
 	bool running = true;
-	bool wireframe = false;
-
-	while (!window.isCloseRequested()) {
-
-		// Determine deltaTime
-		float deltaTime = 1000.0f / SDL_GetTicks();
+	while (running) {
 
 		// Poll inputs
 		SDL_Event e;
 		while (SDL_PollEvent(&e)) {
 			if (e.type == SDL_QUIT || e.key.keysym.sym == SDLK_ESCAPE) {
-				window.requestClose();
-			}
-			if (e.key.keysym.sym == SDLK_PERIOD) {
-				wireframe = true;
-			}
-			if (e.key.keysym.sym == SDLK_COMMA) {
-				wireframe = false;
-			}
-			if (e.key.keysym.sym == SDLK_r) {
-				trans.ChangeRotation(glm::vec3(0, glm::radians(100.0f), 0));
-			}
-			if (e.key.keysym.sym == SDLK_t) {
-				trans.ChangeRotation(glm::vec3(0, glm::radians(-100.0f), 0));
-			}
-			if (e.key.keysym.sym == SDLK_a) {
-				camera.ProcessKeyboard(LEFT, deltaTime);
-			}
-			if (e.key.keysym.sym == SDLK_d) {
-				camera.ProcessKeyboard(RIGHT, deltaTime);
-			}
-			if (e.key.keysym.sym == SDLK_w) {
-				camera.ProcessKeyboard(FORWARD, deltaTime);
-			}
-			if (e.key.keysym.sym == SDLK_s) {
-				camera.ProcessKeyboard(BACKWARD, deltaTime);
-			}
-			if (e.key.keysym.sym == SDLK_q) {
-				camera.ProcessKeyboard(UP, deltaTime);
-			}
-			if (e.key.keysym.sym == SDLK_e) {
-				camera.ProcessKeyboard(DOWN, deltaTime);
-			}
-			if (e.type == SDL_MOUSEBUTTONDOWN) {
-
-				// TODO: Buggy, fix
-				//int x, y;
-				//SDL_GetRelativeMouseState(&x, &y);
-				//camera.ProcessMouseMovement(x, -y);
+				running = false;
 			}
 		}
 
-		glPolygonMode(GL_FRONT_AND_BACK, (wireframe) ? GL_LINE : GL_FILL);
+		glClearColor(0.25f, 0.25f, 0.25f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
 
-		// Update
-		float timeVar = SDL_GetTicks() / 100.0f;
-		//trans.ChangePosition(glm::vec3(0, 0, -timeVar/1000.0f));
-		
-		// Clear / 3D Prepare
-		window.clear();
+		SDL_GL_SwapWindow(m_Window);
 
-		// Render 3D
-		shader.Bind();
-
-		// Model
-		glm::mat4 model;
-		model = trans.GetTransformationMatrix();
-
-		// View
-		glm::mat4 view;
-		view = camera.GetViewMatrix();
-
-		// Projection
-		glm::mat4 projection;
-		projection = glm::perspective(camera.Zoom, (float) window.getWidth() / (float) window.getHeight(), 0.1f, 1000.0f);
-
-		// Send to Shader
-		shader.SetUniform4fv("model", model);
-		shader.SetUniform4fv("view", view);
-		shader.SetUniform4fv("projection", projection);
-
-		shader.SetUniform3fv("lightPosition", light.GetPosition());
-		shader.SetUniform3fv("lightColor", light.GetColor());
-
-		shader.SetUniform3fv("color", mat.m_Color);
-
-		shader.SetUniformf("shineDamper", mat.m_Texture.shineDamper);
-		shader.SetUniformf("reflectivity", mat.m_Texture.reflectivity);
-
-		// Face Culling
-		glEnable(GL_CULL_FACE);
-		glCullFace(GL_BACK);
-		if (mat.m_Texture.hasTransparency)
-		{
-			glDisable(GL_CULL_FACE);
-		}
-
-		if (mat.m_Texture.GetTextureID() != NULL)
-		{
-			mat.m_Texture.Bind();
-		}
-
-		mesh.render();
-
-		shader.Unbind();
-
-		// Render 2D
-		if (wireframe) { glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); }
-		debugUi.prepare();
-		debugUi.render();
-		if (wireframe) { glPolygonMode(GL_FRONT_AND_BACK, GL_LINES); }
-
-		window.swap();
 	}
 
-	window.cleanUp();
-
-	return 0;
+	SDL_GL_DeleteContext(m_Context);
+	SDL_DestroyWindow(m_Window);
+	SDL_Quit();
+	return EXIT_SUCCESS;
 }
