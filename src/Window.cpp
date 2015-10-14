@@ -1,7 +1,7 @@
-#include "graphics/Window.h"
+#include "Window.h"
 
 Window::Window(const char* title, int width, int height)
-: TITLE(title), WIDTH(width), HEIGHT(height)
+	: TITLE(title), WIDTH(width), HEIGHT(height)
 {
 	init();
 }
@@ -14,7 +14,7 @@ Window::~Window()
 void Window::init()
 {
 	//Start SDL
-	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+	if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
 		printf("SDL Error");
 	}
 
@@ -56,17 +56,15 @@ void Window::init()
 	// Limit framerate to help screen tearing
 	//SDL_GL_SetSwapInterval(1);
 
-	// Start GLEW
-	glewExperimental = GL_TRUE;
-	if (glewInit() < 0) {
-		printf("GLEW Error");
+	// Load GLAD Extentions
+	if (!gladLoadGL()) {
+		printf("GLAD Error");
 	}
 
 	// Print Info
 	printf("GL_VERSION: %s \n", glGetString(GL_VERSION));
 	printf("GL_VENDOR: %s \n", glGetString(GL_VENDOR));
 	printf("GL_SHADING_LANGUAGE_VERSION: %s \n", glGetString(GL_SHADING_LANGUAGE_VERSION));
-	printf("GLEW_VERSION: %s \n", glewGetString(GLEW_VERSION));
 
 	// Enable 3D
 	glEnable(GL_DEPTH_TEST);
@@ -85,24 +83,24 @@ void Window::init()
 	isRunning = true;
 }
 
-void Window::cleanUp() 
+void Window::cleanUp()
 {
 	SDL_GL_DeleteContext(m_Context);
 	SDL_DestroyWindow(m_Window);
 	SDL_Quit();
 }
 
-SDL_Window* Window::getWindow() 
+SDL_Window* Window::getWindow()
 {
 	return m_Window;
 }
 
-SDL_GLContext Window::getContext() 
+SDL_GLContext Window::getContext()
 {
 	return m_Context;
 }
 
-void Window::clear() 
+void Window::clear()
 {
 	// Clear
 	glViewport(0, 0, WIDTH, HEIGHT);

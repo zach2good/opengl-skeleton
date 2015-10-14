@@ -1,10 +1,7 @@
 #pragma once
 
+#include <glad\glad.h>
 #include <SDL.h>
-
-#include <GL\glew.h>
-#include <GL\GL.h>
-#include <GL\GLU.h>
 
 #include <stdio.h>
 
@@ -38,4 +35,6 @@ private:
 	int WIDTH;
 
 	bool isRunning;
+
 };
+
