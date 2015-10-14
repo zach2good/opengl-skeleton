@@ -41,4 +41,4 @@ void main()
 
 
 	FragColor = vec4(diffuse, 1.0) * texture2D(texture, TexCoord) + vec4(finalSpecular, 1.0);
-}													;
+}
