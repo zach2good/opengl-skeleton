@@ -6,10 +6,12 @@
 #include <cstdlib>
 
 #include "Window.h"
+#include "DebugUi.h"
 
 int main(int argc, char *argv[])
 {
 	Window window = Window("OpenGL Skeleton", 1280, 720);
+	DebugUi debugUi = DebugUi(window.getWindow());
 
 	while (!window.isCloseRequested()) {
 
@@ -21,8 +23,16 @@ int main(int argc, char *argv[])
 			}
 		}
 
+		// Clear
 		window.clear();
 
+		// 3D Render
+
+		// 2D Render
+		debugUi.prepare();
+		debugUi.render();
+
+		// Swap
 		window.swap();
 	}
 
