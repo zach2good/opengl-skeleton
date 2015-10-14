@@ -5,8 +5,9 @@ int main(int argc, char *argv[])
 	Window window = Window("OpenGL Skeleton", 1280, 720);
 	DebugUi debugUi = DebugUi(window.getWindow());
 
-	ShaderProgram shader = ShaderProgram("../res/shaders/passThru");
+	ShaderProgram shader = ShaderProgram("../res/shaders/basicShader");
 
+	Mesh mesh = Mesh("../res/models/box.obj");
 	Texture texture = Texture("../res/models/box.jpg");
 
 	while (!window.isCloseRequested()) {
@@ -23,6 +24,7 @@ int main(int argc, char *argv[])
 		window.clear();
 
 		// 3D Render
+		mesh.render();
 
 		// 2D Render
 #ifdef _DEBUG 

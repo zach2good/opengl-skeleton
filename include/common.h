@@ -19,6 +19,7 @@ using namespace glm;
 #include "ShaderProgram.h"
 #include "Camera.h"
 #include "Quad.h"
+#include "Mesh.h"
 #include "Texture.h"
 
 
