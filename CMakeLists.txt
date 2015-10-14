@@ -1,95 +1,61 @@
-cmake_minimum_required (VERSION 2.8)
-project (opengl-skeleton)
+cmake_minimum_required(VERSION 3.0)
+project(Skeleton)
 
-# put the executable into the bin directory
-set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
-
-# c++14 activation
-list(APPEND CMAKE_CXX_FLAGS "-std=c++14")
-
-# compilation flags
-add_definitions(-Wall)
-
-# sdl2
-option(DIRECTX "" OFF)
+option(DIRECTX OFF)
 add_subdirectory(lib/sdl)
-include_directories(lib/sdl/include)
 
-# glew
-add_definitions(-DGLEW_STATIC)
-option(glew-cmake_BUILD_SHARED "" OFF)
-add_subdirectory(lib/glew)
-include_directories(lib/glew/include lib/glew/src)
-
-# glm
-include_directories(lib/glm)
-
-# soil
-include_directories(lib/soil/src)
-add_subdirectory(lib/soil)
-
-# assimp
-set(BUILD_SHARED_LIBS OFF CACHE BOOL "Do not build DLL" FORCE)
-set(ASSIMP_BUILD_ASSIMP_TOOLS OFF CACHE BOOL "Do not build the tools" FORCE)
-set(ASSIMP_BUILD_TESTS OFF CACHE BOOL "Do not build the tests" FORCE)
+option(ASSIMP_BUILD_ASSIMP_TOOLS OFF)
+option(ASSIMP_BUILD_SAMPLES OFF)
+option(ASSIMP_BUILD_TESTS OFF)
 add_subdirectory(lib/assimp)
-include_directories(lib/assimp/include)
 
-# reference source
-set(SOURCE_FILES 
+if(MSVC)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4 /MTd")
+else()
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -std=c++14")
+    if(NOT WIN32)
+        set(GLAD_LIBRARIES dl)
+    endif()
+endif()
 
-src/entities/Camera.h
-src/entities/Cube.h
-src/entities/Entity.h
-src/entities/Light.h
-src/entities/Quad.h
-src/entities/Transformation.h
+include_directories(Skeleton/Headers/
+                    Skeleton/lib/assimp/include/
+                    Skeleton/lib/glad/include/
+                    Skeleton/lib/sdl/include/
+                    Skeleton/lib/glm/
+                    Skeleton/lib/stb/)
 
-src/graphics/imgui/imgui.h
-src/graphics/imgui/imgui.cpp
-src/graphics/imgui/imgui_draw.cpp
-src/graphics/imgui/imgui_impl_sdlogl3.h
-src/graphics/imgui/imgui_impl_sdlogl3.cpp
+file(GLOB VENDORS_SOURCES Skeleton/lib//glad/src/glad.c)
 
-src/graphics/models/Mesh.h
-src/graphics/models/Mesh.cpp
-src/graphics/models/Model.h
+file(GLOB PROJECT_HEADERS Skeleton/Headers/*.hpp
+						  Skeleton/Headers/*.h)
 
-src/graphics/shaders/ShaderProgram.h
-src/graphics/shaders/ShaderProgram.cpp
+file(GLOB PROJECT_SOURCES Skeleton/Sources/*.cpp)
 
-src/graphics/textures/Texture.h
-src/graphics/textures/Material.h
+file(GLOB PROJECT_SHADERS Skeleton/Shaders/*.comp
+                          Skeleton/Shaders/*.frag
+                          Skeleton/Shaders/*.geom
+                          Skeleton/Shaders/*.vert)
 
-src/graphics/BasicRenderer.h
-src/graphics/BasicRenderer.cpp
-src/graphics/OBJLoader.h
-src/graphics/OBJLoader.cpp
-src/graphics/Window.h
-src/graphics/Window.cpp
+file(GLOB PROJECT_CONFIGS CMakeLists.txt
+                          Readme.md
+                         .gitattributes
+                         .gitignore
+                         .gitmodules)
 
-src/utils/Maths.h
-src/utils/Maths.cpp
+source_group("Headers" FILES ${PROJECT_HEADERS})
+source_group("Shaders" FILES ${PROJECT_SHADERS})
+source_group("Sources" FILES ${PROJECT_SOURCES})
+source_group("Vendors" FILES ${VENDORS_SOURCES})
 
-src/utils/DebugUi.h
-src/utils/DebugUi.cpp
+add_definitions(-DPROJECT_SOURCE_DIR=\"${PROJECT_SOURCE_DIR}\")
 
-res/shaders/basicShader.frag
-res/shaders/basicShader.vert
-res/shaders/lampShader.frag
-res/shaders/lampShader.vert
-res/shaders/waterShader.frag
-res/shaders/waterShader.vert
+add_executable(${PROJECT_NAME} ${PROJECT_SOURCES} ${PROJECT_HEADERS}
+                               ${PROJECT_SHADERS} ${PROJECT_CONFIGS}
+                               ${VENDORS_SOURCES})
 
-src/main.cpp 
-)
+target_link_libraries(${PROJECT_NAME} assimp SDL2-static SDL2main
+                      ${SDL2_LIBRARIES} ${GLAD_LIBRARIES})
 
-# link source files
-include_directories(src)
-
-# executables
-add_executable(main ${SOURCE_FILES})
-target_link_libraries(main SDL2-static SDL2main libglew_static SOIL assimp)
-
-# Copy resource files to bin directory
-file(COPY ${PROJECT_SOURCE_DIR}/res DESTINATION ${PROJECT_SOURCE_DIR}/bin/)
+set_target_properties(${PROJECT_NAME} PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${PROJECT_NAME})
