@@ -16,6 +16,7 @@ public:
 	~DebugUi();
 
 	void prepare();
+	void cleanUp();
 
 	void processEvents(SDL_Event e);
 

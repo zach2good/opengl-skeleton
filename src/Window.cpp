@@ -33,10 +33,13 @@ void Window::init()
 	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
 	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 2);
 
-	// Request a debug context.
+#ifdef _DEBUG 
+	// Request a debug context
 	SDL_GL_SetAttribute(
-		SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_DEBUG_FLAG
-		);
+		SDL_GL_CONTEXT_FLAGS, 
+		SDL_GL_CONTEXT_DEBUG_FLAG
+	);
+#endif // _DEBUG 
 
 	SDL_DisplayMode current;
 	SDL_GetCurrentDisplayMode(0, &current);
@@ -71,10 +74,12 @@ void Window::init()
 	printf("GL_VENDOR: %s \n", glGetString(GL_VENDOR));
 	printf("GL_SHADING_LANGUAGE_VERSION: %s \n", glGetString(GL_SHADING_LANGUAGE_VERSION));
 
+#ifdef _DEBUG 
 	// Check to see if Debugging is enabled
 	if (glDebugMessageCallbackARB == NULL) {
 		printf("glDebugMessageCallbackARB not supported, OpenGL debugging may be difficult \n");
 	}
+#endif // _DEBUG 
 
 	// Enable 3D
 	glEnable(GL_DEPTH_TEST);

@@ -2,7 +2,6 @@
 
 #include <glad\glad.h>
 #include <SDL.h>
-
 #include <stdio.h>
 
 class Window

@@ -6,10 +6,15 @@ DebugUi::DebugUi(SDL_Window* window)
 	ImGui_ImplSdlOgl3_Init(m_Window);
 
 	ImGuiIO& io = ImGui::GetIO();
-	io.IniFilename = NULL;
+	io.IniFilename = NULL; // Disables ini file output
 }
 
 DebugUi::~DebugUi()
+{
+	ImGui_ImplSdlOgl3_Shutdown();
+}
+
+void DebugUi::cleanUp()
 {
 	ImGui_ImplSdlOgl3_Shutdown();
 }

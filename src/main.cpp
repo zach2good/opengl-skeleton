@@ -4,6 +4,8 @@
 #include "Window.h"
 #include "DebugUi.h"
 
+#define _DEBUG 
+
 int main(int argc, char *argv[])
 {
 	Window window = Window("OpenGL Skeleton", 1280, 720);
@@ -25,13 +27,16 @@ int main(int argc, char *argv[])
 		// 3D Render
 
 		// 2D Render
+#ifdef _DEBUG 
 		debugUi.prepare();
 		debugUi.render();
+#endif // _DEBUG 
 
 		// Swap
 		window.swap();
 	}
 
+	debugUi.cleanUp();
 	window.cleanUp();
 
 	return EXIT_SUCCESS;
