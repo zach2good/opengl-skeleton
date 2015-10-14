@@ -33,6 +33,11 @@ void Window::init()
 	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
 	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 2);
 
+	// Request a debug context.
+	SDL_GL_SetAttribute(
+		SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_DEBUG_FLAG
+		);
+
 	SDL_DisplayMode current;
 	SDL_GetCurrentDisplayMode(0, &current);
 
@@ -56,7 +61,7 @@ void Window::init()
 	// Limit framerate to help screen tearing
 	//SDL_GL_SetSwapInterval(1);
 
-	// Load GLAD Extentions
+	// Load GLAD
 	if (!gladLoadGL()) {
 		printf("GLAD Error");
 	}
@@ -66,6 +71,11 @@ void Window::init()
 	printf("GL_VENDOR: %s \n", glGetString(GL_VENDOR));
 	printf("GL_SHADING_LANGUAGE_VERSION: %s \n", glGetString(GL_SHADING_LANGUAGE_VERSION));
 
+	// Check to see if Debugging is enabled
+	if (glDebugMessageCallbackARB == NULL) {
+		printf("glDebugMessageCallbackARB not supported, OpenGL debugging may be difficult \n");
+	}
+
 	// Enable 3D
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_MULTISAMPLE);
@@ -73,9 +83,6 @@ void Window::init()
 	// Face Culling
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
-
-	glEnable(GL_SMOOTH);
-	glShadeModel(GL_SMOOTH);
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -102,7 +109,6 @@ SDL_GLContext Window::getContext()
 
 void Window::clear()
 {
-	// Clear
 	glViewport(0, 0, WIDTH, HEIGHT);
 	glClearColor(0.2, 0.2, 0.2, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

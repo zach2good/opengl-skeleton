@@ -35,6 +35,4 @@ private:
 	int WIDTH;
 
 	bool isRunning;
-
 };
-

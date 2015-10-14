@@ -13,4 +13,4 @@
 [submodule "lib/glad"]
 	path = lib/glad
 	url = https://github.com/zach2good/glad.git
-	branch = c
+	branch = c-debug
