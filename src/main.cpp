@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
 
 	ShaderProgram shader = ShaderProgram("../res/shaders/basicShader");
 
-	Mesh mesh = Mesh("../res/models/dragon.obj");
+	Mesh mesh = Mesh("../res/models/head/head.obj");
 	Texture texture0 = Texture("../res/models/head/lambertian.jpg");
 
 	/*

@@ -25,7 +25,7 @@ void main()
     gl_Position = projection * view * model * vec4(position, 1.0f);
 
 	Position = vec3(model * vec4(position, 1.0f));
-	Normal = (model * vec4(normal, 0.0)).xyz;
+	Normal = (model * vec4(normal, 0.0)).xyz;	
     TexCoord = vec2(texCoord.x, 1.0 - texCoord.y);
 
 	toLightVector = lightPosition - worldPosition.xyz;
