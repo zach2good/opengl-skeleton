@@ -5,6 +5,8 @@
 class Texture
 {
 public:
+	GLenum Format;
+
 	float shineDamper = 0.12f;
 	float reflectivity = 0.02f;
 	bool hasTransparency = false;

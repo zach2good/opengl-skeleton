@@ -10,7 +10,7 @@
 
 Texture::Texture(const char* filename)
 {
-	unsigned char* image = stbi_load(filename, &m_Width, &m_Height, &m_Channels, STBI_rgb_alpha);
+	unsigned char* image = stbi_load(filename, &m_Width, &m_Height, &m_Channels, 0);
 
 	if (image)
 	{
@@ -19,22 +19,31 @@ Texture::Texture(const char* filename)
 	else {
 		printf("Error loading: %s \n", filename);
 		m_Error = -1;
-		image = stbi_load("../res/models/error.jpg", &m_Width, &m_Height, &m_Channels, STBI_rgb_alpha);
+		image = stbi_load("../res/models/error.jpg", &m_Width, &m_Height, &m_Channels, 0);
 	}
 
 	glGenTextures(1, &m_textureID);
 	glBindTexture(GL_TEXTURE_2D, m_textureID);
 
+	// Texture Wrapping
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
 	// Mipmapping
-	glGenerateMipmap(GL_TEXTURE_2D);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, -0.4f);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, -0.4f);
+	glGenerateMipmap(GL_TEXTURE_2D);
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_Width, m_Height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+	switch (m_Channels)
+	{
+		case 1: Format = GL_ALPHA;     break;
+		case 2: Format = GL_LUMINANCE; break;
+		case 3: Format = GL_RGB;       break;
+		case 4: Format = GL_RGBA;      break;
+	}
+
+	glTexImage2D(GL_TEXTURE_2D, 0, Format, m_Width, m_Height, 0, Format, GL_UNSIGNED_BYTE, image);
 
 	stbi_image_free(image);
 
