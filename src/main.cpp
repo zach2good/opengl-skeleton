@@ -102,11 +102,14 @@ int main(int argc, char *argv[])
 			}
 		}
 
+		//Update
+		float time = sinf(SDL_GetTicks() / 1000.0f) * 7;
+		camera.Position = vec3(time, 0, 8);
+
 		// Clear
 		window.clear();
 
 		// 3D Render
-
 		shader.Bind();
 
 		// Bind Textures using texture units
@@ -144,6 +147,7 @@ int main(int argc, char *argv[])
 			glDrawArrays(GL_TRIANGLES, 0, 36);
 		}
 		glBindVertexArray(0);
+
 		shader.Unbind();
 
 		// 2D Render

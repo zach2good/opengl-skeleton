@@ -2,9 +2,7 @@
 
 #include <algorithm> // std::copy
 
-#include <SDL.h>
-
-#include <glad\glad.h>
+#include "common.h"
 
 #include <imgui\imgui.h>
 #include <imgui\imgui_impl_sdlogl3.h>

@@ -52,6 +52,8 @@ void DebugUi::prepare()
 		ImGui::Text("GL_SHADING_LANGUAGE_VERSION: %s \n", glGetString(GL_SHADING_LANGUAGE_VERSION));
 	}
 
+	ImGui::Text("GL_DRAW_CALLS (Not Implemented): %i \n", 0);
+
 	ImGui::End();
 
 }
