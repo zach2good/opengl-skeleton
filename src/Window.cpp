@@ -81,8 +81,8 @@ void Window::init()
 	glEnable(GL_MULTISAMPLE);
 
 	// Face Culling
-	//glEnable(GL_CULL_FACE);
-	//glCullFace(GL_BACK);
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
 
 	// Image Transparency
 	glEnable(GL_BLEND);

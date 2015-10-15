@@ -5,94 +5,29 @@ int main(int argc, char *argv[])
 	Window window = Window("OpenGL Skeleton", 1280, 720);
 	DebugUi debugUi = DebugUi(window.getWindow());
 	Camera camera = Camera();
-	camera.Position = vec3(0, 0, 12);
+	camera.Position = vec3(0, -0.2f, 2.5f);
 
 	ShaderProgram shader = ShaderProgram("../res/shaders/basicShader");
 
-	//Mesh mesh = Mesh("../res/models/dragon.obj");
+	Mesh mesh = Mesh("../res/models/head/head.obj");
+	Texture texture0 = Texture("../res/models/head/lambertian.jpg");
 
-	// Set up our vertex data (and buffer(s)) and attribute pointers
-	GLfloat vertices[] = {
-		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-		0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-		0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-		0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+	/*
+	Material:
+		vec4 emission;    // Ecm
+		vec4 ambient;     // Acm
+		vec4 diffuse;     // Dcm
+		vec4 specular;    // Scm
+		float shininess;  // Srm
+	*/
 
-		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-		0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-		0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-		0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-		-0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+	Transformation trans = Transformation();
 
-		-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-		-0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-		-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-		0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-		0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-		0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-		0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-		0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-		0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-		0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-		0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-		0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-
-		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-		0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-		0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-		0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-		-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
-	};
-
-	glm::vec3 cubePositions[] = {
-		glm::vec3(0.0f, 0.0f, 0.0f),
-		glm::vec3(2.0f, 5.0f, -15.0f),
-		glm::vec3(-1.5f, -2.2f, -2.5f),
-		glm::vec3(-3.8f, -2.0f, -12.3f),
-		glm::vec3(2.4f, -0.4f, -3.5f),
-		glm::vec3(-1.7f, 3.0f, -7.5f),
-		glm::vec3(1.3f, -2.0f, -2.5f),
-		glm::vec3(1.5f, 2.0f, -2.5f),
-		glm::vec3(1.5f, 0.2f, -1.5f),
-		glm::vec3(-1.3f, 1.0f, -1.5f)
-	};
-
-	GLuint VBO, VAO;
-	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &VBO);
-
-	// Bind our Vertex Array Object first, then bind and set our buffers and pointers.
-	glBindVertexArray(VAO);
-
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-	// Position attribute
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)0);
-	glEnableVertexAttribArray(0);
-
-	// TexCoord attribute
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
-	glEnableVertexAttribArray(2);
-
-	glBindVertexArray(0); // Unbind VAO
-
-	Texture texture1 = Texture("../res/models/box.jpg");
-	Texture texture2 = Texture("../res/models/awesomeface.png");
-
+	bool wireframe = false;
 	while (!window.isCloseRequested()) {
+
+		// Determine deltaTime
+		float deltaTime = 1000.0f / SDL_GetTicks();
 
 		// Poll inputs
 		SDL_Event e;
@@ -100,11 +35,42 @@ int main(int argc, char *argv[])
 			if (e.type == SDL_QUIT || e.key.keysym.sym == SDLK_ESCAPE) {
 				window.requestClose();
 			}
+			if (e.key.keysym.sym == SDLK_PERIOD) {
+				wireframe = true;
+			}
+			if (e.key.keysym.sym == SDLK_COMMA) {
+				wireframe = false;
+			}
+			if (e.key.keysym.sym == SDLK_r) {
+				trans.ChangeRotation(glm::vec3(0, glm::radians(100.0f), 0));
+			}
+			if (e.key.keysym.sym == SDLK_t) {
+				trans.ChangeRotation(glm::vec3(0, glm::radians(-100.0f), 0));
+			}
+			if (e.key.keysym.sym == SDLK_a) {
+				camera.ProcessKeyboard(LEFT, deltaTime);
+			}
+			if (e.key.keysym.sym == SDLK_d) {
+				camera.ProcessKeyboard(RIGHT, deltaTime);
+			}
+			if (e.key.keysym.sym == SDLK_w) {
+				camera.ProcessKeyboard(FORWARD, deltaTime);
+			}
+			if (e.key.keysym.sym == SDLK_s) {
+				camera.ProcessKeyboard(BACKWARD, deltaTime);
+			}
+			if (e.key.keysym.sym == SDLK_q) {
+				camera.ProcessKeyboard(UP, deltaTime);
+			}
+			if (e.key.keysym.sym == SDLK_e) {
+				camera.ProcessKeyboard(DOWN, deltaTime);
+			}
 		}
 
+		glPolygonMode(GL_FRONT_AND_BACK, (wireframe) ? GL_LINE : GL_FILL);
+
 		//Update
-		float time = sinf(SDL_GetTicks() / 1000.0f) * 7;
-		camera.Position = vec3(time, 0, 8);
+		float time = sinf(SDL_GetTicks() / 500.0f) * 10;
 
 		// Clear
 		window.clear();
@@ -113,56 +79,47 @@ int main(int argc, char *argv[])
 		shader.Bind();
 
 		// Bind Textures using texture units
-		texture1.Bind(0);
-		glUniform1i(glGetUniformLocation(shader.GetId(), "ourTexture1"), 0);
+		texture0.Bind(0);
+		glUniform1i(glGetUniformLocation(shader.GetId(), "texture0"), 0);
 
-		texture2.Bind(1);
-		glUniform1i(glGetUniformLocation(shader.GetId(), "ourTexture2"), 1);
+		// Model
+		glm::mat4 model;
+		model = translate(model, vec3(0, 0, 0));
+		model = glm::rotate(model, 0.0f, vec3(0.0, 1.0, 0.0));
+		model = scale(model, vec3(4.0f, 4.0f, 4.0f));
 
-		// Create camera transformation
-		glm::mat4 view;
-		view = camera.GetViewMatrix();
-		glm::mat4 projection;
-		projection = glm::perspective(camera.Zoom, (float)window.getWidth() / (float)window.getHeight(), 0.1f, 1000.0f);
+		glm::mat4 view = camera.GetViewMatrix();
 
-		// Get the uniform locations
-		GLint modelLoc = glGetUniformLocation(shader.GetId(), "model");
-		GLint viewLoc = glGetUniformLocation(shader.GetId(), "view");
-		GLint projLoc = glGetUniformLocation(shader.GetId(), "projection");
+		glm::mat4 projection = glm::perspective(camera.Zoom, (float)window.getWidth() / (float)window.getHeight(), 0.1f, 1000.0f);
 
-		// Pass the matrices to the shader
-		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-		glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
+		shader.SetUniform4fv("model", model);
+		shader.SetUniform4fv("view", view);
+		shader.SetUniform4fv("projection", projection);
 
-		glBindVertexArray(VAO);
-		for (GLuint i = 0; i < 10; i++)
-		{
-			// Calculate the model matrix for each object and pass it to shader before drawing
-			glm::mat4 model;
-			model = glm::translate(model, cubePositions[i]);
-			GLfloat angle = 20.0f * i;
-			model = glm::rotate(model, angle, glm::vec3(1.0f, 0.3f, 0.5f));
-			glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		vec3 viewPos = camera.Position;
+		shader.SetUniform3fv("viewPos", viewPos);
 
-			glDrawArrays(GL_TRIANGLES, 0, 36);
-		}
-		glBindVertexArray(0);
+		shader.SetUniform3fv("lightPosition", vec3(time, 0, 10));
+		shader.SetUniform3fv("lightColor", vec3(1, 1, 1));
+
+		mesh.render();
 
 		shader.Unbind();
 
 		// 2D Render
 #ifdef _DEBUG 
+		// Render 2D
+		if (wireframe) { glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); }
 		debugUi.prepare();
 		debugUi.render();
+		if (wireframe) { glPolygonMode(GL_FRONT_AND_BACK, GL_LINES); }
 #endif // _DEBUG 
 
 		// Swap
 		window.swap();
 	}
 
-	glDeleteVertexArrays(1, &VAO);
-	glDeleteBuffers(1, &VBO);
-
+	mesh.~Mesh();
 	debugUi.cleanUp();
 	window.cleanUp();
 

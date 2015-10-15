@@ -32,7 +32,6 @@ Mesh::MeshEntry::MeshEntry(aiMesh *mesh) {
 		delete vertices;
 	}
 
-
 	if (mesh->HasTextureCoords(0)) {
 		float *texCoords = new float[mesh->mNumVertices * 2];
 		for (int i = 0; i < mesh->mNumVertices; ++i) {
@@ -49,7 +48,6 @@ Mesh::MeshEntry::MeshEntry(aiMesh *mesh) {
 
 		delete texCoords;
 	}
-
 
 	if (mesh->HasNormals()) {
 		float *normals = new float[mesh->mNumVertices * 3];
