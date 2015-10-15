@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
 
 	ShaderProgram shader = ShaderProgram("../res/shaders/basicShader");
 
-	Mesh mesh = Mesh("../res/models/head/head.obj");
+	Mesh mesh = Mesh("../res/models/dragon.obj");
 	Texture texture0 = Texture("../res/models/head/lambertian.jpg");
 
 	/*
@@ -22,6 +22,9 @@ int main(int argc, char *argv[])
 	*/
 
 	Transformation trans = Transformation();
+
+	// Model (Mesh / Material)
+	// Entity (Model / Trans)
 
 	bool wireframe = false;
 	while (!window.isCloseRequested()) {
@@ -83,16 +86,11 @@ int main(int argc, char *argv[])
 		glUniform1i(glGetUniformLocation(shader.GetId(), "texture0"), 0);
 
 		// Model
-		glm::mat4 model;
-		model = translate(model, vec3(0, 0, 0));
-		model = glm::rotate(model, 0.0f, vec3(0.0, 1.0, 0.0));
-		model = scale(model, vec3(4.0f, 4.0f, 4.0f));
-
 		glm::mat4 view = camera.GetViewMatrix();
 
 		glm::mat4 projection = glm::perspective(camera.Zoom, (float)window.getWidth() / (float)window.getHeight(), 0.1f, 1000.0f);
 
-		shader.SetUniform4fv("model", model);
+		shader.SetUniform4fv("model", trans.GetTransformationMatrix());
 		shader.SetUniform4fv("view", view);
 		shader.SetUniform4fv("projection", projection);
 

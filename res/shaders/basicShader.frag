@@ -14,6 +14,15 @@ uniform sampler2D texture0;
 uniform vec3 lightPosition;
 uniform vec3 lightColor;
 
+float near = 1.0; 
+float far  = 100.0; 
+  
+float Linearize(float target) 
+{
+    float z = target * 2.0 - 1.0; // Back to NDC 
+    return (2.0 * near * far) / (far + near - z * (far - near));	
+}
+
 void main()
 {
 	vec3 unitNormal = normalize(Normal);
@@ -35,6 +44,27 @@ void main()
 	float dampedFactor = pow(specularFactor, shineDamper);
 	vec3 finalSpecular = dampedFactor * reflectivity * lightColor;
 
+	// Depth
+	float depthCol = Linearize(gl_FragCoord.z) / far; 
+    vec4 DepthFragColor = vec4(vec3(depthCol), 1.0f);
+
+	// Normal
+	float normalCol = Linearize(gl_FragCoord.z) / far; 
+    vec4 NormalFragColor = vec4(vec3(unitNormal), 1.0f);
+
 	// Texture + Lighting
-    FragColor = vec4(diffuse, 1.0) * texture2D(texture0, TexCoord) + vec4(finalSpecular, 1.0);
+    vec4 GeomColor = vec4(diffuse, 1.0) * texture2D(texture0, TexCoord) + vec4(finalSpecular, 1.0);
+
+	if (gl_FragCoord.x < 500)
+	{
+		FragColor = GeomColor;
+	}
+	else if (gl_FragCoord.x < 800)
+	{
+		 FragColor = NormalFragColor ;
+	}
+	else
+	{
+		FragColor = DepthFragColor;
+	}	
 }
