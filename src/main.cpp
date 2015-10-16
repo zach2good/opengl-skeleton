@@ -24,6 +24,9 @@ int main(int argc, char *argv[])
 	lightTrans.SetPosition(vec3(1, 1, 1));
 	lightTrans.SetScale(vec3(0.2f));
 
+	texture.Bind(0);
+	texture.Bind(1);
+
 	bool wireframe = false;
 	while (!window.isCloseRequested()) {
 
@@ -71,10 +74,11 @@ int main(int argc, char *argv[])
 		glPolygonMode(GL_FRONT_AND_BACK, (wireframe) ? GL_LINE : GL_FILL);
 
 		//Update
+		float time = SDL_GetTicks() / 500.0f;
 		float time_sin = sinf(SDL_GetTicks() / 500.0f);
 		float time_cos = cosf(SDL_GetTicks() / 500.0f);
-		//objectTrans.SetRotation(vec3(0, time_sin * 10, 0));
-		//lightTrans.SetPosition(vec3(time_sin * 2, 0, time_cos * 2));
+		objectTrans.SetRotation(vec3(0, time, 0));
+		lightTrans.SetPosition(vec3(time_sin * 2, 0, time_cos * 2));
 
 		// Clear
 		window.clear();
@@ -92,9 +96,7 @@ int main(int argc, char *argv[])
 
 		// Material
 		basicShader.SetUniform1i("material.diffuse", 0);
-		texture.Bind(0);
 		basicShader.SetUniform1i("material.specular", 1);
-		texture.Bind(1);
 		basicShader.SetUniform1f("material.shininess", 32.0f);
 
 		// Directional light
@@ -104,7 +106,7 @@ int main(int argc, char *argv[])
 		basicShader.SetUniform3fv("dirLight.specular", vec3(0.5f, 0.5f, 0.5f));
 
 		// Point Light
-		basicShader.SetUniform3fv("pointLight.position", glm::vec3(1.7f, 0.2f, 2.0f));
+		basicShader.SetUniform3fv("pointLight.position", lightTrans.GetPosition());
 		basicShader.SetUniform3fv("pointLight.ambient", vec3(0.1f));
 		basicShader.SetUniform3fv("pointLight.diffuse", vec3(0.7f));
 		basicShader.SetUniform3fv("pointLight.specular", vec3(1.0f));
@@ -129,14 +131,13 @@ int main(int argc, char *argv[])
 		basicShader.Unbind();
 
 		// Draw White Lights
-		lightTrans.SetPosition(glm::vec3(1.7f, 0.2f, 2.0f));
-
 		lampShader.Bind();
 		lampShader.SetUniform4fv("model", lightTrans.GetTransformationMatrix());
 		lampShader.SetUniform4fv("view", camera.GetViewMatrix());
 		lampShader.SetUniform4fv("projection", glm::perspective(camera.Zoom, (float)window.getWidth() / (float)window.getHeight(), 0.1f, 1000.0f));
-		
+
 		lightMesh.render();
+
 		lampShader.Unbind();
 
 		// 2D Render
@@ -147,8 +148,6 @@ int main(int argc, char *argv[])
 		debugUi.render();
 		if (wireframe) { glPolygonMode(GL_FRONT_AND_BACK, GL_LINES); }
 #endif // _DEBUG 
-
-		
 
 		// Swap
 		window.swap();

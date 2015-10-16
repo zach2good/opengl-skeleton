@@ -18,7 +18,6 @@ void Window::init()
 		printf("SDL Error");
 	}
 
-	// Double Buffering and Z Depth
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 
@@ -46,6 +45,10 @@ void Window::init()
 		WIDTH, HEIGHT,
 		SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
 
+	// Set Version
+	//SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+	//SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+
 	if (!m_Window) {
 		printf("Window Error");
 	}
@@ -57,7 +60,7 @@ void Window::init()
 	}
 
 	// Limit framerate to help screen tearing
-	//SDL_GL_SetSwapInterval(1);
+	SDL_GL_SetSwapInterval(1);
 
 	// Load GLAD
 	if (!gladLoadGL()) {
