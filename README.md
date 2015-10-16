@@ -35,3 +35,4 @@ Gameplay Goals
 <br>
 <br>
 ![Screenshot](screenshot.png)
+![Screenshot](head.gif)
