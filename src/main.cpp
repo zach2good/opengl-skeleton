@@ -119,6 +119,8 @@ int main(int argc, char *argv[])
 		if (wireframe) { glPolygonMode(GL_FRONT_AND_BACK, GL_LINES); }
 #endif // _DEBUG 
 
+		
+
 		// Swap
 		window.swap();
 	}
