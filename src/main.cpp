@@ -1,4 +1,5 @@
 #include "common.h"
+#include <string.h>
 
 int main(int argc, char *argv[])
 {
@@ -22,6 +23,13 @@ int main(int argc, char *argv[])
 	Transformation lightTrans = Transformation();
 	lightTrans.SetPosition(vec3(1, 1, 1));
 	lightTrans.SetScale(vec3(0.2f));
+
+	glm::vec3 pointLightPositions[] = {
+		glm::vec3(1.7f,  0.2f,  2.0f),
+		glm::vec3(2.3f, -3.3f, -1.0f),
+		glm::vec3(-2.0f,  2.0f, -2.0f),
+		glm::vec3(0.0f,  0.0f, -3.0f)
+	};
 
 
 	bool wireframe = false;
@@ -73,8 +81,8 @@ int main(int argc, char *argv[])
 		//Update
 		float time_sin = sinf(SDL_GetTicks() / 500.0f);
 		float time_cos = cosf(SDL_GetTicks() / 500.0f);
-		objectTrans.SetRotation(vec3(0, time_sin * 10, 0));
-		lightTrans.SetPosition(vec3(time_sin * 2, 0, time_cos * 2));
+		//objectTrans.SetRotation(vec3(0, time_sin * 10, 0));
+		//lightTrans.SetPosition(vec3(time_sin * 2, 0, time_cos * 2));
 
 		// Clear
 		window.clear();
@@ -82,32 +90,91 @@ int main(int argc, char *argv[])
 		// 3D Render
 		basicShader.Bind();
 
+		// Model, View and World Matrices
 		basicShader.SetUniform4fv("model", objectTrans.GetTransformationMatrix());
 		basicShader.SetUniform4fv("view", camera.GetViewMatrix());
 		basicShader.SetUniform4fv("projection", glm::perspective(camera.Zoom, (float)window.getWidth() / (float)window.getHeight(), 0.1f, 1000.0f));
 
+		// Camera Position
 		basicShader.SetUniform3fv("viewPos", camera.Position);
 
-		glUniform1i(glGetUniformLocation(basicShader.GetId(), "material.diffuse"), 0);
+		// Material
+		basicShader.SetUniform1i("material.diffuse", 0);
 		texture.Bind(0);
+		basicShader.SetUniform1i("material.specular", 1);
+		texture.Bind(1);
+		basicShader.SetUniform1f("material.shininess", 32.0f);
 
-		basicShader.SetUniform3fv("material.specular", vec3(0.5f));
-		basicShader.SetUniformf("material.shininess", 32.0f);
+		// Directional light
+		basicShader.SetUniform3fv("dirLight.direction", vec3(-0.2f, -1.0f, -0.3f));
+		basicShader.SetUniform3fv("dirLight.ambient", vec3(0.05f, 0.05f, 0.05f));
+		basicShader.SetUniform3fv("dirLight.diffuse", vec3(0.4f, 0.4f, 0.4f));
+		basicShader.SetUniform3fv("dirLight.specular", vec3(0.5f, 0.5f, 0.5f));
 
-		basicShader.SetUniform3fv("light.position", lightTrans.GetPosition());
+		// Point Lights	0
+		basicShader.SetUniform3fv("pointLights[0].position", pointLightPositions[0]);
+		basicShader.SetUniform3fv("pointLights[0].ambient", vec3(0.1f));
+		basicShader.SetUniform3fv("pointLights[0].diffuse", vec3(0.7f));
+		basicShader.SetUniform3fv("pointLights[0].specular", vec3(1.0f));
+		basicShader.SetUniform1f("pointLights[0].constant", 1.0f);
+		basicShader.SetUniform1f("pointLights[0].linear", 0.09f);
+		basicShader.SetUniform1f("pointLights[0].quadratic", 0.032f);
 
-		basicShader.SetUniform3fv("light.ambient", vec3(1, 1, 1));
-		basicShader.SetUniform3fv("light.diffuse", vec3(1, 1, 1));
-		basicShader.SetUniform3fv("light.specular", vec3(1, 1, 1));
+		// Point Lights	1
+		basicShader.SetUniform3fv("pointLights[1].position", pointLightPositions[1]);
+		basicShader.SetUniform3fv("pointLights[1].ambient", vec3(0.1f));
+		basicShader.SetUniform3fv("pointLights[1].diffuse", vec3(0.7f));
+		basicShader.SetUniform3fv("pointLights[1].specular", vec3(1.0f));
+		basicShader.SetUniform1f("pointLights[1].constant", 1.0f);
+		basicShader.SetUniform1f("pointLights[1].linear", 0.09f);
+		basicShader.SetUniform1f("pointLights[1].quadratic", 0.032f);
+
+		// Point Lights	2
+		basicShader.SetUniform3fv("pointLights[2].position", pointLightPositions[2]);
+		basicShader.SetUniform3fv("pointLights[2].ambient", vec3(0.1f));
+		basicShader.SetUniform3fv("pointLights[2].diffuse", vec3(0.7f));
+		basicShader.SetUniform3fv("pointLights[2].specular", vec3(1.0f));
+		basicShader.SetUniform1f("pointLights[2].constant", 1.0f);
+		basicShader.SetUniform1f("pointLights[2].linear", 0.09f);
+		basicShader.SetUniform1f("pointLights[2].quadratic", 0.032f);
+
+		// Point Lights	3
+		basicShader.SetUniform3fv("pointLights[3].position", pointLightPositions[3]);
+		basicShader.SetUniform3fv("pointLights[3].ambient", vec3(0.1f));
+		basicShader.SetUniform3fv("pointLights[3].diffuse", vec3(0.7f));
+		basicShader.SetUniform3fv("pointLights[3].specular", vec3(1.0f));
+		basicShader.SetUniform1f("pointLights[3].constant", 1.0f);
+		basicShader.SetUniform1f("pointLights[3].linear", 0.09f);
+		basicShader.SetUniform1f("pointLights[3].quadratic", 0.032f);
+
+		// Spot Light
+		basicShader.SetUniform3fv("spotLight.position", camera.Position);
+		basicShader.SetUniform3fv("spotLight.direction", camera.Front);
+		basicShader.SetUniform3fv("spotLight.ambient", vec3(0.0f));
+		basicShader.SetUniform3fv("spotLight.diffuse", vec3(1.0f));
+		basicShader.SetUniform3fv("spotLight.specular", vec3(1.0f));
+		basicShader.SetUniform1f("spotLight.constant", 1.0f);
+		basicShader.SetUniform1f("spotLight.linear", 0.09f);
+		basicShader.SetUniform1f("spotLight.quadratic", 0.032f);
+		basicShader.SetUniform1f("spotLight.cutOff", glm::cos(glm::radians(12.0f)));
+		basicShader.SetUniform1f("spotLight.outerCutOff", glm::cos(glm::radians(15.0f)));
+
 		objectMesh.render();
+
 		basicShader.Unbind();
 
-		// Draw White Light
+		// Draw White Lights
 		lampShader.Bind();
-		lampShader.SetUniform4fv("model", lightTrans.GetTransformationMatrix());
-		lampShader.SetUniform4fv("view", camera.GetViewMatrix());
-		lampShader.SetUniform4fv("projection", glm::perspective(camera.Zoom, (float)window.getWidth() / (float)window.getHeight(), 0.1f, 1000.0f));
-		lightMesh.render();
+		for (GLuint i = 0; i < 4; i++)
+		{
+			lightTrans.SetPosition(pointLightPositions[i]);
+
+			lampShader.SetUniform4fv("model", lightTrans.GetTransformationMatrix());
+			lampShader.SetUniform4fv("view", camera.GetViewMatrix());
+			lampShader.SetUniform4fv("projection", glm::perspective(camera.Zoom, (float)window.getWidth() / (float)window.getHeight(), 0.1f, 1000.0f));
+		
+			lightMesh.render();
+		}
 		lampShader.Unbind();
 
 		// 2D Render

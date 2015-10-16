@@ -12,7 +12,12 @@ public:
 	inline void Unbind() { glUseProgram(0); }
 	inline GLuint GetId() { return m_programID; }
 
-	inline void SetUniformf(const char* name, float value)
+	inline void SetUniform1i(const char* name, float value)
+	{
+		glUniform1i(GetUniformLocation(name), value);
+	}
+
+	inline void SetUniform1f(const char* name, float value)
 	{
 		glUniform1f(GetUniformLocation(name), value);
 	}
