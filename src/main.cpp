@@ -24,14 +24,6 @@ int main(int argc, char *argv[])
 	lightTrans.SetPosition(vec3(1, 1, 1));
 	lightTrans.SetScale(vec3(0.2f));
 
-	glm::vec3 pointLightPositions[] = {
-		glm::vec3(1.7f,  0.2f,  2.0f),
-		glm::vec3(2.3f, -3.3f, -1.0f),
-		glm::vec3(-2.0f,  2.0f, -2.0f),
-		glm::vec3(0.0f,  0.0f, -3.0f)
-	};
-
-
 	bool wireframe = false;
 	while (!window.isCloseRequested()) {
 
@@ -111,41 +103,14 @@ int main(int argc, char *argv[])
 		basicShader.SetUniform3fv("dirLight.diffuse", vec3(0.4f, 0.4f, 0.4f));
 		basicShader.SetUniform3fv("dirLight.specular", vec3(0.5f, 0.5f, 0.5f));
 
-		// Point Lights	0
-		basicShader.SetUniform3fv("pointLights[0].position", pointLightPositions[0]);
-		basicShader.SetUniform3fv("pointLights[0].ambient", vec3(0.1f));
-		basicShader.SetUniform3fv("pointLights[0].diffuse", vec3(0.7f));
-		basicShader.SetUniform3fv("pointLights[0].specular", vec3(1.0f));
-		basicShader.SetUniform1f("pointLights[0].constant", 1.0f);
-		basicShader.SetUniform1f("pointLights[0].linear", 0.09f);
-		basicShader.SetUniform1f("pointLights[0].quadratic", 0.032f);
-
-		// Point Lights	1
-		basicShader.SetUniform3fv("pointLights[1].position", pointLightPositions[1]);
-		basicShader.SetUniform3fv("pointLights[1].ambient", vec3(0.1f));
-		basicShader.SetUniform3fv("pointLights[1].diffuse", vec3(0.7f));
-		basicShader.SetUniform3fv("pointLights[1].specular", vec3(1.0f));
-		basicShader.SetUniform1f("pointLights[1].constant", 1.0f);
-		basicShader.SetUniform1f("pointLights[1].linear", 0.09f);
-		basicShader.SetUniform1f("pointLights[1].quadratic", 0.032f);
-
-		// Point Lights	2
-		basicShader.SetUniform3fv("pointLights[2].position", pointLightPositions[2]);
-		basicShader.SetUniform3fv("pointLights[2].ambient", vec3(0.1f));
-		basicShader.SetUniform3fv("pointLights[2].diffuse", vec3(0.7f));
-		basicShader.SetUniform3fv("pointLights[2].specular", vec3(1.0f));
-		basicShader.SetUniform1f("pointLights[2].constant", 1.0f);
-		basicShader.SetUniform1f("pointLights[2].linear", 0.09f);
-		basicShader.SetUniform1f("pointLights[2].quadratic", 0.032f);
-
-		// Point Lights	3
-		basicShader.SetUniform3fv("pointLights[3].position", pointLightPositions[3]);
-		basicShader.SetUniform3fv("pointLights[3].ambient", vec3(0.1f));
-		basicShader.SetUniform3fv("pointLights[3].diffuse", vec3(0.7f));
-		basicShader.SetUniform3fv("pointLights[3].specular", vec3(1.0f));
-		basicShader.SetUniform1f("pointLights[3].constant", 1.0f);
-		basicShader.SetUniform1f("pointLights[3].linear", 0.09f);
-		basicShader.SetUniform1f("pointLights[3].quadratic", 0.032f);
+		// Point Light
+		basicShader.SetUniform3fv("pointLight.position", glm::vec3(1.7f, 0.2f, 2.0f));
+		basicShader.SetUniform3fv("pointLight.ambient", vec3(0.1f));
+		basicShader.SetUniform3fv("pointLight.diffuse", vec3(0.7f));
+		basicShader.SetUniform3fv("pointLight.specular", vec3(1.0f));
+		basicShader.SetUniform1f("pointLight.constant", 1.0f);
+		basicShader.SetUniform1f("pointLight.linear", 0.09f);
+		basicShader.SetUniform1f("pointLight.quadratic", 0.032f);
 
 		// Spot Light
 		basicShader.SetUniform3fv("spotLight.position", camera.Position);
@@ -164,17 +129,14 @@ int main(int argc, char *argv[])
 		basicShader.Unbind();
 
 		// Draw White Lights
-		lampShader.Bind();
-		for (GLuint i = 0; i < 4; i++)
-		{
-			lightTrans.SetPosition(pointLightPositions[i]);
+		lightTrans.SetPosition(glm::vec3(1.7f, 0.2f, 2.0f));
 
-			lampShader.SetUniform4fv("model", lightTrans.GetTransformationMatrix());
-			lampShader.SetUniform4fv("view", camera.GetViewMatrix());
-			lampShader.SetUniform4fv("projection", glm::perspective(camera.Zoom, (float)window.getWidth() / (float)window.getHeight(), 0.1f, 1000.0f));
+		lampShader.Bind();
+		lampShader.SetUniform4fv("model", lightTrans.GetTransformationMatrix());
+		lampShader.SetUniform4fv("view", camera.GetViewMatrix());
+		lampShader.SetUniform4fv("projection", glm::perspective(camera.Zoom, (float)window.getWidth() / (float)window.getHeight(), 0.1f, 1000.0f));
 		
-			lightMesh.render();
-		}
+		lightMesh.render();
 		lampShader.Unbind();
 
 		// 2D Render
