@@ -11,10 +11,10 @@ int main(int argc, char *argv[])
 	ShaderProgram basicShader = ShaderProgram("../res/shaders/basicShader");
 	ShaderProgram lampShader = ShaderProgram("../res/shaders/lampShader");
 
-	Mesh objectMesh = Mesh("../res/models/head/head.obj");
-	Mesh lightMesh = Mesh("../res/models/cube.obj");
+	Mesh objectMesh = Mesh("../res/models/head/head.obj");	
+	Texture texture = Texture("../res/models/head/lambertian.jpg");
 
-	Texture texture = Texture("../res/models/container.png");
+	Mesh lightMesh = Mesh("../res/models/cube.obj");
 
 	Transformation objectTrans = Transformation();
 	objectTrans.SetScale(vec3(5.8f));

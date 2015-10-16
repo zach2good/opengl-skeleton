@@ -10,6 +10,9 @@
 
 Texture::Texture(const char* filename)
 {
+	// This makes the image right-way up in OpenGL
+	stbi_set_flip_vertically_on_load(true);
+
 	unsigned char* image = stbi_load(filename, &m_Width, &m_Height, &m_Channels, 0);
 
 	if (image)
