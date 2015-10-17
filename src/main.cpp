@@ -22,6 +22,59 @@ public:
 	}
 };
 
+class BasicShader : public ShaderProgram
+{
+public:
+	BasicShader(const std::string& fileName)
+		: ShaderProgram(fileName) {}
+
+	void SetMVP(mat4 m, mat4 v, mat4 p)
+	{
+		SetUniform4fv("model", m);
+		SetUniform4fv("view", v);
+		SetUniform4fv("projection", p);
+	}
+	void SetMaterial(Material material)
+	{
+		SetUniform1i("material.diffuse", material.diffuse.GetTextureID()); //0
+		SetUniform1i("material.specular", material.specular.GetTextureID()); //1
+		SetUniform1f("material.shininess", material.shininess);
+	}
+
+	void SetDirLight(DirLight dirLight)
+	{
+		SetUniform3fv("dirLight.direction", dirLight.direction);
+		SetUniform3fv("dirLight.ambient", dirLight.ambient);
+		SetUniform3fv("dirLight.diffuse", dirLight.diffuse);
+		SetUniform3fv("dirLight.specular", dirLight.specular);
+	}
+
+	void SetPointLight(PointLight pointLight)
+	{
+		SetUniform3fv("pointLight.position", pointLight.position);
+		SetUniform3fv("pointLight.ambient", pointLight.ambient);
+		SetUniform3fv("pointLight.diffuse", pointLight.diffuse);
+		SetUniform3fv("pointLight.specular", pointLight.specular);
+		SetUniform1f("pointLight.constant", pointLight.constant);
+		SetUniform1f("pointLight.linear", pointLight.linear);
+		SetUniform1f("pointLight.quadratic", pointLight.quadratic);
+	}
+
+	void SetSpotLight(SpotLight spotLight)
+	{
+		SetUniform3fv("spotLight.position", spotLight.position);
+		SetUniform3fv("spotLight.direction", spotLight.direction);
+		SetUniform3fv("spotLight.ambient", spotLight.ambient);
+		SetUniform3fv("spotLight.diffuse", spotLight.diffuse);
+		SetUniform3fv("spotLight.specular", spotLight.specular);
+		SetUniform1f("spotLight.constant", spotLight.constant);
+		SetUniform1f("spotLight.linear", spotLight.linear);
+		SetUniform1f("spotLight.quadratic", spotLight.quadratic);
+		SetUniform1f("spotLight.cutOff", spotLight.cutOff);
+		SetUniform1f("spotLight.outerCutOff", spotLight.outerCutOff);
+	}
+};
+
 
 int main(int argc, char *argv[])
 {
@@ -31,7 +84,7 @@ int main(int argc, char *argv[])
 	Camera camera = Camera();
 	camera.Position = vec3(0, 0, 5);
 
-	ShaderProgram basicShader = ShaderProgram("../res/shaders/basicShader");
+	BasicShader basicShader = BasicShader("../res/shaders/basicShader");
 	ShaderProgram lampShader = ShaderProgram("../res/shaders/lampShader");
 
 	Mesh objectMesh = Mesh("../res/models/head/head.obj");	
@@ -53,7 +106,7 @@ int main(int argc, char *argv[])
 
 	DirLight dirLight = DirLight(vec3(-0.2f, -1.0f, -0.3f));
 	PointLight pointLight = PointLight(vec3());
-	SpotLight spotLight = SpotLight(camera.Position, camera.Front);
+	SpotLight spotLight = SpotLight(vec3(0.0f, 0.0f, 2.0f), camera.Front);
 
 	bool wireframe = false;
 	while (!window.isCloseRequested()) {
@@ -108,6 +161,7 @@ int main(int argc, char *argv[])
 		objectTrans.SetRotation(vec3(0, time, 0));
 		lightTrans.SetPosition(vec3(time_sin * 2, 0, time_cos * 2));
 		pointLight.position = lightTrans.GetPosition();
+		spotLight.position.y -= (time_sin / 6.0f);
 
 		// Clear
 		window.clear();
@@ -116,44 +170,16 @@ int main(int argc, char *argv[])
 		basicShader.Bind();
 
 		// Model, View and World Matrices
-		basicShader.SetUniform4fv("model", objectTrans.GetTransformationMatrix());
-		basicShader.SetUniform4fv("view", camera.GetViewMatrix());
-		basicShader.SetUniform4fv("projection", glm::perspective(camera.Zoom, (float)window.getWidth() / (float)window.getHeight(), 0.1f, 1000.0f));
-
-		// Camera Position
+		basicShader.SetMVP(
+			objectTrans.GetTransformationMatrix(),
+			camera.GetViewMatrix(),
+			glm::perspective(camera.Zoom, (float)window.getWidth() / (float)window.getHeight(), 0.1f, 1000.0f)
+			);
 		basicShader.SetUniform3fv("viewPos", camera.Position);
-
-		// Material
-		basicShader.SetUniform1i("material.diffuse", material.diffuse.GetTextureID()); //0
-		basicShader.SetUniform1i("material.specular", material.specular.GetTextureID()); //1
-		basicShader.SetUniform1f("material.shininess", material.shininess);
-
-		// Directional light
-		basicShader.SetUniform3fv("dirLight.direction", dirLight.direction);
-		basicShader.SetUniform3fv("dirLight.ambient", dirLight.ambient);
-		basicShader.SetUniform3fv("dirLight.diffuse", dirLight.diffuse);
-		basicShader.SetUniform3fv("dirLight.specular", dirLight.specular);
-
-		// Point Light
-		basicShader.SetUniform3fv("pointLight.position", pointLight.position);
-		basicShader.SetUniform3fv("pointLight.ambient", pointLight.ambient);
-		basicShader.SetUniform3fv("pointLight.diffuse", pointLight.diffuse);
-		basicShader.SetUniform3fv("pointLight.specular", pointLight.specular);
-		basicShader.SetUniform1f("pointLight.constant", pointLight.constant);
-		basicShader.SetUniform1f("pointLight.linear", pointLight.linear);
-		basicShader.SetUniform1f("pointLight.quadratic", pointLight.quadratic);
-
-		// Spot Light
-		basicShader.SetUniform3fv("spotLight.position", spotLight.position);
-		basicShader.SetUniform3fv("spotLight.direction", spotLight.direction);
-		basicShader.SetUniform3fv("spotLight.ambient", spotLight.ambient);
-		basicShader.SetUniform3fv("spotLight.diffuse", spotLight.diffuse);
-		basicShader.SetUniform3fv("spotLight.specular", spotLight.specular);
-		basicShader.SetUniform1f("spotLight.constant", spotLight.constant);
-		basicShader.SetUniform1f("spotLight.linear", spotLight.linear);
-		basicShader.SetUniform1f("spotLight.quadratic", spotLight.quadratic);
-		basicShader.SetUniform1f("spotLight.cutOff", spotLight.cutOff);
-		basicShader.SetUniform1f("spotLight.outerCutOff", spotLight.outerCutOff);
+		basicShader.SetMaterial(material);
+		basicShader.SetDirLight(dirLight);
+		basicShader.SetPointLight(pointLight);
+		basicShader.SetSpotLight(spotLight);
 
 		objectMesh.render();
 
