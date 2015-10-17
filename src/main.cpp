@@ -1,6 +1,28 @@
 #include "common.h"
 #include <string.h>
 
+
+class Material
+{
+public:
+	Texture diffuse;
+	Texture specular;
+	float shininess;
+
+	Material(Texture tex)
+		: diffuse(tex), specular(tex)
+	{
+		shininess = 32.0f;
+	}
+
+	Material(Texture d, Texture s)
+		: diffuse(d), specular(s)
+	{
+		shininess = 32.0f;
+	}
+};
+
+
 int main(int argc, char *argv[])
 {
 	Window window = Window("OpenGL Skeleton", 1280, 720);
@@ -26,6 +48,12 @@ int main(int argc, char *argv[])
 
 	texture.Bind(0);
 	texture.Bind(1);
+
+	Material material = Material(texture);
+
+	DirLight dirLight = DirLight(vec3(-0.2f, -1.0f, -0.3f));
+	PointLight pointLight = PointLight(vec3());
+	SpotLight spotLight = SpotLight(camera.Position, camera.Front);
 
 	bool wireframe = false;
 	while (!window.isCloseRequested()) {
@@ -79,6 +107,7 @@ int main(int argc, char *argv[])
 		float time_cos = cosf(SDL_GetTicks() / 500.0f);
 		objectTrans.SetRotation(vec3(0, time, 0));
 		lightTrans.SetPosition(vec3(time_sin * 2, 0, time_cos * 2));
+		pointLight.position = lightTrans.GetPosition();
 
 		// Clear
 		window.clear();
@@ -95,36 +124,36 @@ int main(int argc, char *argv[])
 		basicShader.SetUniform3fv("viewPos", camera.Position);
 
 		// Material
-		basicShader.SetUniform1i("material.diffuse", 0);
-		basicShader.SetUniform1i("material.specular", 1);
-		basicShader.SetUniform1f("material.shininess", 32.0f);
+		basicShader.SetUniform1i("material.diffuse", material.diffuse.GetTextureID()); //0
+		basicShader.SetUniform1i("material.specular", material.specular.GetTextureID()); //1
+		basicShader.SetUniform1f("material.shininess", material.shininess);
 
 		// Directional light
-		basicShader.SetUniform3fv("dirLight.direction", vec3(-0.2f, -1.0f, -0.3f));
-		basicShader.SetUniform3fv("dirLight.ambient", vec3(0.05f, 0.05f, 0.05f));
-		basicShader.SetUniform3fv("dirLight.diffuse", vec3(0.4f, 0.4f, 0.4f));
-		basicShader.SetUniform3fv("dirLight.specular", vec3(0.5f, 0.5f, 0.5f));
+		basicShader.SetUniform3fv("dirLight.direction", dirLight.direction);
+		basicShader.SetUniform3fv("dirLight.ambient", dirLight.ambient);
+		basicShader.SetUniform3fv("dirLight.diffuse", dirLight.diffuse);
+		basicShader.SetUniform3fv("dirLight.specular", dirLight.specular);
 
 		// Point Light
-		basicShader.SetUniform3fv("pointLight.position", lightTrans.GetPosition());
-		basicShader.SetUniform3fv("pointLight.ambient", vec3(0.1f));
-		basicShader.SetUniform3fv("pointLight.diffuse", vec3(0.7f));
-		basicShader.SetUniform3fv("pointLight.specular", vec3(1.0f));
-		basicShader.SetUniform1f("pointLight.constant", 1.0f);
-		basicShader.SetUniform1f("pointLight.linear", 0.09f);
-		basicShader.SetUniform1f("pointLight.quadratic", 0.032f);
+		basicShader.SetUniform3fv("pointLight.position", pointLight.position);
+		basicShader.SetUniform3fv("pointLight.ambient", pointLight.ambient);
+		basicShader.SetUniform3fv("pointLight.diffuse", pointLight.diffuse);
+		basicShader.SetUniform3fv("pointLight.specular", pointLight.specular);
+		basicShader.SetUniform1f("pointLight.constant", pointLight.constant);
+		basicShader.SetUniform1f("pointLight.linear", pointLight.linear);
+		basicShader.SetUniform1f("pointLight.quadratic", pointLight.quadratic);
 
 		// Spot Light
-		basicShader.SetUniform3fv("spotLight.position", camera.Position);
-		basicShader.SetUniform3fv("spotLight.direction", camera.Front);
-		basicShader.SetUniform3fv("spotLight.ambient", vec3(0.0f));
-		basicShader.SetUniform3fv("spotLight.diffuse", vec3(1.0f));
-		basicShader.SetUniform3fv("spotLight.specular", vec3(1.0f));
-		basicShader.SetUniform1f("spotLight.constant", 1.0f);
-		basicShader.SetUniform1f("spotLight.linear", 0.09f);
-		basicShader.SetUniform1f("spotLight.quadratic", 0.032f);
-		basicShader.SetUniform1f("spotLight.cutOff", glm::cos(glm::radians(12.0f)));
-		basicShader.SetUniform1f("spotLight.outerCutOff", glm::cos(glm::radians(15.0f)));
+		basicShader.SetUniform3fv("spotLight.position", spotLight.position);
+		basicShader.SetUniform3fv("spotLight.direction", spotLight.direction);
+		basicShader.SetUniform3fv("spotLight.ambient", spotLight.ambient);
+		basicShader.SetUniform3fv("spotLight.diffuse", spotLight.diffuse);
+		basicShader.SetUniform3fv("spotLight.specular", spotLight.specular);
+		basicShader.SetUniform1f("spotLight.constant", spotLight.constant);
+		basicShader.SetUniform1f("spotLight.linear", spotLight.linear);
+		basicShader.SetUniform1f("spotLight.quadratic", spotLight.quadratic);
+		basicShader.SetUniform1f("spotLight.cutOff", spotLight.cutOff);
+		basicShader.SetUniform1f("spotLight.outerCutOff", spotLight.outerCutOff);
 
 		objectMesh.render();
 
