@@ -89,6 +89,7 @@ int main(int argc, char *argv[])
 
 	Mesh objectMesh = Mesh("../res/models/head/head.obj");	
 	Texture texture = Texture("../res/models/head/lambertian.jpg");
+	Texture normalMap = Texture("../res/models/normal.jpg");
 
 	Mesh lightMesh = Mesh("../res/models/cube.obj");
 
@@ -104,9 +105,9 @@ int main(int argc, char *argv[])
 
 	Material material = Material(texture);
 
-	DirLight dirLight = DirLight(vec3(-0.2f, -1.0f, -0.3f));
-	PointLight pointLight = PointLight(vec3());
-	SpotLight spotLight = SpotLight(vec3(0.0f, 0.0f, 2.0f), camera.Front);
+	DirLight dirLight = DirLight(vec3(-0.2f, -1.0f, -0.3f), vec3(0, 0, 0.8f));
+	PointLight pointLight = PointLight(vec3(0));
+	SpotLight spotLight = SpotLight(vec3(0.0f, 0.0f, 2.0f), camera.Front, vec3(1.0f, 0, 0));
 
 	bool wireframe = false;
 	while (!window.isCloseRequested()) {
