@@ -88,6 +88,7 @@ int main(int argc, char *argv[])
 
 	BasicShader basicShader = BasicShader("../res/shaders/basicShader");
 	ShaderProgram lampShader = ShaderProgram("../res/shaders/lampShader");
+	ShaderProgram depthShader = ShaderProgram("../res/shaders/depthShader");
 
 	Mesh objectMesh = Mesh("../res/models/head/head.obj");	
 	Texture texture = Texture("../res/models/head/lambertian.jpg");
@@ -124,6 +125,10 @@ int main(int argc, char *argv[])
 	PointLight pointLight = PointLight(pointLightTrans.GetPosition());
 	SpotLight spotLight = SpotLight(spotLightTrans.GetPosition(), camera.Front, vec3(1.0f, 0, 0));
 
+	int centerX = window.getWidth() / 2;
+	int centerY = window.getHeight() / 2;
+
+	bool mouseDown = false;
 	bool wireframe = false;
 	while (!window.isCloseRequested()) {
 
@@ -133,6 +138,7 @@ int main(int argc, char *argv[])
 		// Poll inputs
 		SDL_Event e;
 		while (SDL_PollEvent(&e)) {
+
 			if (e.type == SDL_QUIT || e.key.keysym.sym == SDLK_ESCAPE) {
 				window.requestClose();
 			}
@@ -166,17 +172,27 @@ int main(int argc, char *argv[])
 			if (e.key.keysym.sym == SDLK_e) {
 				camera.ProcessKeyboard(DOWN, deltaTime);
 			}
+
+			// Start of Input Manager
 			if (e.type == SDL_MOUSEBUTTONDOWN)
 			{
+				mouseDown = true;
+				SDL_WarpMouseInWindow(window.getWindow(), centerX, centerY);
+			}
+			if (e.type == SDL_MOUSEBUTTONUP)
+			{
+				mouseDown = false;
+			}
+			if (e.type == SDL_MOUSEMOTION && mouseDown)
+			{
+				SDL_WarpMouseInWindow(window.getWindow(), centerX, centerY);
 				int x = 0;
 				int y = 0;
-				int MidX = window.getWidth() / 2;
-				int MidY = window.getHeight() / 2;
-				int tmpx, tmpy;
-				SDL_GetRelativeMouseState(&tmpx, &tmpy);
-				x += (MidX - tmpx);
-				y += (MidY - tmpy);
-				camera.ProcessMouseMovement(x, y);
+				SDL_GetMouseState(&x, &y);
+				int dx = x - centerX;
+				int dy = centerY - y;
+
+				camera.ProcessMouseMovement(dx, dy);
 			}
 		}
 
