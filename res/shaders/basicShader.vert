@@ -13,6 +13,8 @@ out vec3 Normal;
 out vec3 Tangent;
 out vec3 Bitangent;
 
+out mat3 TBN;
+
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
@@ -20,9 +22,17 @@ uniform mat4 projection;
 void main()
 {
 	gl_Position = projection * view *  model * vec4(position, 1.0f);
-    FragPos = vec3(model * vec4(position, 1.0f));
-	TexCoords = texCoords;
+    
+	FragPos = vec3(model * vec4(position, 1.0f));
+	TexCoords = texCoords;  
     Normal = mat3(transpose(inverse(model))) * normal;  
-	Tangent = vec3(model * vec4(tangent, 1.0f));
-	Bitangent = vec3(model * vec4(bitangent, 1.0f));
+	Tangent = normalize(vec3(model * vec4(tangent, 0.0f)));
+	Bitangent = normalize(vec3(model * vec4(bitangent, 0.0f)));
+
+	vec3 T = normalize(vec3(model * vec4(tangent,   0.0)));
+    vec3 B = normalize(vec3(model * vec4(bitangent, 0.0)));
+    vec3 N = normalize(vec3(model * vec4(normal,    0.0)));
+
+    TBN = mat3(T, B, N);
+
 } 

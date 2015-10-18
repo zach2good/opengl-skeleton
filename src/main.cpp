@@ -37,9 +37,9 @@ public:
 	}
 	void SetMaterial(Material material)
 	{
-		SetUniform1i("material.diffuse", material.diffuse.GetTextureID()); //0
-		SetUniform1i("material.specular", material.specular.GetTextureID()); //1
-		SetUniform1i("material.normal", material.normal.GetTextureID()); //2
+		SetUniform1i("material.diffuse", material.diffuse.GetTextureID());
+		SetUniform1i("material.specular", material.specular.GetTextureID());
+		SetUniform1i("material.normal", material.normal.GetTextureID());
 		SetUniform1f("material.shininess", material.shininess);
 	}
 
@@ -91,16 +91,21 @@ int main(int argc, char *argv[])
 
 	Mesh objectMesh = Mesh("../res/models/head/head.obj");	
 	Texture texture = Texture("../res/models/head/lambertian.jpg");
+	Texture specularMap = Texture("../res/models/head/lambertian.jpg");
 	Texture normalMap = Texture("../res/models/normal.jpg");
 
-	Mesh dirLightMesh = Mesh("../res/models/cube.obj");
+	texture.Bind(0);
+	specularMap.Bind(1);
+	normalMap.Bind(2);
 
-	Mesh pointLightMesh = Mesh("../res/models/sphere.obj");
-
-	Mesh flashlightMesh = Mesh("../res/models/flashlight.obj");
+	Material material = Material(texture, specularMap, normalMap);
 
 	Transformation objectTrans = Transformation();
 	objectTrans.SetScale(vec3(5.8f));
+
+	Mesh dirLightMesh = Mesh("../res/models/cube.obj");
+	Mesh pointLightMesh = Mesh("../res/models/sphere.obj");
+	Mesh flashlightMesh = Mesh("../res/models/flashlight.obj");
 
 	Transformation dirLightTrans = Transformation();
 	dirLightTrans.SetPosition(vec3(0, 2.0f, 0));
@@ -113,13 +118,7 @@ int main(int argc, char *argv[])
 	Transformation spotLightTrans = Transformation();
 	spotLightTrans.SetPosition(vec3(0.0f, 0.0f, 2.0f));
 	spotLightTrans.SetRotation(vec3(90.0f, 0.0f, 0.0f));
-	spotLightTrans.SetScale(vec3(0.1f));
-
-	texture.Bind(0);
-	texture.Bind(1);
-	normalMap.Bind(3);
-
-	Material material = Material(texture, texture, normalMap);
+	spotLightTrans.SetScale(vec3(0.1f));	
 
 	DirLight dirLight = DirLight(vec3(-0.2f, -1.0f, -0.3f), vec3(0, 0, 0.8f));
 	PointLight pointLight = PointLight(pointLightTrans.GetPosition());
@@ -208,6 +207,7 @@ int main(int argc, char *argv[])
 			camera.GetViewMatrix(),
 			glm::perspective(camera.Zoom, (float)window.getWidth() / (float)window.getHeight(), 0.1f, 1000.0f)
 			);
+
 		basicShader.SetUniform3fv("viewPos", camera.Position);
 		basicShader.SetMaterial(material);
 		basicShader.SetDirLight(dirLight);

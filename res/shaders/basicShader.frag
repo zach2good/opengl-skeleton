@@ -50,6 +50,8 @@ in vec3 Normal;
 in vec3 Tangent;
 in vec3 Bitangent;
 
+in mat3 TBN;
+
 out vec4 color;
 
 uniform vec3 viewPos;
@@ -64,10 +66,14 @@ vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
 
 void main()
 {
+	
+   
     // Properties
+	vec3 normal_from_map = normalize( 2.0 * (texture(material.normal, TexCoords).rgb) - 1.0 );
+
     vec3 norm = normalize(Normal);
     vec3 viewDir = normalize(viewPos - FragPos);
-
+	
     // Phase 1: Directional lighting
     vec3 p1result = CalcDirLight(dirLight, norm, viewDir);
 
@@ -78,7 +84,7 @@ void main()
     vec3 p3result = CalcSpotLight(spotLight, norm, FragPos, viewDir);    
     
 	// Final Result
-	vec3 finalResult =  p1result + p2result + p3result;
+	vec3 finalResult = p1result + p2result + p3result;
 
     color = vec4(finalResult, 1.0);
 } 
