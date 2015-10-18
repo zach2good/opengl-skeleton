@@ -6,6 +6,8 @@ public:
 	vec3 position;
 	vec3 direction;
 
+	vec3 color;
+
 	vec3 ambient;
 	vec3 diffuse;
 	vec3 specular;
@@ -21,6 +23,8 @@ public:
 	{
 		position = pos;
 		direction = dir;
+
+		color = col;
 
 		ambient = vec3(0.0f) * col;
 		diffuse = vec3(1.0f) * col;

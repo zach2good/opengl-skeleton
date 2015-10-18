@@ -17,10 +17,10 @@ class Mesh
 public:
 	struct MeshEntry {
 		static enum BUFFERS {
-			VERTEX_BUFFER, TEXCOORD_BUFFER, NORMAL_BUFFER, INDEX_BUFFER
+			VERTEX_BUFFER, TEXCOORD_BUFFER, NORMAL_BUFFER, TANGENT_BUFFER, BITANGENT_BUFFER, INDEX_BUFFER
 		};
 		GLuint vao;
-		GLuint vbo[4];
+		GLuint vbo[6];
 
 		unsigned int elementCount;
 

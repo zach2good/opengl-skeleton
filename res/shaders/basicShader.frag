@@ -4,6 +4,7 @@ precision highp float;
 struct Material {
     sampler2D diffuse;
     sampler2D specular;
+	sampler2D normal;
     float shininess;
 }; 
 
@@ -44,8 +45,10 @@ struct SpotLight {
 };
 
 in vec3 FragPos;
-in vec3 Normal;
 in vec2 TexCoords;
+in vec3 Normal;
+in vec3 Tangent;
+in vec3 Bitangent;
 
 out vec4 color;
 

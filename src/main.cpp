@@ -7,16 +7,17 @@ class Material
 public:
 	Texture diffuse;
 	Texture specular;
+	Texture normal;
 	float shininess;
 
 	Material(Texture tex)
-		: diffuse(tex), specular(tex)
+		: diffuse(tex), specular(tex), normal(tex)
 	{
 		shininess = 32.0f;
 	}
 
-	Material(Texture d, Texture s)
-		: diffuse(d), specular(s)
+	Material(Texture d, Texture s, Texture n)
+		: diffuse(d), specular(s), normal(n)
 	{
 		shininess = 32.0f;
 	}
@@ -38,6 +39,7 @@ public:
 	{
 		SetUniform1i("material.diffuse", material.diffuse.GetTextureID()); //0
 		SetUniform1i("material.specular", material.specular.GetTextureID()); //1
+		SetUniform1i("material.normal", material.normal.GetTextureID()); //2
 		SetUniform1f("material.shininess", material.shininess);
 	}
 
@@ -91,23 +93,37 @@ int main(int argc, char *argv[])
 	Texture texture = Texture("../res/models/head/lambertian.jpg");
 	Texture normalMap = Texture("../res/models/normal.jpg");
 
-	Mesh lightMesh = Mesh("../res/models/cube.obj");
+	Mesh dirLightMesh = Mesh("../res/models/cube.obj");
+
+	Mesh pointLightMesh = Mesh("../res/models/sphere.obj");
+
+	Mesh flashlightMesh = Mesh("../res/models/flashlight.obj");
 
 	Transformation objectTrans = Transformation();
 	objectTrans.SetScale(vec3(5.8f));
 
-	Transformation lightTrans = Transformation();
-	lightTrans.SetPosition(vec3(1, 1, 1));
-	lightTrans.SetScale(vec3(0.2f));
+	Transformation dirLightTrans = Transformation();
+	dirLightTrans.SetPosition(vec3(0, 2.0f, 0));
+	dirLightTrans.SetScale(vec3(0.2f));
+
+	Transformation pointLightTrans = Transformation();
+	pointLightTrans.SetPosition(vec3(1, 1, 1));
+	pointLightTrans.SetScale(vec3(0.1f));
+
+	Transformation spotLightTrans = Transformation();
+	spotLightTrans.SetPosition(vec3(0.0f, 0.0f, 2.0f));
+	spotLightTrans.SetRotation(vec3(90.0f, 0.0f, 0.0f));
+	spotLightTrans.SetScale(vec3(0.1f));
 
 	texture.Bind(0);
 	texture.Bind(1);
+	normalMap.Bind(3);
 
-	Material material = Material(texture);
+	Material material = Material(texture, texture, normalMap);
 
 	DirLight dirLight = DirLight(vec3(-0.2f, -1.0f, -0.3f), vec3(0, 0, 0.8f));
-	PointLight pointLight = PointLight(vec3(0));
-	SpotLight spotLight = SpotLight(vec3(0.0f, 0.0f, 2.0f), camera.Front, vec3(1.0f, 0, 0));
+	PointLight pointLight = PointLight(pointLightTrans.GetPosition());
+	SpotLight spotLight = SpotLight(spotLightTrans.GetPosition(), camera.Front, vec3(1.0f, 0, 0));
 
 	bool wireframe = false;
 	while (!window.isCloseRequested()) {
@@ -151,6 +167,18 @@ int main(int argc, char *argv[])
 			if (e.key.keysym.sym == SDLK_e) {
 				camera.ProcessKeyboard(DOWN, deltaTime);
 			}
+			if (e.type == SDL_MOUSEBUTTONDOWN)
+			{
+				int x = 0;
+				int y = 0;
+				int MidX = window.getWidth() / 2;
+				int MidY = window.getHeight() / 2;
+				int tmpx, tmpy;
+				SDL_GetRelativeMouseState(&tmpx, &tmpy);
+				x += (MidX - tmpx);
+				y += (MidY - tmpy);
+				camera.ProcessMouseMovement(x, y);
+			}
 		}
 
 		glPolygonMode(GL_FRONT_AND_BACK, (wireframe) ? GL_LINE : GL_FILL);
@@ -159,10 +187,14 @@ int main(int argc, char *argv[])
 		float time = SDL_GetTicks() / 500.0f;
 		float time_sin = sinf(SDL_GetTicks() / 500.0f);
 		float time_cos = cosf(SDL_GetTicks() / 500.0f);
-		objectTrans.SetRotation(vec3(0, time, 0));
-		lightTrans.SetPosition(vec3(time_sin * 2, 0, time_cos * 2));
-		pointLight.position = lightTrans.GetPosition();
-		spotLight.position.y -= (time_sin / 6.0f);
+
+		objectTrans.SetRotation(vec3(0, time_sin * 10, 0));
+
+		pointLightTrans.SetPosition(vec3(time_sin * 2, 0, time_cos * 2));
+		pointLight.position = pointLightTrans.GetPosition();
+
+		spotLightTrans.SetPosition(vec3(0, 0, 2.0f + time_cos));
+		spotLight.position = spotLightTrans.GetPosition();
 
 		// Clear
 		window.clear();
@@ -186,14 +218,31 @@ int main(int argc, char *argv[])
 
 		basicShader.Unbind();
 
-		// Draw White Lights
+		// Draw Point Light
 		lampShader.Bind();
-		lampShader.SetUniform4fv("model", lightTrans.GetTransformationMatrix());
+		lampShader.SetUniform4fv("model", dirLightTrans.GetTransformationMatrix());
 		lampShader.SetUniform4fv("view", camera.GetViewMatrix());
 		lampShader.SetUniform4fv("projection", glm::perspective(camera.Zoom, (float)window.getWidth() / (float)window.getHeight(), 0.1f, 1000.0f));
+		lampShader.SetUniform3fv("color", dirLight.color);
+		dirLightMesh.render();
+		lampShader.Unbind();
 
-		lightMesh.render();
+		// Draw Point Light
+		lampShader.Bind();
+		lampShader.SetUniform4fv("model", pointLightTrans.GetTransformationMatrix());
+		lampShader.SetUniform4fv("view", camera.GetViewMatrix());
+		lampShader.SetUniform4fv("projection", glm::perspective(camera.Zoom, (float)window.getWidth() / (float)window.getHeight(), 0.1f, 1000.0f));
+		lampShader.SetUniform3fv("color", pointLight.color);
+		pointLightMesh.render();
+		lampShader.Unbind();
 
+		// Draw Spot Light
+		lampShader.Bind();
+		lampShader.SetUniform4fv("model", spotLightTrans.GetTransformationMatrix());
+		lampShader.SetUniform4fv("view", camera.GetViewMatrix());
+		lampShader.SetUniform4fv("projection", glm::perspective(camera.Zoom, (float)window.getWidth() / (float)window.getHeight(), 0.1f, 1000.0f));
+		lampShader.SetUniform3fv("color", spotLight.color);
+		flashlightMesh.render();
 		lampShader.Unbind();
 
 		// 2D Render

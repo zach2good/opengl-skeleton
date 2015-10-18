@@ -7,6 +7,8 @@ Mesh::MeshEntry::MeshEntry(aiMesh *mesh) {
 	vbo[VERTEX_BUFFER] = NULL;
 	vbo[TEXCOORD_BUFFER] = NULL;
 	vbo[NORMAL_BUFFER] = NULL;
+	vbo[TANGENT_BUFFER] = NULL;
+	vbo[BITANGENT_BUFFER] = NULL;
 	vbo[INDEX_BUFFER] = NULL;
 
 	glGenVertexArrays(1, &vao);
@@ -67,6 +69,42 @@ Mesh::MeshEntry::MeshEntry(aiMesh *mesh) {
 		delete normals;
 	}
 
+	if (mesh->HasTangentsAndBitangents())
+	{
+		//Generate Tangent Buffer
+		float *tangents = new float[mesh->mNumVertices * 3];
+		for (int i = 0; i < mesh->mNumVertices; ++i) {
+			tangents[i * 3] = mesh->mTangents[i].x;
+			tangents[i * 3 + 1] = mesh->mTangents[i].y;
+			tangents[i * 3 + 2] = mesh->mTangents[i].z;
+		}
+
+		glGenBuffers(1, &vbo[TANGENT_BUFFER]);
+		glBindBuffer(GL_ARRAY_BUFFER, vbo[TANGENT_BUFFER]);
+		glBufferData(GL_ARRAY_BUFFER, 3 * mesh->mNumVertices * sizeof(GLfloat), tangents, GL_STATIC_DRAW);
+
+		glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+		glEnableVertexAttribArray(3);
+
+		delete tangents;
+
+		//Generate Bitangent Buffer
+		float *bitangents = new float[mesh->mNumVertices * 3];
+		for (int i = 0; i < mesh->mNumVertices; ++i) {
+			bitangents[i * 3] = mesh->mBitangents[i].x;
+			bitangents[i * 3 + 1] = mesh->mBitangents[i].y;
+			bitangents[i * 3 + 2] = mesh->mBitangents[i].z;
+		}
+
+		glGenBuffers(1, &vbo[BITANGENT_BUFFER]);
+		glBindBuffer(GL_ARRAY_BUFFER, vbo[BITANGENT_BUFFER]);
+		glBufferData(GL_ARRAY_BUFFER, 3 * mesh->mNumVertices * sizeof(GLfloat), bitangents, GL_STATIC_DRAW);
+
+		glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+		glEnableVertexAttribArray(4);
+
+		delete bitangents;
+	}
 
 	if (mesh->HasFaces()) {
 		unsigned int *indices = new unsigned int[mesh->mNumFaces * 3];
@@ -129,7 +167,7 @@ void Mesh::MeshEntry::render() {
 Mesh::Mesh(const char *filename)
 {
 	Assimp::Importer importer;
-	const aiScene *scene = importer.ReadFile(filename, aiProcessPreset_TargetRealtime_Fast);
+	const aiScene *scene = importer.ReadFile(filename, aiProcessPreset_TargetRealtime_Quality);
 	if (!scene) {
 		printf("Unable to load mesh: %s\n", importer.GetErrorString());
 	}

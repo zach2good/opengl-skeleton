@@ -1,7 +1,12 @@
 #version 330 core
-out vec4 color;
+
+in vec3 Normal;
+
+out vec4 FragColor;
+
+uniform vec3 color;
 
 void main()
 {
-    color = vec4(1.0f); // Set alle 4 vector values to 1.0f
+    FragColor = vec4(color + (Normal * 0.2f), 1.0f);
 }
