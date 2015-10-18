@@ -1,6 +1,10 @@
 #include "common.h"
 #include <string.h>
 
+#define WHITE vec3(1.0f)
+#define RED vec3(1.0f, 0.0f, 0.0f)
+#define BLUE vec3(0.0f, 0.0f, 1.0f)
+#define GREEN vec3(0.0f, 1.0f, 0.0f)
 
 class Material
 {
@@ -91,15 +95,15 @@ int main(int argc, char *argv[])
 	ShaderProgram depthShader = ShaderProgram("../res/shaders/depthShader");
 
 	Mesh objectMesh = Mesh("../res/models/head/head.obj");	
-	Texture texture = Texture("../res/models/head/lambertian.jpg");
-	Texture specularMap = Texture("../res/models/head/lambertian.jpg");
-	Texture normalMap = Texture("../res/models/normal.jpg");
+	Texture texture = Texture("../res/models/head/Diffuse.png");
+	Texture specularMap = Texture("../res/models/head/Specular.png");
+	Texture normalMap = Texture("../res/models/head/Normal.png");
 
-	texture.Bind(0);
-	specularMap.Bind(1);
-	normalMap.Bind(2);
+	texture.Bind(texture.GetTextureID());
+	specularMap.Bind(specularMap.GetTextureID());
+	normalMap.Bind(normalMap.GetTextureID());
 
-	Material material = Material(texture, specularMap, normalMap);
+	Material material = Material(texture, texture, normalMap);
 
 	Transformation objectTrans = Transformation();
 	objectTrans.SetScale(vec3(5.8f));
@@ -121,13 +125,14 @@ int main(int argc, char *argv[])
 	spotLightTrans.SetRotation(vec3(90.0f, 0.0f, 0.0f));
 	spotLightTrans.SetScale(vec3(0.1f));	
 
-	DirLight dirLight = DirLight(vec3(-0.2f, -1.0f, -0.3f), vec3(0, 0, 0.8f));
-	PointLight pointLight = PointLight(pointLightTrans.GetPosition());
-	SpotLight spotLight = SpotLight(spotLightTrans.GetPosition(), camera.Front, vec3(1.0f, 0, 0));
+	DirLight dirLight = DirLight(vec3(-0.2f, -1.0f, -0.3f), WHITE);
+	PointLight pointLight = PointLight(RED);
+	SpotLight spotLight = SpotLight(spotLightTrans.GetPosition(), camera.Front, GREEN);
 
 	int centerX = window.getWidth() / 2;
 	int centerY = window.getHeight() / 2;
 
+	bool UseNormalMapping = true;
 	bool mouseDown = false;
 	bool wireframe = false;
 	while (!window.isCloseRequested()) {
@@ -186,6 +191,7 @@ int main(int argc, char *argv[])
 			if (e.type == SDL_MOUSEMOTION && mouseDown)
 			{
 				SDL_WarpMouseInWindow(window.getWindow(), centerX, centerY);
+
 				int x = 0;
 				int y = 0;
 				SDL_GetMouseState(&x, &y);
@@ -208,7 +214,7 @@ int main(int argc, char *argv[])
 		pointLightTrans.SetPosition(vec3(time_sin * 2, 0, time_cos * 2));
 		pointLight.position = pointLightTrans.GetPosition();
 
-		spotLightTrans.SetPosition(vec3(0, 0, 2.0f + time_cos));
+		spotLightTrans.SetPosition(vec3(-time_sin, -0.7f, 2));
 		spotLight.position = spotLightTrans.GetPosition();
 
 		// Clear
@@ -229,6 +235,8 @@ int main(int argc, char *argv[])
 		basicShader.SetDirLight(dirLight);
 		basicShader.SetPointLight(pointLight);
 		basicShader.SetSpotLight(spotLight);
+
+		basicShader.SetUniform1f("UseNormalMapping", UseNormalMapping);
 
 		objectMesh.render();
 

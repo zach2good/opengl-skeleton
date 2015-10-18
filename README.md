@@ -36,3 +36,4 @@ Gameplay Goals
 <br>
 ![Screenshot](screenshot.png)
 ![Screenshot](lighting.gif)
+![Screenshot](normalMapping.png)

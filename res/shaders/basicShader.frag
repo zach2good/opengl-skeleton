@@ -60,18 +60,23 @@ uniform DirLight dirLight;
 uniform PointLight pointLight;
 uniform SpotLight spotLight;
 
+uniform float UseNormalMapping;
+
 vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir);
 vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
 vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
 
 void main()
-{
-	
-   
+{   
     // Properties
 	vec3 normal_from_map = normalize( 2.0 * (texture(material.normal, TexCoords).rgb) - 1.0 );
-
     vec3 norm = normalize(Normal);
+
+	if (UseNormalMapping)
+	{
+		norm =  normalize(TBN * normal_from_map);
+	}
+
     vec3 viewDir = normalize(viewPos - FragPos);
 	
     // Phase 1: Directional lighting
