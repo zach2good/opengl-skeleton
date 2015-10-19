@@ -1,16 +1,42 @@
-#include "input.h"
+#include "Input.h"
 
-Input::Input() :
-	held_keys_(),
-	pressed_keys_(),
-	released_keys_(),
-
-	held_buttons_(),
-	pressed_buttons_(),
-	released_buttons_()
+Input::Input()
 {
-	x = 0;
-	y = 0;
+	held_keys_ = map<SDL_Scancode, bool>();
+	pressed_keys_ = map<SDL_Scancode, bool>();
+	released_keys_ = map<SDL_Scancode, bool>();
+
+	held_buttons_ = map<Uint8, bool>();
+	pressed_buttons_ = map<Uint8, bool>();
+	released_buttons_ = map<Uint8, bool>();
+}
+
+void Input::pollInput()
+{
+	while (SDL_PollEvent(&e)) {
+		switch (e.type) {
+		case SDL_MOUSEMOTION:
+			mouseMotion(e);
+			break;
+		case SDL_MOUSEBUTTONDOWN:
+			mouseButtonDownEvent(e);
+			break;
+		case SDL_MOUSEBUTTONUP:
+			mouseButtonUpEvent(e);
+			break;
+		case SDL_KEYDOWN:
+			keyDownEvent(e);
+			break;
+		case SDL_KEYUP:
+			keyUpEvent(e);
+			break;
+		case SDL_QUIT:
+			//window.requestClose();
+			break;
+		default:
+			break;
+		}
+	}
 }
 
 void Input::beginNewFrame()

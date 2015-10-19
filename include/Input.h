@@ -1,9 +1,12 @@
+#pragma once
 #include "common.h"
 
-#include <map>
-
-struct Input {
+class Input 
+{
+public:
     Input();
+
+	void pollInput();
 
     void beginNewFrame();
 
@@ -24,6 +27,9 @@ struct Input {
     bool isKeyHeld(SDL_Scancode key);
 
 private:
+
+	SDL_Event e;
+
 	int x;
 	int y;
 
