@@ -86,6 +86,7 @@ int main(int argc, char *argv[])
 {
 	Window window = Window("OpenGL Skeleton", 1280, 720);
 	DebugUi debugUi = DebugUi(window.getWindow());
+	Input input = Input();
 
 	Camera camera = Camera();
 	camera.Position = vec3(0, 0, 5);
@@ -140,9 +141,41 @@ int main(int argc, char *argv[])
 		// Determine deltaTime
 		float deltaTime = 1000.0f / SDL_GetTicks();
 
+		input.beginNewFrame();
+		SDL_Event e;
+		while (SDL_PollEvent(&e)) {
+			switch (e.type) {
+			case SDL_MOUSEMOTION:
+				input.mouseMotion(e);
+				break;
+			case SDL_MOUSEBUTTONDOWN:
+				input.mouseButtonDownEvent(e);
+				break;
+			case SDL_MOUSEBUTTONUP:
+				input.mouseButtonUpEvent(e);
+				break;
+			case SDL_KEYDOWN:
+				input.keyDownEvent(e);
+				break;
+			case SDL_KEYUP:
+				input.keyUpEvent(e);
+				break;
+			case SDL_QUIT:
+				window.requestClose();
+				break;
+			default:
+				break;
+			}
+		}
+
+		if (input.wasKeyPressed(SDL_SCANCODE_Q) || input.wasKeyPressed(SDL_SCANCODE_ESCAPE)) {
+			window.requestClose();
+		}
+
 		// Poll inputs
 		SDL_Event e;
 		while (SDL_PollEvent(&e)) {
+			input.beginNewFrame();
 
 			if (e.type == SDL_QUIT || e.key.keysym.sym == SDLK_ESCAPE) {
 				window.requestClose();
@@ -285,5 +318,5 @@ int main(int argc, char *argv[])
 	debugUi.cleanUp();
 	window.cleanUp();
 
-	return EXIT_SUCCESS;
+	return 0;
 }

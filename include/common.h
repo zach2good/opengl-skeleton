@@ -21,6 +21,7 @@ using namespace glm;
 
 #include "Window.h"
 #include "DebugUi.h"
+#include "Input.h"
 #include "ShaderProgram.h"
 
 #include "Material.h"
