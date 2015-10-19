@@ -2,17 +2,19 @@
 
 Input::Input()
 {
-	held_keys_ = map<SDL_Scancode, bool>();
-	pressed_keys_ = map<SDL_Scancode, bool>();
-	released_keys_ = map<SDL_Scancode, bool>();
+	held_keys_ = std::map<SDL_Scancode, bool>();
+	pressed_keys_ = std::map<SDL_Scancode, bool>();
+	released_keys_ = std::map<SDL_Scancode, bool>();
 
-	held_buttons_ = map<Uint8, bool>();
-	pressed_buttons_ = map<Uint8, bool>();
-	released_buttons_ = map<Uint8, bool>();
+	held_buttons_ = std::map<Uint8, bool>();
+	pressed_buttons_ = std::map<Uint8, bool>();
+	released_buttons_ = std::map<Uint8, bool>();
 }
 
 void Input::pollInput()
 {
+	beginNewFrame();
+
 	while (SDL_PollEvent(&e)) {
 		switch (e.type) {
 		case SDL_MOUSEMOTION:

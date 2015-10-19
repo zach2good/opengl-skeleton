@@ -1,10 +1,4 @@
 #include "common.h"
-#include <string.h>
-
-#define WHITE vec3(1.0f)
-#define RED vec3(1.0f, 0.0f, 0.0f)
-#define BLUE vec3(0.0f, 0.0f, 1.0f)
-#define GREEN vec3(0.0f, 1.0f, 0.0f)
 
 class Material
 {
@@ -85,17 +79,18 @@ public:
 int main(int argc, char *argv[])
 {
 	Window window = Window("OpenGL Skeleton", 1280, 720);
-	DebugUi debugUi = DebugUi(window.getWindow());
+
 	Input input = Input();
 
 	Camera camera = Camera();
 	camera.Position = vec3(0, 0, 5);
 
+
 	BasicShader basicShader = BasicShader("../res/shaders/basicShader");
 	ShaderProgram lampShader = ShaderProgram("../res/shaders/lampShader");
 	ShaderProgram depthShader = ShaderProgram("../res/shaders/depthShader");
 
-	Mesh objectMesh = Mesh("../res/models/head/head.obj");	
+	Mesh objectMesh = Mesh("../res/models/head/head.obj");
 	Texture texture = Texture("../res/models/head/Diffuse.png");
 	Texture specularMap = Texture("../res/models/head/Specular.png");
 	Texture normalMap = Texture("../res/models/head/Normal.png");
@@ -124,7 +119,7 @@ int main(int argc, char *argv[])
 	Transformation spotLightTrans = Transformation();
 	spotLightTrans.SetPosition(vec3(0.0f, 0.0f, 2.0f));
 	spotLightTrans.SetRotation(vec3(90.0f, 0.0f, 0.0f));
-	spotLightTrans.SetScale(vec3(0.1f));	
+	spotLightTrans.SetScale(vec3(0.1f));
 
 	DirLight dirLight = DirLight(vec3(-0.2f, -1.0f, -0.3f), WHITE);
 	PointLight pointLight = PointLight(RED);
@@ -134,108 +129,54 @@ int main(int argc, char *argv[])
 	int centerY = window.getHeight() / 2;
 
 	bool UseNormalMapping = true;
-	bool mouseDown = false;
-	bool wireframe = false;
+	bool UseWireFrame = false;
+
+	DebugUi debugUi = DebugUi(window.getWindow());
+
+	debugUi.addFloat("PointLight R", &pointLight.color.r);
+
+	debugUi.addFloat("Camera X", &camera.Position.x);
+	debugUi.addFloat("Camera Y", &camera.Position.y);
+	debugUi.addFloat("Camera Z", &camera.Position.z);
+
+	debugUi.addBool("Normal Mapping", &UseNormalMapping);
+	debugUi.addBool("Wireframe", &UseWireFrame);
+
 	while (!window.isCloseRequested()) {
 
 		// Determine deltaTime
 		float deltaTime = 1000.0f / SDL_GetTicks();
 
-		input.beginNewFrame();
-		SDL_Event e;
-		while (SDL_PollEvent(&e)) {
-			switch (e.type) {
-			case SDL_MOUSEMOTION:
-				input.mouseMotion(e);
-				break;
-			case SDL_MOUSEBUTTONDOWN:
-				input.mouseButtonDownEvent(e);
-				break;
-			case SDL_MOUSEBUTTONUP:
-				input.mouseButtonUpEvent(e);
-				break;
-			case SDL_KEYDOWN:
-				input.keyDownEvent(e);
-				break;
-			case SDL_KEYUP:
-				input.keyUpEvent(e);
-				break;
-			case SDL_QUIT:
-				window.requestClose();
-				break;
-			default:
-				break;
-			}
-		}
-
-		if (input.wasKeyPressed(SDL_SCANCODE_Q) || input.wasKeyPressed(SDL_SCANCODE_ESCAPE)) {
+		input.pollInput();
+		if (input.wasKeyPressed(SDL_SCANCODE_ESCAPE)) {
 			window.requestClose();
 		}
-
-		// Poll inputs
-		SDL_Event e;
-		while (SDL_PollEvent(&e)) {
-			input.beginNewFrame();
-
-			if (e.type == SDL_QUIT || e.key.keysym.sym == SDLK_ESCAPE) {
-				window.requestClose();
-			}
-			if (e.key.keysym.sym == SDLK_PERIOD) {
-				wireframe = true;
-			}
-			if (e.key.keysym.sym == SDLK_COMMA) {
-				wireframe = false;
-			}
-			if (e.key.keysym.sym == SDLK_r) {
-				objectTrans.ChangeRotation(glm::vec3(0, glm::radians(100.0f), 0));
-			}
-			if (e.key.keysym.sym == SDLK_t) {
-				objectTrans.ChangeRotation(glm::vec3(0, glm::radians(-100.0f), 0));
-			}
-			if (e.key.keysym.sym == SDLK_a) {
-				camera.ProcessKeyboard(LEFT, deltaTime);
-			}
-			if (e.key.keysym.sym == SDLK_d) {
-				camera.ProcessKeyboard(RIGHT, deltaTime);
-			}
-			if (e.key.keysym.sym == SDLK_w) {
-				camera.ProcessKeyboard(FORWARD, deltaTime);
-			}
-			if (e.key.keysym.sym == SDLK_s) {
-				camera.ProcessKeyboard(BACKWARD, deltaTime);
-			}
-			if (e.key.keysym.sym == SDLK_q) {
-				camera.ProcessKeyboard(UP, deltaTime);
-			}
-			if (e.key.keysym.sym == SDLK_e) {
-				camera.ProcessKeyboard(DOWN, deltaTime);
-			}
-
-			// Start of Input Manager
-			if (e.type == SDL_MOUSEBUTTONDOWN)
-			{
-				mouseDown = true;
-				SDL_WarpMouseInWindow(window.getWindow(), centerX, centerY);
-			}
-			if (e.type == SDL_MOUSEBUTTONUP)
-			{
-				mouseDown = false;
-			}
-			if (e.type == SDL_MOUSEMOTION && mouseDown)
-			{
-				SDL_WarpMouseInWindow(window.getWindow(), centerX, centerY);
-
-				int x = 0;
-				int y = 0;
-				SDL_GetMouseState(&x, &y);
-				int dx = x - centerX;
-				int dy = centerY - y;
-
-				camera.ProcessMouseMovement(dx, dy);
-			}
+		if (input.isKeyHeld(SDL_SCANCODE_A))
+		{
+			camera.ProcessKeyboard(LEFT, deltaTime);
+		}
+		if (input.isKeyHeld(SDL_SCANCODE_D))
+		{
+			camera.ProcessKeyboard(RIGHT, deltaTime);
+		}
+		if (input.isKeyHeld(SDL_SCANCODE_W))
+		{
+			camera.ProcessKeyboard(FORWARD, deltaTime);
+		}
+		if (input.isKeyHeld(SDL_SCANCODE_S))
+		{
+			camera.ProcessKeyboard(BACKWARD, deltaTime);
+		}
+		if (input.isKeyHeld(SDL_SCANCODE_Q))
+		{
+			camera.ProcessKeyboard(UP, deltaTime);
+		}
+		if (input.isKeyHeld(SDL_SCANCODE_E))
+		{
+			camera.ProcessKeyboard(DOWN, deltaTime);
 		}
 
-		glPolygonMode(GL_FRONT_AND_BACK, (wireframe) ? GL_LINE : GL_FILL);
+		glPolygonMode(GL_FRONT_AND_BACK, (UseWireFrame) ? GL_LINE : GL_FILL);
 
 		//Update
 		float time = SDL_GetTicks() / 500.0f;
@@ -253,27 +194,27 @@ int main(int argc, char *argv[])
 		// Clear
 		window.clear();
 
-		// 3D Render
-		basicShader.Bind();
+		//// 3D Render
+		//basicShader.Bind();
 
-		// Model, View and World Matrices
-		basicShader.SetMVP(
-			objectTrans.GetTransformationMatrix(),
-			camera.GetViewMatrix(),
-			glm::perspective(camera.Zoom, (float)window.getWidth() / (float)window.getHeight(), 0.1f, 1000.0f)
-			);
+		//// Model, View and World Matrices
+		//basicShader.SetMVP(
+		//	objectTrans.GetTransformationMatrix(),
+		//	camera.GetViewMatrix(),
+		//	glm::perspective(camera.Zoom, (float)window.getWidth() / (float)window.getHeight(), 0.1f, 1000.0f)
+		//	);
 
-		basicShader.SetUniform3fv("viewPos", camera.Position);
-		basicShader.SetMaterial(material);
-		basicShader.SetDirLight(dirLight);
-		basicShader.SetPointLight(pointLight);
-		basicShader.SetSpotLight(spotLight);
+		//basicShader.SetUniform3fv("viewPos", camera.Position);
+		//basicShader.SetMaterial(material);
+		//basicShader.SetDirLight(dirLight);
+		//basicShader.SetPointLight(pointLight);
+		//basicShader.SetSpotLight(spotLight);
 
-		basicShader.SetUniform1f("UseNormalMapping", UseNormalMapping);
+		//basicShader.SetUniform1f("UseNormalMapping", UseNormalMapping);
 
-		objectMesh.render();
+		//objectMesh.render();
 
-		basicShader.Unbind();
+		//basicShader.Unbind();
 
 		// Draw Point Light
 		lampShader.Bind();
@@ -305,10 +246,10 @@ int main(int argc, char *argv[])
 		// 2D Render
 #ifdef _DEBUG 
 		// Render 2D
-		if (wireframe) { glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); }
+		if (UseWireFrame) { glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); }
 		debugUi.prepare();
 		debugUi.render();
-		if (wireframe) { glPolygonMode(GL_FRONT_AND_BACK, GL_LINES); }
+		if (UseWireFrame) { glPolygonMode(GL_FRONT_AND_BACK, GL_LINES); }
 #endif // _DEBUG 
 
 		// Swap
