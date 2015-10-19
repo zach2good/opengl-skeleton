@@ -12,15 +12,47 @@ http://www.nexcius.net/2014/04/13/loading-meshes-using-assimp-in-opengl/
 #include <assimp\Importer.hpp>
 #include <assimp\postprocess.h>
 
+#define NUM_BONES_PER_VEREX 4
+#define INVALID_MATERIAL 0xFFFFFFFF
+
+struct BoneInfo
+{
+	mat4 BoneOffset;
+	mat4 FinalTransformation;
+
+	BoneInfo()
+	{
+		BoneOffset = mat4(0);
+		FinalTransformation = mat4(0);
+	}
+};
+
+struct VertexBoneData
+{
+	uint IDs[NUM_BONES_PER_VEREX];
+	float Weights[NUM_BONES_PER_VEREX];
+
+	VertexBoneData()
+	{
+		Reset();
+	};
+
+	void Reset()
+	{
+	}
+
+	void AddBoneData(uint BoneID, float Weight);
+};
+
 class Mesh
 {
 public:
 	struct MeshEntry {
 		static enum BUFFERS {
-			VERTEX_BUFFER, TEXCOORD_BUFFER, NORMAL_BUFFER, TANGENT_BUFFER, BITANGENT_BUFFER, INDEX_BUFFER
+			VERTEX_BUFFER, TEXCOORD_BUFFER, NORMAL_BUFFER, TANGENT_BUFFER, BITANGENT_BUFFER, BONE_BUFFER, INDEX_BUFFER, BUFFER_COUNT
 		};
 		GLuint vao;
-		GLuint vbo[6];
+		GLuint vbo[BUFFER_COUNT];
 
 		unsigned int elementCount;
 

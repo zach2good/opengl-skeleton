@@ -106,6 +106,11 @@ Mesh::MeshEntry::MeshEntry(aiMesh *mesh) {
 		delete bitangents;
 	}
 
+	if (mesh->HasBones())
+	{
+
+	}
+
 	if (mesh->HasFaces()) {
 		unsigned int *indices = new unsigned int[mesh->mNumFaces * 3];
 		for (int i = 0; i < mesh->mNumFaces; ++i) {
