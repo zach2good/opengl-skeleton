@@ -133,7 +133,9 @@ int main(int argc, char *argv[])
 
 	DebugUi debugUi = DebugUi(window.getWindow());
 
-	debugUi.addFloat("PointLight R", &pointLight.color.r);
+	debugUi.addFloat("PointLight R", &pointLight.color.r, 0.0f, 1.0f);
+	debugUi.addFloat("PointLight G", &pointLight.color.g, 0.0f, 1.0f);
+	debugUi.addFloat("PointLight B", &pointLight.color.b, 0.0f, 1.0f);
 
 	debugUi.addFloat("Camera X", &camera.Position.x);
 	debugUi.addFloat("Camera Y", &camera.Position.y);
