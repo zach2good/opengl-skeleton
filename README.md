@@ -34,6 +34,7 @@ Gameplay Goals
 * Recreate Wolfenstein 3D basic functionality
 <br>
 <br>
-![Screenshot](screenshot.png)
-![Screenshot](lighting.gif)
-![Screenshot](normalMapping.png)
+![Screenshot](img/screenshot.png)
+![Screenshot](img/lighting.gif)
+![Screenshot](img/normalMapping.png)
+![Screenshot](img/debug.gif)
