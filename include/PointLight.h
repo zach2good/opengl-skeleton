@@ -26,4 +26,11 @@ public:
 		diffuse = vec3(0.7f) * col;
 		specular = vec3(1.0f) * col;
 	}
+
+	inline void update()
+	{
+		ambient = vec3(0.1f) * color;
+		diffuse = vec3(0.7f) * color;
+		specular = vec3(1.0f) * color;
+	}
 };

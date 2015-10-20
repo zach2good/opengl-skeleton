@@ -32,8 +32,8 @@ void DebugUi::prepare()
 	static bool opened = false;
 
 	ImGui::SetNextWindowPos(ImVec2(10, 10), 0);
-	ImGui::SetNextWindowSize(ImVec2(250, 300), 0);
-	ImGui::Begin("Debug Window", &opened, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoSavedSettings);
+	//ImGui::SetNextWindowSize(ImVec2(250, 300), 0);
+	ImGui::Begin("Debug Window", &opened, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoSavedSettings);
 
 	static ImVector<float> values;
 
@@ -216,8 +216,8 @@ bool DebugUi::ColorPicker(const char* label, ImColor* color)
 		picker_pos,
 		ImVec2(picker_pos.x + SV_PICKER_SIZE.x, picker_pos.y + SV_PICKER_SIZE.y),
 		ImColor(0, 0, 0),
+		ImColor(0,0,0),
 		hue_color,
-		ImColor(255, 255, 255),
 		ImColor(255, 255, 255));
 
 	float x = saturation * value;
