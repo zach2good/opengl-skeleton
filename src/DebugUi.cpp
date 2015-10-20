@@ -1,4 +1,5 @@
 #include "DebugUi.h"
+#include <string.h>
 
 DebugUi::DebugUi(SDL_Window* window)
 {
@@ -11,6 +12,7 @@ DebugUi::DebugUi(SDL_Window* window)
 	floats = std::vector<FloatDebug>();
 	bools = std::vector<BoolDebug>();
 	colors = std::vector<ColorDebug>();
+	vecs = std::vector<Vec3Debug>();
 }
 
 DebugUi::~DebugUi()
@@ -77,6 +79,32 @@ void DebugUi::prepare()
 		}
 	}
 
+	for (int i = 0; i < vecs.size(); i++) {
+
+		if (ImGui::CollapsingHeader(vecs.at(i).title))
+		{
+			
+			Vec3Debug v = vecs.at(i);
+
+			// TODO: Ugly and slow, fix me
+			std::string x = std::string(v.title) + std::string("x");;
+			std::string y = std::string(v.title) + std::string("y");;
+			std::string z = std::string(v.title) + std::string("z");;
+			
+			ImGui::PushItemWidth(-1.0f);
+			ImGui::SliderFloat(x.c_str(), &v.val->x, -10.0f, 10.0f);
+			ImGui::PopItemWidth();
+
+			ImGui::PushItemWidth(-1.0f);
+			ImGui::SliderFloat(y.c_str(), &v.val->y, -10.0f, 10.0f);
+			ImGui::PopItemWidth();
+
+			ImGui::PushItemWidth(-1.0f);
+			ImGui::SliderFloat(z.c_str(), &v.val->z, -10.0f, 10.0f);
+			ImGui::PopItemWidth();
+		}
+	}
+
 
 	for (int i = 0; i < colors.size(); i++) {
 		if (ImGui::CollapsingHeader(colors.at(i).title))
@@ -126,6 +154,11 @@ void DebugUi::addBool(const char* title, bool* var)
 void DebugUi::addColor(const char* title, vec3* val)
 {
 	colors.push_back(ColorDebug(title, val));
+}
+
+void DebugUi::addVec3(const char* title, vec3* val)
+{
+	vecs.push_back(Vec3Debug(title, val));
 }
 
 /*

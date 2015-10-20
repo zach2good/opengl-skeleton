@@ -37,6 +37,15 @@ struct ColorDebug
 	vec3* col;
 };
 
+struct Vec3Debug
+{
+	Vec3Debug(const char* title, vec3* val) :
+		title(title), val(val) {}
+
+	const char* title;
+	vec3* val;
+};
+
 class DebugUi
 {
 public:
@@ -57,9 +66,12 @@ public:
 
 	void addColor(const char* title, vec3* val);
 
+	void addVec3(const char* title, vec3* val);
+
 	std::vector<FloatDebug> floats;
 	std::vector<BoolDebug> bools;
 	std::vector<ColorDebug> colors;
+	std::vector<Vec3Debug> vecs;
 
 	SDL_Window* m_Window;
 

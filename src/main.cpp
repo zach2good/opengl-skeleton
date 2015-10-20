@@ -133,9 +133,11 @@ int main(int argc, char *argv[])
 
 	DebugUi debugUi = DebugUi(window.getWindow());
 
-	debugUi.addFloat("Camera X", &camera.Position.x);
-	debugUi.addFloat("Camera Y", &camera.Position.y);
-	debugUi.addFloat("Camera Z", &camera.Position.z);
+	float speedMultiplier = 1.0f;
+
+	debugUi.addFloat("Speed Multiplier", &speedMultiplier, 0.0f, 5.0f);
+
+	debugUi.addVec3("Camera", &camera.Position);
 
 	debugUi.addBool("Normal Mapping", &UseNormalMapping);
 	debugUi.addBool("Wireframe", &UseWireFrame);
@@ -181,9 +183,9 @@ int main(int argc, char *argv[])
 		glPolygonMode(GL_FRONT_AND_BACK, (UseWireFrame) ? GL_LINE : GL_FILL);
 
 		//Update
-		float time = SDL_GetTicks() / 500.0f;
-		float time_sin = sinf(SDL_GetTicks() / 500.0f);
-		float time_cos = cosf(SDL_GetTicks() / 500.0f);
+		float time = (SDL_GetTicks() / 500.0f) * speedMultiplier;
+		float time_sin = sinf(time);
+		float time_cos = cosf(time);
 
 		objectTrans.SetRotation(vec3(0, time_sin * 10, 0));
 
