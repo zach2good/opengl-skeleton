@@ -36,14 +36,13 @@ Texture::Texture(const char* filename)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, -0.4f);
-	glGenerateMipmap(GL_TEXTURE_2D);
 
 	switch (m_Channels)
 	{
-		case 1: Format = GL_ALPHA;     break;
-		case 2: Format = GL_LUMINANCE; break;
-		case 3: Format = GL_RGB;       break;
-		case 4: Format = GL_RGBA;      break;
+	case 1: Format = GL_ALPHA;     break;
+	case 2: Format = GL_LUMINANCE; break;
+	case 3: Format = GL_RGB;       break;
+	case 4: Format = GL_RGBA;      break;
 	}
 
 	glTexImage2D(GL_TEXTURE_2D, 0, Format, m_Width, m_Height, 0, Format, GL_UNSIGNED_BYTE, image);

@@ -5,17 +5,17 @@ class Material
 public:
 	Texture diffuse;
 	Texture specular;
-	Texture normal;
+
 	float shininess;
 
 	Material(Texture tex)
-		: diffuse(tex), specular(tex), normal(tex)
+		: diffuse(tex), specular(tex)
 	{
 		shininess = 32.0f;
 	}
 
-	Material(Texture d, Texture s, Texture n)
-		: diffuse(d), specular(s), normal(n)
+	Material(Texture d, Texture s)
+		: diffuse(d), specular(s)
 	{
 		shininess = 32.0f;
 	}
@@ -37,7 +37,6 @@ public:
 	{
 		SetUniform1i("material.diffuse", material.diffuse.GetTextureID());
 		SetUniform1i("material.specular", material.specular.GetTextureID());
-		SetUniform1i("material.normal", material.normal.GetTextureID());
 		SetUniform1f("material.shininess", material.shininess);
 	}
 
@@ -75,7 +74,6 @@ public:
 	}
 };
 
-
 int main(int argc, char *argv[])
 {
 	Window window = Window("OpenGL Skeleton", 1280, 720);
@@ -85,21 +83,20 @@ int main(int argc, char *argv[])
 	Camera camera = Camera();
 	camera.Position = vec3(0, 0, 5);
 
-
+	BasicShader debugShader = BasicShader("../res/shaders/debugShader");
 	BasicShader basicShader = BasicShader("../res/shaders/basicShader");
 	ShaderProgram lampShader = ShaderProgram("../res/shaders/lampShader");
 	ShaderProgram depthShader = ShaderProgram("../res/shaders/depthShader");
 
 	Mesh objectMesh = Mesh("../res/models/head/head.obj");
-	Texture texture = Texture("../res/models/head/Diffuse.png");
+
+	Texture texture = Texture("../res/models/head/Normal.png");
 	Texture specularMap = Texture("../res/models/head/Specular.png");
-	Texture normalMap = Texture("../res/models/head/Normal.png");
 
-	texture.Bind(texture.GetTextureID());
-	specularMap.Bind(specularMap.GetTextureID());
-	normalMap.Bind(normalMap.GetTextureID());
+	Material material = Material(texture, specularMap);
 
-	Material material = Material(texture, texture, normalMap);
+	texture.Bind(0);
+	specularMap.Bind(1);
 
 	Transformation objectTrans = Transformation();
 	objectTrans.SetScale(vec3(5.8f));
@@ -198,29 +195,22 @@ int main(int argc, char *argv[])
 		// Clear
 		window.clear();
 
-		//// 3D Render
-		//basicShader.Bind();
+		// 3D Render
+		basicShader.Bind();
 
-		//// Model, View and World Matrices
-		//basicShader.SetMVP(
-		//	objectTrans.GetTransformationMatrix(),
-		//	camera.GetViewMatrix(),
-		//	glm::perspective(camera.Zoom, (float)window.getWidth() / (float)window.getHeight(), 0.1f, 1000.0f)
-		//	);
+		// Model, View and World Matrices
+		basicShader.SetMVP(
+			objectTrans.GetTransformationMatrix(),
+			camera.GetViewMatrix(),
+			glm::perspective(camera.Zoom, (float)window.getWidth() / (float)window.getHeight(), 0.1f, 1000.0f)
+		);
 
-		//basicShader.SetUniform3fv("viewPos", camera.Position);
-		//basicShader.SetMaterial(material);
-		//basicShader.SetDirLight(dirLight);
-		//basicShader.SetPointLight(pointLight);
-		//basicShader.SetSpotLight(spotLight);
+		objectMesh.render();
 
-		//basicShader.SetUniform1f("UseNormalMapping", UseNormalMapping);
 
-		//objectMesh.render();
+		basicShader.Unbind();
 
-		//basicShader.Unbind();
-
-		// Draw Point Light
+		// Draw Dir Light
 		lampShader.Bind();
 		lampShader.SetUniform4fv("model", dirLightTrans.GetTransformationMatrix());
 		lampShader.SetUniform4fv("view", camera.GetViewMatrix());

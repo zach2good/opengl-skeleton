@@ -6,11 +6,6 @@ class Texture
 {
 public:
 	GLenum Format;
-	const char * type;
-
-	float shineDamper = 0.12f;
-	float reflectivity = 0.02f;
-	bool hasTransparency = false;
 
 	Texture(const char* filename);
 
