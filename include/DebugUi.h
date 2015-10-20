@@ -4,8 +4,9 @@
 
 #include "common.h"
 
-#include <imgui\imgui.h>
-#include <imgui\imgui_impl_sdlogl3.h>
+#include "imgui/imgui.h"
+#include "imgui/imgui_impl_sdlogl3.h"
+#include "imgui/imgui_internal.h"
 
 struct FloatDebug
 {
@@ -27,6 +28,15 @@ struct BoolDebug
 	bool* value;
 };
 
+struct ColorDebug
+{
+	ColorDebug(const char* title, vec3* col) :
+		title(title), col(col) {}
+
+	const char* title;
+	vec3* col;
+};
+
 class DebugUi
 {
 public:
@@ -45,8 +55,13 @@ public:
 
 	void addBool(const char* title, bool* var);
 
+	void addColor(const char* title, vec3* val);
+
 	std::vector<FloatDebug> floats;
 	std::vector<BoolDebug> bools;
+	std::vector<ColorDebug> colors;
 
 	SDL_Window* m_Window;
+
+	bool ColorPicker(const char* label, ImColor* color);
 };

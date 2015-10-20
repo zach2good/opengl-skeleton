@@ -133,16 +133,16 @@ int main(int argc, char *argv[])
 
 	DebugUi debugUi = DebugUi(window.getWindow());
 
-	debugUi.addFloat("PointLight R", &pointLight.color.r, 0.0f, 1.0f);
-	debugUi.addFloat("PointLight G", &pointLight.color.g, 0.0f, 1.0f);
-	debugUi.addFloat("PointLight B", &pointLight.color.b, 0.0f, 1.0f);
-
 	debugUi.addFloat("Camera X", &camera.Position.x);
 	debugUi.addFloat("Camera Y", &camera.Position.y);
 	debugUi.addFloat("Camera Z", &camera.Position.z);
 
 	debugUi.addBool("Normal Mapping", &UseNormalMapping);
 	debugUi.addBool("Wireframe", &UseWireFrame);
+
+	debugUi.addColor("DirLight Color", &dirLight.color);
+	debugUi.addColor("PointLight Color", &pointLight.color);
+	debugUi.addColor("SpotLight Color", &spotLight.color);
 
 	while (!window.isCloseRequested()) {
 
