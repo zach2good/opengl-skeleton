@@ -92,6 +92,10 @@ int main(int argc, char *argv[])
 	pointLightTrans.SetPosition(vec3(1, 1, 1));
 	pointLightTrans.SetScale(vec3(0.1f));
 
+	Transformation pointLight2Trans = Transformation();
+	pointLight2Trans.SetPosition(vec3(2, 1, 1));
+	pointLight2Trans.SetScale(vec3(0.1f));
+
 	Transformation spotLightTrans = Transformation();
 	spotLightTrans.SetPosition(vec3(0.0f, 0.0f, 2.0f));
 	spotLightTrans.SetRotation(vec3(90.0f, 0.0f, 0.0f));
@@ -99,12 +103,13 @@ int main(int argc, char *argv[])
 
 	DirLight dirLight = DirLight(vec3(-0.2f, -1.0f, -0.3f), WHITE);
 	PointLight pointLight = PointLight(vec3(0.0f), RED);
+	PointLight pointLight2 = PointLight(vec3(1.0f), BLUE);
 	SpotLight spotLight = SpotLight(spotLightTrans.GetPosition(), camera.Front, GREEN);
 
 	int centerX = window.getWidth() / 2;
 	int centerY = window.getHeight() / 2;
 
-	bool useNormalMapping = true;
+	bool useNormalMapping = false;
 
 	bool showWireFrame = false;
 	bool showNormalMap = false;
@@ -124,7 +129,8 @@ int main(int argc, char *argv[])
 	debugUi.addBool("Show Specular Map", &showSpecularMap);
 
 	debugUi.addColor("DirLight Color", &dirLight.color);
-	debugUi.addColor("PointLight Color", &pointLight.color);
+	debugUi.addColor("PointLight 1 Color", &pointLight.color);
+	debugUi.addColor("PointLight 2 Color", &pointLight2.color);
 	debugUi.addColor("SpotLight Color", &spotLight.color);
 
 	while (!window.isCloseRequested()) {
@@ -170,9 +176,15 @@ int main(int argc, char *argv[])
 
 		objectTrans.SetRotation(vec3(0, time_sin * 10, 0));
 
+		dirLight.update();
+
 		pointLightTrans.SetPosition(vec3(time_sin * 2, 0, time_cos * 2));
 		pointLight.position = pointLightTrans.GetPosition();
 		pointLight.update();
+
+		pointLight2Trans.SetPosition(vec3(time_cos * 2, 0.5f, time_sin * 2));
+		pointLight2.position = pointLight2Trans.GetPosition();
+		pointLight2.update();
 
 		spotLightTrans.SetPosition(vec3(-time_sin, -0.7f, 2));
 		spotLight.position = spotLightTrans.GetPosition();
@@ -201,7 +213,25 @@ int main(int argc, char *argv[])
 		basicShader.SetUniform1f("shininess", 32.0f);
 
 		basicShader.SetDirLight(dirLight);
-		basicShader.SetPointLight(pointLight);
+
+		//basicShader.SetPointLight(pointLight);
+
+		basicShader.SetUniform3fv("pointLights[0].position", pointLight.position);
+		basicShader.SetUniform3fv("pointLights[0].ambient", pointLight.ambient);
+		basicShader.SetUniform3fv("pointLights[0].diffuse", pointLight.diffuse);
+		basicShader.SetUniform3fv("pointLights[0].specular", pointLight.specular);
+		basicShader.SetUniform1f("pointLights[0].constant", pointLight.constant);
+		basicShader.SetUniform1f("pointLights[0].linear", pointLight.linear);
+		basicShader.SetUniform1f("pointLights[0].quadratic", pointLight.quadratic);
+
+		basicShader.SetUniform3fv("pointLights[1].position", pointLight2.position );
+		basicShader.SetUniform3fv("pointLights[1].ambient", pointLight2.ambient);
+		basicShader.SetUniform3fv("pointLights[1].diffuse", pointLight2.diffuse);
+		basicShader.SetUniform3fv("pointLights[1].specular", pointLight2.specular);
+		basicShader.SetUniform1f("pointLights[1].constant", pointLight2.constant);
+		basicShader.SetUniform1f("pointLights[1].linear", pointLight2.linear);
+		basicShader.SetUniform1f("pointLights[1].quadratic", pointLight2.quadratic);
+
 		basicShader.SetSpotLight(spotLight);
 
 		basicShader.SetUniform1i("useNormalMapping", useNormalMapping);
@@ -222,13 +252,23 @@ int main(int argc, char *argv[])
 		dirLightMesh.render();
 		lampShader.Unbind();
 
-		// Draw Point Light
+		// Draw Point Light 1
 		lampShader.Bind();
 		lampShader.SetUniform4fv("model", pointLightTrans.GetTransformationMatrix());
 		lampShader.SetUniform4fv("view", camera.GetViewMatrix());
 		lampShader.SetUniform4fv("projection", glm::perspective(camera.Zoom, (float)window.getWidth() / (float)window.getHeight(), 0.1f, 1000.0f));
 		lampShader.SetUniform3fv("viewPos", camera.Position);
 		lampShader.SetUniform3fv("color", pointLight.color);
+		pointLightMesh.render();
+		lampShader.Unbind();
+
+		// Draw Point Light	2
+		lampShader.Bind();
+		lampShader.SetUniform4fv("model", pointLight2Trans.GetTransformationMatrix());
+		lampShader.SetUniform4fv("view", camera.GetViewMatrix());
+		lampShader.SetUniform4fv("projection", glm::perspective(camera.Zoom, (float)window.getWidth() / (float)window.getHeight(), 0.1f, 1000.0f));
+		lampShader.SetUniform3fv("viewPos", camera.Position);
+		lampShader.SetUniform3fv("color", pointLight2.color);
 		pointLightMesh.render();
 		lampShader.Unbind();
 

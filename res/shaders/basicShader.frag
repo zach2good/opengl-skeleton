@@ -51,7 +51,7 @@ uniform sampler2D normalMap;
 uniform float shininess;
 
 uniform DirLight dirLight;
-uniform PointLight pointLight;
+uniform PointLight pointLights[2];
 uniform SpotLight spotLight;
 
 uniform bool useNormalMapping;
@@ -79,10 +79,9 @@ void main()
 		norm = normalize(norm * 2.0 - 1.0); 
 	} 
 
-	norm = normalize(norm); 
-
 	vec3 dir = CalcDirLight(dirLight, norm, viewDir);
-	vec3 point = CalcPointLight(pointLight, norm, FragPos, viewDir); 
+	vec3 point = CalcPointLight(pointLights[0], norm, FragPos, viewDir); 
+		 point += CalcPointLight(pointLights[1], norm, FragPos, viewDir); 
 	vec3 spot = CalcSpotLight(spotLight, norm, FragPos, viewDir); 
 
 	vec3 result = dir + point + spot;
