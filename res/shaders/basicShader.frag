@@ -39,6 +39,7 @@ struct SpotLight {
 in vec3 FragPos;
 in vec3 Normal;
 in vec2 TexCoords;
+in mat3 TBN;
 
 out vec4 color;
 
@@ -77,6 +78,8 @@ void main()
 		// Transform normal vector to range [-1,1]
 		norm = normalize(norm * 2.0 - 1.0); 
 	} 
+
+	norm = normalize(norm); 
 
 	vec3 dir = CalcDirLight(dirLight, norm, viewDir);
 	vec3 point = CalcPointLight(pointLight, norm, FragPos, viewDir); 
