@@ -83,6 +83,12 @@ int main(int argc, char *argv[])
 	Mesh dirLightMesh = Mesh("../res/models/cube.obj");
 	Mesh pointLightMesh = Mesh("../res/models/sphere.obj");
 	Mesh flashlightMesh = Mesh("../res/models/flashlight.obj");
+	Mesh quadMesh = Mesh("../res/models/quad.obj");
+
+	Transformation quadTrans = Transformation();
+	quadTrans.SetPosition(vec3(-10.0f, -1.8f, 10.0f));
+	quadTrans.SetRotation(vec3(-90, 0, 0));
+	quadTrans.SetScale(vec3(10.f));
 
 	Transformation dirLightTrans = Transformation();
 	dirLightTrans.SetPosition(vec3(0, 2.0f, 0));
@@ -193,16 +199,24 @@ int main(int argc, char *argv[])
 		// Clear
 		window.clear();
 
+		// Draw Quad
+		lampShader.Bind();
+		lampShader.SetUniform4fv("model", quadTrans.GetTransformationMatrix());
+		lampShader.SetUniform4fv("view", camera.GetViewMatrix());
+		lampShader.SetUniform4fv("projection", glm::perspective(camera.Zoom, (float)window.getWidth() / (float)window.getHeight(), 0.1f, 1000.0f));
+		lampShader.SetUniform3fv("viewPos", camera.Position);
+		lampShader.SetUniform3fv("color", RED);
+		quadMesh.render();
+		lampShader.Unbind();
+
 		// 3D Render
 		basicShader.Bind();
-
 		// Model, View and World Matrices
 		basicShader.SetMVP(
 			objectTrans.GetTransformationMatrix(),
 			camera.GetViewMatrix(),
 			glm::perspective(camera.Zoom, (float)window.getWidth() / (float)window.getHeight(), 0.1f, 1000.0f)
 		);
-
 		basicShader.SetUniform3fv("viewPos", camera.Position);
 
 		// Material
