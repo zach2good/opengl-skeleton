@@ -1,26 +1,5 @@
 #include "common.h"
 
-class Material
-{
-public:
-	Texture diffuse;
-	Texture specular;
-
-	float shininess;
-
-	Material(Texture tex)
-		: diffuse(tex), specular(tex)
-	{
-		shininess = 32.0f;
-	}
-
-	Material(Texture d, Texture s)
-		: diffuse(d), specular(s)
-	{
-		shininess = 32.0f;
-	}
-};
-
 class BasicShader : public ShaderProgram
 {
 public:
@@ -33,16 +12,11 @@ public:
 		SetUniform4fv("view", v);
 		SetUniform4fv("projection", p);
 	}
-	void SetMaterial(Material material)
-	{
-		SetUniform1i("material.diffuse", material.diffuse.GetTextureID());
-		SetUniform1i("material.specular", material.specular.GetTextureID());
-		SetUniform1f("material.shininess", material.shininess);
-	}
 
 	void SetDirLight(DirLight dirLight)
 	{
 		SetUniform3fv("dirLight.direction", dirLight.direction);
+
 		SetUniform3fv("dirLight.ambient", dirLight.ambient);
 		SetUniform3fv("dirLight.diffuse", dirLight.diffuse);
 		SetUniform3fv("dirLight.specular", dirLight.specular);
@@ -51,9 +25,11 @@ public:
 	void SetPointLight(PointLight pointLight)
 	{
 		SetUniform3fv("pointLight.position", pointLight.position);
+
 		SetUniform3fv("pointLight.ambient", pointLight.ambient);
 		SetUniform3fv("pointLight.diffuse", pointLight.diffuse);
 		SetUniform3fv("pointLight.specular", pointLight.specular);
+
 		SetUniform1f("pointLight.constant", pointLight.constant);
 		SetUniform1f("pointLight.linear", pointLight.linear);
 		SetUniform1f("pointLight.quadratic", pointLight.quadratic);
@@ -63,12 +39,15 @@ public:
 	{
 		SetUniform3fv("spotLight.position", spotLight.position);
 		SetUniform3fv("spotLight.direction", spotLight.direction);
+
 		SetUniform3fv("spotLight.ambient", spotLight.ambient);
 		SetUniform3fv("spotLight.diffuse", spotLight.diffuse);
 		SetUniform3fv("spotLight.specular", spotLight.specular);
+
 		SetUniform1f("spotLight.constant", spotLight.constant);
 		SetUniform1f("spotLight.linear", spotLight.linear);
 		SetUniform1f("spotLight.quadratic", spotLight.quadratic);
+
 		SetUniform1f("spotLight.cutOff", spotLight.cutOff);
 		SetUniform1f("spotLight.outerCutOff", spotLight.outerCutOff);
 	}
@@ -90,13 +69,13 @@ int main(int argc, char *argv[])
 
 	Mesh objectMesh = Mesh("../res/models/head/head.obj");
 
-	Texture texture = Texture("../res/models/head/Diffuse.png");
+	Texture diffuseMap = Texture("../res/models/head/Diffuse.png");
 	Texture specularMap = Texture("../res/models/head/Specular.png");
+	Texture normalMap = Texture("../res/models/head/Normal.png");
 
-	Material material = Material(texture, specularMap);
-
-	texture.Bind(texture.GetTextureID());
+	diffuseMap.Bind(diffuseMap.GetTextureID());
 	specularMap.Bind(specularMap.GetTextureID());
+	normalMap.Bind(normalMap.GetTextureID());
 
 	Transformation objectTrans = Transformation();
 	objectTrans.SetScale(vec3(5.8f));
@@ -125,8 +104,11 @@ int main(int argc, char *argv[])
 	int centerX = window.getWidth() / 2;
 	int centerY = window.getHeight() / 2;
 
-	bool UseNormalMapping = true;
-	bool UseWireFrame = false;
+	bool useNormalMapping = true;
+
+	bool showWireFrame = false;
+	bool showNormalMap = false;
+	bool showSpecularMap = false;
 
 	DebugUi debugUi = DebugUi(window.getWindow());
 
@@ -136,12 +118,14 @@ int main(int argc, char *argv[])
 
 	debugUi.addVec3("Camera", &camera.Position);
 
-	debugUi.addBool("Normal Mapping", &UseNormalMapping);
-	debugUi.addBool("Wireframe", &UseWireFrame);
+	debugUi.addBool("Normal Mapping", &useNormalMapping);
+	debugUi.addBool("Show Wireframe", &showWireFrame);
+	debugUi.addBool("Show Normal Map", &showNormalMap);
+	debugUi.addBool("Show Specular Map", &showSpecularMap);
 
-	//debugUi.addColor("DirLight Color", &dirLight.color);
+	debugUi.addColor("DirLight Color", &dirLight.color);
 	debugUi.addColor("PointLight Color", &pointLight.color);
-	//debugUi.addColor("SpotLight Color", &spotLight.color);
+	debugUi.addColor("SpotLight Color", &spotLight.color);
 
 	while (!window.isCloseRequested()) {
 
@@ -177,7 +161,7 @@ int main(int argc, char *argv[])
 			camera.ProcessKeyboard(DOWN, deltaTime);
 		}
 
-		glPolygonMode(GL_FRONT_AND_BACK, (UseWireFrame) ? GL_LINE : GL_FILL);
+		glPolygonMode(GL_FRONT_AND_BACK, (showWireFrame) ? GL_LINE : GL_FILL);
 
 		//Update
 		float time = (SDL_GetTicks() / 500.0f) * speedMultiplier;
@@ -192,6 +176,7 @@ int main(int argc, char *argv[])
 
 		spotLightTrans.SetPosition(vec3(-time_sin, -0.7f, 2));
 		spotLight.position = spotLightTrans.GetPosition();
+		spotLight.update();
 
 		// Clear
 		window.clear();
@@ -207,52 +192,63 @@ int main(int argc, char *argv[])
 		);
 
 		basicShader.SetUniform3fv("viewPos", camera.Position);
-		basicShader.SetMaterial(material);
+
+		// Material
+		// Passing in Textures in a struct crashes the program?
+		basicShader.SetUniform1i("diffuseMap", diffuseMap.GetTextureID());
+		basicShader.SetUniform1i("specularMap", specularMap.GetTextureID());
+		basicShader.SetUniform1i("normalMap", normalMap.GetTextureID());
+		basicShader.SetUniform1f("shininess", 32.0f);
+
+		basicShader.SetDirLight(dirLight);
 		basicShader.SetPointLight(pointLight);
+		basicShader.SetSpotLight(spotLight);
+
+		basicShader.SetUniform1i("useNormalMapping", useNormalMapping);
+		basicShader.SetUniform1i("showNormalMap", showNormalMap);
+		basicShader.SetUniform1i("showSpecularMap", showSpecularMap);
 
 		objectMesh.render();
 
 		basicShader.Unbind();
 
-		//// Draw Dir Light
-		//lampShader.Bind();
-		//lampShader.SetUniform4fv("model", dirLightTrans.GetTransformationMatrix());
-		//lampShader.SetUniform4fv("view", camera.GetViewMatrix());
-		//lampShader.SetUniform4fv("projection", glm::perspective(camera.Zoom, (float)window.getWidth() / (float)window.getHeight(), 0.1f, 1000.0f));
-		//lampShader.SetUniform3fv("color", dirLight.color);
-		//dirLightMesh.render();
-		//lampShader.Unbind();
+		// Draw Dir Light
+		lampShader.Bind();
+		lampShader.SetUniform4fv("model", dirLightTrans.GetTransformationMatrix());
+		lampShader.SetUniform4fv("view", camera.GetViewMatrix());
+		lampShader.SetUniform4fv("projection", glm::perspective(camera.Zoom, (float)window.getWidth() / (float)window.getHeight(), 0.1f, 1000.0f));
+		lampShader.SetUniform3fv("viewPos", camera.Position);
+		lampShader.SetUniform3fv("color", dirLight.color);
+		dirLightMesh.render();
+		lampShader.Unbind();
 
 		// Draw Point Light
 		lampShader.Bind();
 		lampShader.SetUniform4fv("model", pointLightTrans.GetTransformationMatrix());
 		lampShader.SetUniform4fv("view", camera.GetViewMatrix());
 		lampShader.SetUniform4fv("projection", glm::perspective(camera.Zoom, (float)window.getWidth() / (float)window.getHeight(), 0.1f, 1000.0f));
-
 		lampShader.SetUniform3fv("viewPos", camera.Position);
-
 		lampShader.SetUniform3fv("color", pointLight.color);
-
 		pointLightMesh.render();
-
 		lampShader.Unbind();
 
-		//// Draw Spot Light
-		//lampShader.Bind();
-		//lampShader.SetUniform4fv("model", spotLightTrans.GetTransformationMatrix());
-		//lampShader.SetUniform4fv("view", camera.GetViewMatrix());
-		//lampShader.SetUniform4fv("projection", glm::perspective(camera.Zoom, (float)window.getWidth() / (float)window.getHeight(), 0.1f, 1000.0f));
-		//lampShader.SetUniform3fv("color", spotLight.color);
-		//flashlightMesh.render();
-		//lampShader.Unbind();
+		// Draw Spot Light
+		lampShader.Bind();
+		lampShader.SetUniform4fv("model", spotLightTrans.GetTransformationMatrix());
+		lampShader.SetUniform4fv("view", camera.GetViewMatrix());
+		lampShader.SetUniform4fv("projection", glm::perspective(camera.Zoom, (float)window.getWidth() / (float)window.getHeight(), 0.1f, 1000.0f));
+		lampShader.SetUniform3fv("viewPos", camera.Position);
+		lampShader.SetUniform3fv("color", spotLight.color);
+		flashlightMesh.render();
+		lampShader.Unbind();
 
 		// 2D Render
 #ifdef _DEBUG 
 		// Render 2D
-		if (UseWireFrame) { glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); }
+		if (showWireFrame) { glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); }
 		debugUi.prepare();
 		debugUi.render();
-		if (UseWireFrame) { glPolygonMode(GL_FRONT_AND_BACK, GL_LINES); }
+		if (showWireFrame) { glPolygonMode(GL_FRONT_AND_BACK, GL_LINES); }
 #endif // _DEBUG 
 
 		// Swap
