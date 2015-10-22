@@ -67,18 +67,24 @@ int main(int argc, char *argv[])
 	ShaderProgram lampShader = ShaderProgram("../res/shaders/lampShader");
 	ShaderProgram depthShader = ShaderProgram("../res/shaders/depthShader");
 
-	Mesh objectMesh = Mesh("../res/models/head/head.obj");
+	//Mesh objectMesh = Mesh("../res/models/head/head.obj");
+	//Texture diffuseMap = Texture("../res/models/head/Diffuse.png");
+	//Texture specularMap = Texture("../res/models/head/Specular.png");
+	//Texture normalMap = Texture("../res/models/head/Normal.png");
 
-	Texture diffuseMap = Texture("../res/models/head/Diffuse.png");
-	Texture specularMap = Texture("../res/models/head/Specular.png");
-	Texture normalMap = Texture("../res/models/head/Normal.png");
+	Mesh objectMesh = Mesh("../res/models/cube.obj");
+	Texture diffuseMap = Texture("../res/models/rastertek/diffuse.png");
+	Texture specularMap = Texture("../res/models/rastertek/specular.png");
+	Texture normalMap = Texture("../res/models/rastertek/normal.png");
 
 	diffuseMap.Bind(diffuseMap.GetTextureID());
 	specularMap.Bind(specularMap.GetTextureID());
 	normalMap.Bind(normalMap.GetTextureID());
 
+	float shininess = 32.0f;
+
 	Transformation objectTrans = Transformation();
-	objectTrans.SetScale(vec3(5.8f));
+	//objectTrans.SetScale(vec3(5.8f));
 
 	Mesh dirLightMesh = Mesh("../res/models/cube.obj");
 	Mesh pointLightMesh = Mesh("../res/models/sphere.obj");
@@ -126,6 +132,7 @@ int main(int argc, char *argv[])
 	float speedMultiplier = 1.0f;
 
 	debugUi.addFloat("Speed Multiplier", &speedMultiplier, 0.0f, 5.0f);
+	debugUi.addFloat("Shininess", &shininess, 0.0f, 128.0f);
 
 	debugUi.addVec3("Camera", &camera.Position);
 
@@ -224,7 +231,7 @@ int main(int argc, char *argv[])
 		basicShader.SetUniform1i("diffuseMap", diffuseMap.GetTextureID());
 		basicShader.SetUniform1i("specularMap", specularMap.GetTextureID());
 		basicShader.SetUniform1i("normalMap", normalMap.GetTextureID());
-		basicShader.SetUniform1f("shininess", 32.0f);
+		basicShader.SetUniform1f("shininess", shininess);
 
 		basicShader.SetDirLight(dirLight);
 
@@ -246,7 +253,7 @@ int main(int argc, char *argv[])
 
 		basicShader.SetSpotLight(spotLight);
 
-		basicShader.SetUniform1i("useNormalMapping", useNormalMapping);
+		basicShader.SetUniform1i("useNormalMapping", useNormalMapping);	
 		basicShader.SetUniform1i("showNormalMap", showNormalMap);
 		basicShader.SetUniform1i("showSpecularMap", showSpecularMap);
 
