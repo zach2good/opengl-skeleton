@@ -31,6 +31,7 @@ using namespace glm;
 #include "DebugUi.h"
 #include "Input.h"
 #include "ShaderProgram.h"
+#include "GBuffer.h"
 
 #include "Material.h"
 #include "DirLight.h"

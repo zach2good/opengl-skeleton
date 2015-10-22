@@ -228,8 +228,6 @@ int main(int argc, char *argv[])
 
 		basicShader.SetDirLight(dirLight);
 
-		//basicShader.SetPointLight(pointLight);
-
 		basicShader.SetUniform3fv("pointLights[0].position", pointLight.position);
 		basicShader.SetUniform3fv("pointLights[0].ambient", pointLight.ambient);
 		basicShader.SetUniform3fv("pointLights[0].diffuse", pointLight.diffuse);
