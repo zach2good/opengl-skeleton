@@ -205,7 +205,7 @@ int main(int argc, char *argv[])
 		lampShader.SetUniform4fv("view", camera.GetViewMatrix());
 		lampShader.SetUniform4fv("projection", glm::perspective(camera.Zoom, (float)window.getWidth() / (float)window.getHeight(), 0.1f, 1000.0f));
 		lampShader.SetUniform3fv("viewPos", camera.Position);
-		lampShader.SetUniform3fv("color", RED);
+		lampShader.SetUniform3fv("color", FIREBRICK);
 		quadMesh.render();
 		lampShader.Unbind();
 

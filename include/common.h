@@ -22,10 +22,7 @@ using namespace glm;
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-#define WHITE vec3(1.0f)
-#define RED vec3(1.0f, 0.0f, 0.0f)
-#define BLUE vec3(0.0f, 0.0f, 1.0f)
-#define GREEN vec3(0.0f, 1.0f, 0.0f)
+#include "graphics\Color.h"
 
 #include "Window.h"
 #include "DebugUi.h"
@@ -46,8 +43,6 @@ using namespace glm;
 #include "Texture.h"
 
 #include "Transformation.h"
-
-
 
 
 
