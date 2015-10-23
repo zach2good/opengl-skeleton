@@ -56,38 +56,25 @@ public:
 int main(int argc, char *argv[])
 {
 	Window window = Window("OpenGL Skeleton", 1280, 720);
-
 	Input input = Input();
 
 	Camera camera = Camera();
 	camera.Position = vec3(0, 0, 5);
 
-	BasicShader debugShader = BasicShader("../res/shaders/debugShader"); 
 	BasicShader basicShader = BasicShader("../res/shaders/basicShader");
 	ShaderProgram lampShader = ShaderProgram("../res/shaders/lampShader");
-	ShaderProgram depthShader = ShaderProgram("../res/shaders/depthShader");
-
-	//Mesh objectMesh = Mesh("../res/models/head/head.obj");
-	//Texture diffuseMap = Texture("../res/models/head/Diffuse.png");
-	//Texture specularMap = Texture("../res/models/head/Specular.png");
-	//Texture normalMap = Texture("../res/models/head/Normal.png");
 
 	Mesh objectMesh = Mesh("../res/models/cube.obj");
-	Texture diffuseMap = Texture("../res/models/rastertek/diffuse.png");
-	Texture specularMap = Texture("../res/models/rastertek/specular.png");
-	Texture normalMap = Texture("../res/models/rastertek/normal.png");
+	Texture texture = Texture("../res/textures/box.jpg");
 
-	diffuseMap.Bind(diffuseMap.GetTextureID());
-	specularMap.Bind(specularMap.GetTextureID());
-	normalMap.Bind(normalMap.GetTextureID());
+	texture.Bind(texture.GetTextureID());
 
 	float shininess = 32.0f;
 
 	Transformation objectTrans = Transformation();
-	//objectTrans.SetScale(vec3(5.8f));
 
-	Mesh dirLightMesh = Mesh("../res/models/cube.obj");
-	Mesh pointLightMesh = Mesh("../res/models/sphere.obj");
+	Mesh cubeMesh = Mesh("../res/models/cube.obj");
+	Mesh sphereMesh = Mesh("../res/models/sphere.obj");
 	Mesh flashlightMesh = Mesh("../res/models/flashlight.obj");
 	Mesh quadMesh = Mesh("../res/models/quad.obj");
 
@@ -200,9 +187,8 @@ int main(int argc, char *argv[])
 		pointLight2.position = pointLight2Trans.GetPosition();
 		pointLight2.update();
 
-		//spotLightTrans.SetPosition(vec3(-time_sin, -0.7f, 2));
-		//spotLight.position = spotLightTrans.GetPosition();
 		spotLight.update();
+		spotLightTrans.SetPosition(spotLight.position);
 
 		// Clear
 		window.clear();
@@ -219,6 +205,7 @@ int main(int argc, char *argv[])
 
 		// 3D Render
 		basicShader.Bind();
+
 		// Model, View and World Matrices
 		basicShader.SetMVP(
 			objectTrans.GetTransformationMatrix(),
@@ -227,16 +214,12 @@ int main(int argc, char *argv[])
 		);
 		basicShader.SetUniform3fv("viewPos", camera.Position);
 
-		// Material
-		// Passing in Textures in a struct crashes the program?
-		basicShader.SetUniform1i("diffuseMap", diffuseMap.GetTextureID());
-		basicShader.SetUniform1i("specularMap", specularMap.GetTextureID());
-		basicShader.SetUniform1i("normalMap", normalMap.GetTextureID());
+		basicShader.SetUniform1i("texture", texture.GetTextureID());
 		basicShader.SetUniform1f("shininess", shininess);
 
 		basicShader.SetDirLight(dirLight);
 
-		/*basicShader.SetUniform3fv("pointLights[0].position", pointLight.position);
+		basicShader.SetUniform3fv("pointLights[0].position", pointLight.position);
 		basicShader.SetUniform3fv("pointLights[0].ambient", pointLight.ambient);
 		basicShader.SetUniform3fv("pointLights[0].diffuse", pointLight.diffuse);
 		basicShader.SetUniform3fv("pointLights[0].specular", pointLight.specular);
@@ -250,13 +233,9 @@ int main(int argc, char *argv[])
 		basicShader.SetUniform3fv("pointLights[1].specular", pointLight2.specular);
 		basicShader.SetUniform1f("pointLights[1].constant", pointLight2.constant);
 		basicShader.SetUniform1f("pointLights[1].linear", pointLight2.linear);
-		basicShader.SetUniform1f("pointLights[1].quadratic", pointLight2.quadratic);*/
+		basicShader.SetUniform1f("pointLights[1].quadratic", pointLight2.quadratic);
 
 		basicShader.SetSpotLight(spotLight);
-
-		basicShader.SetUniform1i("useNormalMapping", useNormalMapping);	
-		basicShader.SetUniform1i("showNormalMap", showNormalMap);
-		basicShader.SetUniform1i("showSpecularMap", showSpecularMap);
 
 		objectMesh.render();
 
@@ -269,7 +248,7 @@ int main(int argc, char *argv[])
 		lampShader.SetUniform4fv("projection", glm::perspective(camera.Zoom, (float)window.getWidth() / (float)window.getHeight(), 0.1f, 1000.0f));
 		lampShader.SetUniform3fv("viewPos", camera.Position);
 		lampShader.SetUniform3fv("color", dirLight.color);
-		dirLightMesh.render();
+		cubeMesh.render();
 		lampShader.Unbind();
 
 		// Draw Point Light 1
@@ -279,7 +258,7 @@ int main(int argc, char *argv[])
 		lampShader.SetUniform4fv("projection", glm::perspective(camera.Zoom, (float)window.getWidth() / (float)window.getHeight(), 0.1f, 1000.0f));
 		lampShader.SetUniform3fv("viewPos", camera.Position);
 		lampShader.SetUniform3fv("color", pointLight.color);
-		pointLightMesh.render();
+		sphereMesh.render();
 		lampShader.Unbind();
 
 		// Draw Point Light	2
@@ -289,7 +268,7 @@ int main(int argc, char *argv[])
 		lampShader.SetUniform4fv("projection", glm::perspective(camera.Zoom, (float)window.getWidth() / (float)window.getHeight(), 0.1f, 1000.0f));
 		lampShader.SetUniform3fv("viewPos", camera.Position);
 		lampShader.SetUniform3fv("color", pointLight2.color);
-		pointLightMesh.render();
+		sphereMesh.render();
 		lampShader.Unbind();
 
 		// Draw Spot Light
@@ -302,14 +281,9 @@ int main(int argc, char *argv[])
 		flashlightMesh.render();
 		lampShader.Unbind();
 
-		// 2D Render
-#ifdef _DEBUG 
 		// Render 2D
-		if (showWireFrame) { glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); }
 		debugUi.prepare();
 		debugUi.render();
-		if (showWireFrame) { glPolygonMode(GL_FRONT_AND_BACK, GL_LINES); }
-#endif // _DEBUG 
 
 		// Swap
 		window.swap();

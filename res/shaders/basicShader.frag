@@ -39,7 +39,6 @@ struct SpotLight {
 in vec3 FragPos;
 in vec3 Normal;
 in vec2 TexCoords;
-in mat3 TBN;
 
 out vec4 color;
 
@@ -54,11 +53,6 @@ uniform DirLight dirLight;
 uniform PointLight pointLights[2];
 uniform SpotLight spotLight;
 
-uniform bool useNormalMapping;
-
-uniform bool showNormalMap;
-uniform bool showSpecularMap;
-
 // Function prototypes
 vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir);
 vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
@@ -70,31 +64,12 @@ void main()
     vec3 norm = normalize(Normal);
     vec3 viewDir = normalize(viewPos - FragPos);
 
-	if (useNormalMapping)
-	{
-		// Obtain normal from normal map
-		norm = texture(normalMap, TexCoords).rgb;
-
-		// Transform normal vector to range [-1,1]
-		norm = normalize(norm * 2.0 - 1.0); 
-	} 
-
 	vec3 dir = CalcDirLight(dirLight, norm, viewDir);
 	vec3 point = CalcPointLight(pointLights[0], norm, FragPos, viewDir); 
 		 point += CalcPointLight(pointLights[1], norm, FragPos, viewDir); 
 	vec3 spot = CalcSpotLight(spotLight, norm, FragPos, viewDir); 
 
 	vec3 result = dir + point + spot;
-
-	if (showSpecularMap) 
-	{
-		result = vec3(texture(specularMap, TexCoords));
-	}
-
-	if (showNormalMap) 
-	{
-		result = vec3(texture(normalMap, TexCoords));
-	}
 
     color = vec4(result, 1.0);
 } 

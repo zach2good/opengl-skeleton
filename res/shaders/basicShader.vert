@@ -9,7 +9,6 @@ layout (location = 4) in vec3 bitangent;
 out vec3 FragPos; 
 out vec2 TexCoords;
 out vec3 Normal;
-out mat3 TBN;
 
 uniform mat4 model;
 uniform mat4 view;
@@ -23,10 +22,5 @@ void main()
 	TexCoords = texCoords;  
 
 	mat3 normalMatrix = transpose(inverse(mat3(model)));
-	Normal = normalMatrix * normal;
-
-	vec3 T = normalize(vec3(model * vec4(tangent,   0.0)));
-    vec3 B = normalize(vec3(model * vec4(bitangent, 0.0)));
-    vec3 N = normalize(vec3(model * vec4(normal,    0.0)));
-	mat3 TBN = transpose(mat3(T, B, N));     
+	Normal = normalMatrix * normal;  
 } 
