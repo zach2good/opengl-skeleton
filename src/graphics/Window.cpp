@@ -105,7 +105,7 @@ void Window::cleanUp()
 	SDL_Quit();
 }
 
-SDL_Window* Window::getWindow()
+SDL_Window* Window::getWindow() const
 {
 	return m_Window;
 }

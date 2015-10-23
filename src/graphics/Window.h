@@ -24,12 +24,12 @@ public:
 	bool isCloseRequested();
 	void requestClose();
 
-	SDL_Window* getWindow();
+	SDL_Window* getWindow() const;
 	SDL_GLContext getContext();
 
-	inline int getWidth() { return WIDTH; }
-	inline int getHeight() { return HEIGHT; }
-	inline float getAspect() { return (float)WIDTH / (float)HEIGHT; }
+	int getWidth() const { return WIDTH; }
+	int getHeight() const { return HEIGHT; }
+	float getAspect() const	{ return float(WIDTH) / float(HEIGHT); }
 
 private:
 	SDL_Window *m_Window;

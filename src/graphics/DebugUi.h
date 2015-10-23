@@ -49,7 +49,7 @@ struct Vec3Debug
 class DebugUi
 {
 public:
-	DebugUi(SDL_Window* window);
+	explicit DebugUi(SDL_Window* window);
 	~DebugUi();
 
 	void prepare();

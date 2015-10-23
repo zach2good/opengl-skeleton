@@ -1,61 +1,62 @@
 #include "common.h"
 
+#undef main
 int main(int argc, char *argv[])
 {
-	Window window = Window("OpenGL Skeleton", 1280, 720);
+	auto window = Window("OpenGL Skeleton", 1280, 720);
 
-	Camera camera = Camera();
+	auto camera = Camera();
 	camera.Position = vec3(0, 0, 5);
 
-	BasicShader basicShader = BasicShader("../res/shaders/basicShader");
-	ShaderProgram lampShader = ShaderProgram("../res/shaders/lampShader");
+	auto basicShader = BasicShader("../res/shaders/basicShader");
+	auto lampShader = ShaderProgram("../res/shaders/lampShader");
 
-	Mesh objectMesh = Mesh("../res/models/cube.obj");
-	Texture texture = Texture("../res/textures/box.jpg");
+	auto objectMesh = Mesh("../res/models/cube.obj");
+	auto texture = Texture("../res/textures/box.jpg");
 
 	texture.Bind(texture.GetTextureID());
 
-	float shininess = 32.0f;
+	auto shininess = 32.0f;
 
-	Transformation objectTrans = Transformation();
+	auto objectTrans = Transformation();
 
-	Mesh cubeMesh = Mesh("../res/models/cube.obj");
-	Mesh sphereMesh = Mesh("../res/models/sphere.obj");
-	Mesh flashlightMesh = Mesh("../res/models/flashlight.obj");
-	Mesh quadMesh = Mesh("../res/models/quad.obj");
+	auto cubeMesh = Mesh("../res/models/cube.obj");
+	auto sphereMesh = Mesh("../res/models/sphere.obj");
+	auto flashlightMesh = Mesh("../res/models/flashlight.obj");
+	auto quadMesh = Mesh("../res/models/quad.obj");
 
-	Transformation quadTrans = Transformation();
+	auto quadTrans = Transformation();
 	quadTrans.SetPosition(vec3(-10.0f, -1.8f, 10.0f));
 	quadTrans.SetRotation(vec3(-90, 0, 0));
 	quadTrans.SetScale(vec3(10.f));
 
-	Transformation dirLightTrans = Transformation();
+	auto dirLightTrans = Transformation();
 	dirLightTrans.SetPosition(vec3(0, 2.0f, 0));
 	dirLightTrans.SetScale(vec3(0.2f));
 
-	Transformation pointLightTrans = Transformation();
+	auto pointLightTrans = Transformation();
 	pointLightTrans.SetPosition(vec3(1, 1, 1));
 	pointLightTrans.SetScale(vec3(0.1f));
 
-	Transformation pointLight2Trans = Transformation();
+	auto pointLight2Trans = Transformation();
 	pointLight2Trans.SetPosition(vec3(2, 1, 1));
 	pointLight2Trans.SetScale(vec3(0.1f));
 
-	Transformation spotLightTrans = Transformation();
+	auto spotLightTrans = Transformation();
 	spotLightTrans.SetPosition(vec3(0.0f, 0.0f, 2.0f));
 	spotLightTrans.SetRotation(vec3(90.0f, 0.0f, 0.0f));
 	spotLightTrans.SetScale(vec3(0.1f));
 
-	DirLight dirLight = DirLight(vec3(-0.2f, -1.0f, -0.3f), WHITE);
-	PointLight pointLight = PointLight(vec3(0.0f), RED);
-	PointLight pointLight2 = PointLight(vec3(1.0f), BLUE);
-	SpotLight spotLight = SpotLight(spotLightTrans.GetPosition(), camera.Front, GREEN);
+	auto dirLight = DirLight(vec3(-0.2f, -1.0f, -0.3f), WHITE);
+	auto pointLight = PointLight(vec3(0.0f), RED);
+	auto pointLight2 = PointLight(vec3(1.0f), BLUE);
+	auto spotLight = SpotLight(spotLightTrans.GetPosition(), camera.Front, GREEN);
 
-	bool showWireFrame = false;
+	auto showWireFrame = false;
 
 	// Setup DebugUi
-	DebugUi debugUi = DebugUi(window.getWindow());
-	float speedMultiplier = 1.0f;
+	auto debugUi = DebugUi(window.getWindow());
+	auto speedMultiplier = 1.0f;
 	debugUi.addFloat("Speed Multiplier", &speedMultiplier, 0.0f, 5.0f);
 	debugUi.addFloat("Shininess", &shininess, 0.0f, 128.0f);
 	debugUi.addVec3("Camera", &camera.Position);
@@ -66,12 +67,12 @@ int main(int argc, char *argv[])
 	debugUi.addColor("PointLight 2 Color", &pointLight2.color);
 	debugUi.addColor("SpotLight Color", &spotLight.color);
 
-	double startTime = Timer::GetTime();
+	auto startTime = Timer::GetTime();
 
 	while (!window.isCloseRequested()) {
 
 		// Determine deltaTime
-		float deltaTime = Timer::GetTime() - startTime;
+		auto deltaTime = Timer::GetTime() - startTime;
 		startTime = Timer::GetTime();
 
 		if (deltaTime > 0.100f) // Stop the time related functions going nuts if the delta is too huge
@@ -84,9 +85,9 @@ int main(int argc, char *argv[])
 		glPolygonMode(GL_FRONT_AND_BACK, (showWireFrame) ? GL_LINE : GL_FILL);
 
 		//Update
-		float time = (SDL_GetTicks() / 500.0f) * speedMultiplier;
-		float time_sin = sinf(time);
-		float time_cos = cosf(time);
+		auto time = (SDL_GetTicks() / 500.0f) * speedMultiplier;
+		auto time_sin = sinf(time);
+		auto time_cos = cosf(time);
 
 		objectTrans.SetRotation(vec3(0, time_sin * 10, 0));
 
@@ -106,11 +107,14 @@ int main(int argc, char *argv[])
 		// Clear
 		window.clear();
 
+		auto projection = glm::perspective(camera.Zoom, float(window.getWidth()) / float(window.getHeight()), 0.1f, 1000.0f);
+
 		// Draw Quad
 		lampShader.Bind();
 		lampShader.SetUniform4fv("model", quadTrans.GetTransformationMatrix());
 		lampShader.SetUniform4fv("view", camera.GetViewMatrix());
-		lampShader.SetUniform4fv("projection", glm::perspective(camera.Zoom, (float)window.getWidth() / (float)window.getHeight(), 0.1f, 1000.0f));
+		
+		lampShader.SetUniform4fv("projection", projection);
 		lampShader.SetUniform3fv("viewPos", camera.Position);
 		lampShader.SetUniform3fv("color", FIREBRICK);
 		quadMesh.render();
@@ -123,8 +127,8 @@ int main(int argc, char *argv[])
 		basicShader.SetMVP(
 			objectTrans.GetTransformationMatrix(),
 			camera.GetViewMatrix(),
-			glm::perspective(camera.Zoom, (float)window.getWidth() / (float)window.getHeight(), 0.1f, 1000.0f)
-		);
+			projection
+			);
 		basicShader.SetUniform3fv("viewPos", camera.Position);
 
 		basicShader.SetUniform1i("texture", texture.GetTextureID());
@@ -140,7 +144,7 @@ int main(int argc, char *argv[])
 		basicShader.SetUniform1f("pointLights[0].linear", pointLight.linear);
 		basicShader.SetUniform1f("pointLights[0].quadratic", pointLight.quadratic);
 
-		basicShader.SetUniform3fv("pointLights[1].position", pointLight2.position );
+		basicShader.SetUniform3fv("pointLights[1].position", pointLight2.position);
 		basicShader.SetUniform3fv("pointLights[1].ambient", pointLight2.ambient);
 		basicShader.SetUniform3fv("pointLights[1].diffuse", pointLight2.diffuse);
 		basicShader.SetUniform3fv("pointLights[1].specular", pointLight2.specular);
@@ -158,7 +162,7 @@ int main(int argc, char *argv[])
 		lampShader.Bind();
 		lampShader.SetUniform4fv("model", dirLightTrans.GetTransformationMatrix());
 		lampShader.SetUniform4fv("view", camera.GetViewMatrix());
-		lampShader.SetUniform4fv("projection", glm::perspective(camera.Zoom, (float)window.getWidth() / (float)window.getHeight(), 0.1f, 1000.0f));
+		lampShader.SetUniform4fv("projection", projection);
 		lampShader.SetUniform3fv("viewPos", camera.Position);
 		lampShader.SetUniform3fv("color", dirLight.color);
 		cubeMesh.render();
@@ -168,7 +172,7 @@ int main(int argc, char *argv[])
 		lampShader.Bind();
 		lampShader.SetUniform4fv("model", pointLightTrans.GetTransformationMatrix());
 		lampShader.SetUniform4fv("view", camera.GetViewMatrix());
-		lampShader.SetUniform4fv("projection", glm::perspective(camera.Zoom, (float)window.getWidth() / (float)window.getHeight(), 0.1f, 1000.0f));
+		lampShader.SetUniform4fv("projection", projection);
 		lampShader.SetUniform3fv("viewPos", camera.Position);
 		lampShader.SetUniform3fv("color", pointLight.color);
 		sphereMesh.render();
@@ -178,7 +182,7 @@ int main(int argc, char *argv[])
 		lampShader.Bind();
 		lampShader.SetUniform4fv("model", pointLight2Trans.GetTransformationMatrix());
 		lampShader.SetUniform4fv("view", camera.GetViewMatrix());
-		lampShader.SetUniform4fv("projection", glm::perspective(camera.Zoom, (float)window.getWidth() / (float)window.getHeight(), 0.1f, 1000.0f));
+		lampShader.SetUniform4fv("projection", projection);
 		lampShader.SetUniform3fv("viewPos", camera.Position);
 		lampShader.SetUniform3fv("color", pointLight2.color);
 		sphereMesh.render();
@@ -188,7 +192,7 @@ int main(int argc, char *argv[])
 		lampShader.Bind();
 		lampShader.SetUniform4fv("model", spotLightTrans.GetTransformationMatrix());
 		lampShader.SetUniform4fv("view", camera.GetViewMatrix());
-		lampShader.SetUniform4fv("projection", glm::perspective(camera.Zoom, (float)window.getWidth() / (float)window.getHeight(), 0.1f, 1000.0f));
+		lampShader.SetUniform4fv("projection", projection);
 		lampShader.SetUniform3fv("viewPos", camera.Position);
 		lampShader.SetUniform3fv("color", spotLight.color);
 		flashlightMesh.render();
