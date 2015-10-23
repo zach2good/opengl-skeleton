@@ -10,3 +10,6 @@ git clone --recursive --progress -v "https://github.com/zach2good/opengl-skeleto
 2) Point CMake at it<br>
 3) ???<br>
 4) Profit<br>
+<br>
+<br>
+![Screenshot](img/screenshot.png)

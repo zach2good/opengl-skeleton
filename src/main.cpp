@@ -1,62 +1,8 @@
 #include "common.h"
 
-class BasicShader : public ShaderProgram
-{
-public:
-	BasicShader(const std::string& fileName)
-		: ShaderProgram(fileName) {}
-
-	void SetMVP(mat4 m, mat4 v, mat4 p)
-	{
-		SetUniform4fv("model", m);
-		SetUniform4fv("view", v);
-		SetUniform4fv("projection", p);
-	}
-
-	void SetDirLight(DirLight dirLight)
-	{
-		SetUniform3fv("dirLight.direction", dirLight.direction);
-
-		SetUniform3fv("dirLight.ambient", dirLight.ambient);
-		SetUniform3fv("dirLight.diffuse", dirLight.diffuse);
-		SetUniform3fv("dirLight.specular", dirLight.specular);
-	}
-
-	void SetPointLight(PointLight pointLight)
-	{
-		SetUniform3fv("pointLight.position", pointLight.position);
-
-		SetUniform3fv("pointLight.ambient", pointLight.ambient);
-		SetUniform3fv("pointLight.diffuse", pointLight.diffuse);
-		SetUniform3fv("pointLight.specular", pointLight.specular);
-
-		SetUniform1f("pointLight.constant", pointLight.constant);
-		SetUniform1f("pointLight.linear", pointLight.linear);
-		SetUniform1f("pointLight.quadratic", pointLight.quadratic);
-	}
-
-	void SetSpotLight(SpotLight spotLight)
-	{
-		SetUniform3fv("spotLight.position", spotLight.position);
-		SetUniform3fv("spotLight.direction", spotLight.direction);
-
-		SetUniform3fv("spotLight.ambient", spotLight.ambient);
-		SetUniform3fv("spotLight.diffuse", spotLight.diffuse);
-		SetUniform3fv("spotLight.specular", spotLight.specular);
-
-		SetUniform1f("spotLight.constant", spotLight.constant);
-		SetUniform1f("spotLight.linear", spotLight.linear);
-		SetUniform1f("spotLight.quadratic", spotLight.quadratic);
-
-		SetUniform1f("spotLight.cutOff", spotLight.cutOff);
-		SetUniform1f("spotLight.outerCutOff", spotLight.outerCutOff);
-	}
-};
-
 int main(int argc, char *argv[])
 {
 	Window window = Window("OpenGL Skeleton", 1280, 720);
-	Input input = Input();
 
 	Camera camera = Camera();
 	camera.Position = vec3(0, 0, 5);
@@ -105,68 +51,35 @@ int main(int argc, char *argv[])
 	PointLight pointLight2 = PointLight(vec3(1.0f), BLUE);
 	SpotLight spotLight = SpotLight(spotLightTrans.GetPosition(), camera.Front, GREEN);
 
-	int centerX = window.getWidth() / 2;
-	int centerY = window.getHeight() / 2;
-
-	bool useNormalMapping = false;
-
 	bool showWireFrame = false;
-	bool showNormalMap = false;
-	bool showSpecularMap = false;
 
+	// Setup DebugUi
 	DebugUi debugUi = DebugUi(window.getWindow());
-
 	float speedMultiplier = 1.0f;
-
 	debugUi.addFloat("Speed Multiplier", &speedMultiplier, 0.0f, 5.0f);
 	debugUi.addFloat("Shininess", &shininess, 0.0f, 128.0f);
-
 	debugUi.addVec3("Camera", &camera.Position);
 	debugUi.addVec3("Spotlight pos", &spotLight.position);
-
-	debugUi.addBool("Normal Mapping", &useNormalMapping);
 	debugUi.addBool("Show Wireframe", &showWireFrame);
-	debugUi.addBool("Show Normal Map", &showNormalMap);
-	debugUi.addBool("Show Specular Map", &showSpecularMap);
-
 	debugUi.addColor("DirLight Color", &dirLight.color);
 	debugUi.addColor("PointLight 1 Color", &pointLight.color);
 	debugUi.addColor("PointLight 2 Color", &pointLight2.color);
 	debugUi.addColor("SpotLight Color", &spotLight.color);
 
+	double startTime = Timer::GetTime();
+
 	while (!window.isCloseRequested()) {
 
 		// Determine deltaTime
-		float deltaTime = 1000.0f / SDL_GetTicks();
+		float deltaTime = Timer::GetTime() - startTime;
+		startTime = Timer::GetTime();
 
-		input.pollInput();
-		if (input.wasKeyPressed(SDL_SCANCODE_ESCAPE)) {
-			window.requestClose();
-		}
-		if (input.isKeyHeld(SDL_SCANCODE_A))
+		if (deltaTime > 0.100f) // Stop the time related functions going nuts if the delta is too huge
 		{
-			camera.ProcessKeyboard(LEFT, deltaTime);
+			deltaTime = 0.016f;
 		}
-		if (input.isKeyHeld(SDL_SCANCODE_D))
-		{
-			camera.ProcessKeyboard(RIGHT, deltaTime);
-		}
-		if (input.isKeyHeld(SDL_SCANCODE_W))
-		{
-			camera.ProcessKeyboard(FORWARD, deltaTime);
-		}
-		if (input.isKeyHeld(SDL_SCANCODE_S))
-		{
-			camera.ProcessKeyboard(BACKWARD, deltaTime);
-		}
-		if (input.isKeyHeld(SDL_SCANCODE_Q))
-		{
-			camera.ProcessKeyboard(UP, deltaTime);
-		}
-		if (input.isKeyHeld(SDL_SCANCODE_E))
-		{
-			camera.ProcessKeyboard(DOWN, deltaTime);
-		}
+
+		window.update();
 
 		glPolygonMode(GL_FRONT_AND_BACK, (showWireFrame) ? GL_LINE : GL_FILL);
 
