@@ -135,6 +135,7 @@ int main(int argc, char *argv[])
 	debugUi.addFloat("Shininess", &shininess, 0.0f, 128.0f);
 
 	debugUi.addVec3("Camera", &camera.Position);
+	debugUi.addVec3("Spotlight pos", &spotLight.position);
 
 	debugUi.addBool("Normal Mapping", &useNormalMapping);
 	debugUi.addBool("Show Wireframe", &showWireFrame);
@@ -199,8 +200,8 @@ int main(int argc, char *argv[])
 		pointLight2.position = pointLight2Trans.GetPosition();
 		pointLight2.update();
 
-		spotLightTrans.SetPosition(vec3(-time_sin, -0.7f, 2));
-		spotLight.position = spotLightTrans.GetPosition();
+		//spotLightTrans.SetPosition(vec3(-time_sin, -0.7f, 2));
+		//spotLight.position = spotLightTrans.GetPosition();
 		spotLight.update();
 
 		// Clear
@@ -235,7 +236,7 @@ int main(int argc, char *argv[])
 
 		basicShader.SetDirLight(dirLight);
 
-		basicShader.SetUniform3fv("pointLights[0].position", pointLight.position);
+		/*basicShader.SetUniform3fv("pointLights[0].position", pointLight.position);
 		basicShader.SetUniform3fv("pointLights[0].ambient", pointLight.ambient);
 		basicShader.SetUniform3fv("pointLights[0].diffuse", pointLight.diffuse);
 		basicShader.SetUniform3fv("pointLights[0].specular", pointLight.specular);
@@ -249,7 +250,7 @@ int main(int argc, char *argv[])
 		basicShader.SetUniform3fv("pointLights[1].specular", pointLight2.specular);
 		basicShader.SetUniform1f("pointLights[1].constant", pointLight2.constant);
 		basicShader.SetUniform1f("pointLights[1].linear", pointLight2.linear);
-		basicShader.SetUniform1f("pointLights[1].quadratic", pointLight2.quadratic);
+		basicShader.SetUniform1f("pointLights[1].quadratic", pointLight2.quadratic);*/
 
 		basicShader.SetSpotLight(spotLight);
 
