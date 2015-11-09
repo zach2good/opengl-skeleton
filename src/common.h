@@ -10,13 +10,17 @@
 
 #include <SDL.h>
 
+#ifndef EMSCRIPTEN
 #include <glad/glad.h>
+#endif
 
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 using namespace glm;
+
+
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>

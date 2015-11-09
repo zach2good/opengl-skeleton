@@ -1,0 +1,1 @@
+emcc src/main.cpp -I lib\stb\stb.h -I lib\stb\stb_image.h -DEMSCRIPTEN=1 -s USE_SDL=2 -s LEGACY_GL_EMULATION=1
