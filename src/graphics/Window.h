@@ -1,7 +1,17 @@
 #pragma once
 
 #include <SDL.h>
-#include <glad\glad.h>
+
+#ifdef EMSCRIPTEN
+	#include <emscripten.h>
+	#include <GL/glew.h>
+	#include <GL/glut.h>
+
+	// #include <GLES2/gl2.h> // GLES2
+#else
+	#include <glad/glad.h>
+#endif
+
 #include <stdio.h>
 
 #include "../core/Input.h"
