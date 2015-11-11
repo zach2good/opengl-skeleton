@@ -14,7 +14,7 @@ Window::~Window()
 void Window::init()
 {
 	//Start SDL
-	if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
+	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
 		printf("SDL Error");
 	}
 
@@ -31,14 +31,6 @@ void Window::init()
 	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
 	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 2);
 
-#ifdef _DEBUG 
-	// Request a debug context
-	SDL_GL_SetAttribute(
-		SDL_GL_CONTEXT_FLAGS,
-		SDL_GL_CONTEXT_DEBUG_FLAG
-		);
-#endif // _DEBUG 
-
 	SDL_DisplayMode current;
 	SDL_GetCurrentDisplayMode(0, &current);
 
@@ -48,10 +40,6 @@ void Window::init()
 		SDL_WINDOWPOS_UNDEFINED,
 		WIDTH, HEIGHT,
 		SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
-
-	// Set Version
-	//SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
-	//SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
 
 	if (!m_Window) {
 		printf("Window Error");
@@ -66,22 +54,17 @@ void Window::init()
 	// Limit framerate to help screen tearing
 	SDL_GL_SetSwapInterval(1);
 
+#ifndef EMSCRIPTEN
 	// Load GLAD
 	if (!gladLoadGL()) {
 		printf("GLAD Error");
 	}
+#endif
 
 	// Print Info
 	printf("GL_VERSION: %s \n", glGetString(GL_VERSION));
 	printf("GL_VENDOR: %s \n", glGetString(GL_VENDOR));
 	printf("GL_SHADING_LANGUAGE_VERSION: %s \n", glGetString(GL_SHADING_LANGUAGE_VERSION));
-
-#ifdef _DEBUG 
-	// Check to see if Debugging is enabled
-	if (glDebugMessageCallbackARB == NULL) {
-		printf("glDebugMessageCallbackARB not supported, OpenGL debugging may be difficult \n");
-	}
-#endif // _DEBUG 
 
 	// Enable 3D
 	glEnable(GL_DEPTH_TEST);
@@ -122,6 +105,11 @@ void Window::update()
 	{
 		requestClose();
 	}
+
+	if (m_Input.wasKeyPressed(SDL_SCANCODE_SPACE))
+	{
+		printf("Space\n");
+	}
 }
 
 void Window::clear()
@@ -145,4 +133,3 @@ void Window::requestClose()
 {
 	isRunning = false;
 }
-
