@@ -12,4 +12,7 @@ git clone --recursive --progress -v "https://github.com/zach2good/opengl-skeleto
 4) Profit<br>
 <br>
 <br>
+Desktop
 ![Screenshot](img/screenshot.png)
+Web
+![Screenshot](img/ems.png)
