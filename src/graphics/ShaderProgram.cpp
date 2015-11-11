@@ -4,8 +4,13 @@
 ShaderProgram::ShaderProgram(const std::string& fileName)
 {
 	// Load shaders from file
+	#ifdef EMSCRIPTEN
+	m_vertexShaderID = LoadShader(fileName + ".es2.vert", GL_VERTEX_SHADER);
+	m_fragmentShaderID = LoadShader(fileName + ".es2.frag", GL_FRAGMENT_SHADER);
+	#else
 	m_vertexShaderID = LoadShader(fileName + ".vert", GL_VERTEX_SHADER);
 	m_fragmentShaderID = LoadShader(fileName + ".frag", GL_FRAGMENT_SHADER);
+	#endif
 
 	// Create shader program
 	m_programID = glCreateProgram();
@@ -56,9 +61,10 @@ GLuint ShaderProgram::LoadShader(const std::string& fileName, GLenum type)
 {
 	// Open the file as read only
 	FILE* file;
-	if (fopen_s(&file, fileName.c_str(), "r") != 0)
+	file = fopen(fileName.c_str(), "r");
+	if (file == NULL)
 	{
-		printf("Failed to open: %s\n", fileName);
+		printf("Failed to open: %s\n", fileName.c_str());
 	}
 
 	// Create temp variables
