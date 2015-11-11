@@ -10,6 +10,9 @@
 #include "graphics/ShaderProgram.h"
 #include "graphics/Camera.h"
 
+#include "imgui/imgui.h"
+#include "imgui/imgui_impl_sdlems.h"
+
 auto window = Window("OpenGL Skeleton", 1280, 720);
 auto shader = ShaderProgram("res/shaders/basicShader");
 
@@ -18,6 +21,9 @@ GLuint VBO, VAO, EBO;
 void step () {
 
 	window.update();
+
+	ImGui_ImplSdl_NewFrame(window.getWindow());
+
 	window.clear();
 
 	shader.Bind();
@@ -27,6 +33,14 @@ void step () {
 	glBindVertexArray(0);
 
 	shader.Unbind();
+
+	{
+		static float f = 0.0f;
+		ImGui::Text("Hello, world!");
+		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+	}
+
+	ImGui::Render();
 	
 	window.swap();
 }
@@ -66,6 +80,9 @@ int main(int argc, char *argv[])
 	glBindBuffer(GL_ARRAY_BUFFER, 0); // Note that this is allowed, the call to glVertexAttribPointer registered VBO as the currently bound vertex buffer object so afterwards we can safely unbind
 
 	glBindVertexArray(0); // Unbind VAO (it's always a good thing to unbind any buffer/array to prevent strange bugs), remember: do NOT unbind the EBO, keep it bound to this VAO
+
+
+	ImGui_ImplSdl_Init(window.getWindow());
 
 	#ifdef EMSCRIPTEN
 	emscripten_set_main_loop(step, 0, true);
