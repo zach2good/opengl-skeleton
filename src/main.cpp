@@ -1,19 +1,16 @@
 #include <stdio.h>
 #include <SDL.h>
 
-#include "core/assimp.h"
-
 #include "graphics/GL.h"
 #include "graphics/glm.h"
 
 #include "graphics/Window.h"
+#include "graphics/DebugUi.h"
 #include "graphics/ShaderProgram.h"
 #include "graphics/Camera.h"
 
-#include "imgui/imgui.h"
-#include "imgui/imgui_impl_sdlems.h"
-
 auto window = Window("OpenGL Skeleton", 1280, 720);
+auto debug = DebugUi(window.getWindow());
 auto shader = ShaderProgram("res/shaders/basicShader");
 
 GLuint VBO, VAO, EBO;
@@ -21,9 +18,6 @@ GLuint VBO, VAO, EBO;
 void step () {
 
 	window.update();
-
-	ImGui_ImplSdl_NewFrame(window.getWindow());
-
 	window.clear();
 
 	shader.Bind();
@@ -32,16 +26,11 @@ void step () {
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 
+	debug.prepare();
+	debug.render();
+
 	shader.Unbind();
 
-	{
-		static float f = 0.0f;
-		ImGui::Text("Hello, world!");
-		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-	}
-
-	ImGui::Render();
-	
 	window.swap();
 }
 
@@ -82,8 +71,6 @@ int main(int argc, char *argv[])
 	glBindVertexArray(0); // Unbind VAO (it's always a good thing to unbind any buffer/array to prevent strange bugs), remember: do NOT unbind the EBO, keep it bound to this VAO
 
 
-	ImGui_ImplSdl_Init(window.getWindow());
-
 	#ifdef EMSCRIPTEN
 	emscripten_set_main_loop(step, 0, true);
 	#else
@@ -91,8 +78,6 @@ int main(int argc, char *argv[])
 		step();	
 	}
 	#endif
-
-
 	
 	return 0;
 }

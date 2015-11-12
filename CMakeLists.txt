@@ -10,9 +10,9 @@ option(ASSIMP_BUILD_TESTS OFF)
 add_subdirectory(lib/assimp)
 
 if(MSVC)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4 /MTd -O2")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4 /MTd")
 else()
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -std=c++11 -O2")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -std=c++11")
     if(NOT WIN32)
         set(GLAD_LIBRARIES dl)
     endif()
@@ -28,17 +28,20 @@ include_directories(include/
 file(GLOB VENDORS_SOURCES lib/glad/src/glad.c)
 
 file(GLOB PROJECT_HEADERS src/*.hpp
-						              src/*.h
+                          src/*.h
                           src/*/*.hpp
-                          src/*/*.h)
+                          src/*/*.h
+                          src/*/*/*.hpp
+                          src/*/*/*.h
+                          src/*/*/*/*.hpp
+                          src/*/*/*/*.h)
 
 file(GLOB PROJECT_SOURCES src/*.cpp
                           src/*/*.cpp
                           src/*/*/*.cpp
                           src/*/*/*/*.cpp)
 
-file(GLOB PROJECT_SHADERS res/shaders/*.glsl
-                          res/shaders/*.comp
+file(GLOB PROJECT_SHADERS res/shaders/*.comp
                           res/shaders/*.frag
                           res/shaders/*.geom
                           res/shaders/*.vert)

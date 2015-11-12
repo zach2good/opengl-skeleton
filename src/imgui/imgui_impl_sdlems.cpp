@@ -1,17 +1,13 @@
 // ImGui SDL2 binding with OpenGL ES 2, compatible with WebGL when compiled with Emscripten
 // https://github.com/ocornut/imgui
 
-#include <imgui.h>
+#include "imgui.h"
 #include "imgui_impl_sdlems.h"
 
-#include <SDL.h>
-#include <SDL_syswm.h>
-#ifdef __APPLE__
-#include <OpenGL/gl.h>
-#include <OpenGL/glext.h>
-#else
-#include <SDL_opengles2.h>
-#endif
+#include "SDL.h"
+#include "SDL_syswm.h"
+
+#include "../graphics/GL.h"
 
 // Data
 static double       g_Time = 0.0f;

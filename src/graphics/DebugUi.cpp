@@ -4,7 +4,13 @@
 DebugUi::DebugUi(SDL_Window* window)
 {
 	m_Window = window;
-	ImGui_ImplSdlOgl3_Init(m_Window);
+
+	#ifdef EMSCRIPTEN
+		ImGui_ImplSdl_Init(m_Window);
+	#else
+		ImGui_ImplSdlOgl3_Init(m_Window);
+	#endif
+	
 
 	ImGuiIO& io = ImGui::GetIO();
 	io.IniFilename = NULL; // Disables ini file output
@@ -17,17 +23,25 @@ DebugUi::DebugUi(SDL_Window* window)
 
 DebugUi::~DebugUi()
 {
-	ImGui_ImplSdlOgl3_Shutdown();
+	cleanUp();
 }
 
 void DebugUi::cleanUp()
 {
+#ifdef EMSCRIPTEN
+	ImGui_ImplSdl_Shutdown();
+#else
 	ImGui_ImplSdlOgl3_Shutdown();
+#endif	
 }
 
 void DebugUi::prepare()
 {
+#ifdef EMSCRIPTEN
+	ImGui_ImplSdl_NewFrame(m_Window);
+#else
 	ImGui_ImplSdlOgl3_NewFrame(m_Window);
+#endif
 
 	static bool opened = false;
 
@@ -128,7 +142,11 @@ void DebugUi::prepare()
 
 void DebugUi::processEvents(SDL_Event e)
 {
+#ifdef EMSCRIPTEN
+	ImGui_ImplSdl_ProcessEvent(&e);
+#else
 	ImGui_ImplSdlOgl3_ProcessEvent(&e);
+#endif	
 }
 
 void DebugUi::render()

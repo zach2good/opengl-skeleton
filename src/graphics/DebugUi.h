@@ -5,8 +5,13 @@
 #include "../common.h"
 
 #include "../imgui/imgui.h"
-#include "../imgui/imgui_impl_sdlogl3.h"
 #include "../imgui/imgui_internal.h"
+
+#ifdef EMSCRIPTEN
+#include "../imgui/imgui_impl_sdlems.h"
+#else
+#include "../imgui/imgui_impl_sdlogl3.h"
+#endif
 
 struct FloatDebug
 {
