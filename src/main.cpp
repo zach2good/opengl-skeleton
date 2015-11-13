@@ -26,10 +26,10 @@ void step () {
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 
+	shader.Unbind();
+
 	debug.prepare();
 	debug.render();
-
-	shader.Unbind();
 
 	window.swap();
 }
