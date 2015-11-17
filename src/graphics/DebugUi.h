@@ -10,7 +10,7 @@
 #ifdef EMSCRIPTEN
 #include "../imgui/imgui_impl_sdlems.h"
 #else
-#include "../imgui/imgui_impl_sdlogl3.h"
+#include "../imgui/imgui_impl_sdl_gl3.h"
 #endif
 
 struct FloatDebug

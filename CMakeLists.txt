@@ -20,6 +20,7 @@ else()
 endif()
 
 include_directories(include/
+                    src/imgui
                     lib/assimp/include/
                     lib/glad/include/
                     lib/sdl/include/
@@ -40,7 +41,8 @@ file(GLOB PROJECT_HEADERS src/*.hpp
 file(GLOB PROJECT_SOURCES src/*.cpp
                           src/*/*.cpp
                           src/*/*/*.cpp
-                          src/*/*/*/*.cpp)
+                          src/*/*/*/*.cpp
+                          src/imgui)
 
 file(GLOB PROJECT_SHADERS res/shaders/*.comp
                           res/shaders/*.frag

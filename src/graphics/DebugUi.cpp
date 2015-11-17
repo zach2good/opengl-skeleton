@@ -8,7 +8,7 @@ DebugUi::DebugUi(SDL_Window* window)
 	#ifdef EMSCRIPTEN
 		ImGui_ImplSdl_Init(m_Window);
 	#else
-		ImGui_ImplSdlOgl3_Init(m_Window);
+		ImGui_ImplSdlGL3_Init(m_Window);
 	#endif
 	
 
@@ -31,7 +31,7 @@ void DebugUi::cleanUp()
 #ifdef EMSCRIPTEN
 	ImGui_ImplSdl_Shutdown();
 #else
-	ImGui_ImplSdlOgl3_Shutdown();
+	ImGui_ImplSdlGL3_Shutdown();
 #endif	
 }
 
@@ -40,7 +40,7 @@ void DebugUi::prepare()
 #ifdef EMSCRIPTEN
 	ImGui_ImplSdl_NewFrame(m_Window);
 #else
-	ImGui_ImplSdlOgl3_NewFrame(m_Window);
+	ImGui_ImplSdlGL3_NewFrame();
 #endif
 
 	static bool opened = false;
@@ -145,7 +145,7 @@ void DebugUi::processEvents(SDL_Event e)
 #ifdef EMSCRIPTEN
 	ImGui_ImplSdl_ProcessEvent(&e);
 #else
-	ImGui_ImplSdlOgl3_ProcessEvent(&e);
+	ImGui_ImplSdlGL3_ProcessEvent(&e);
 #endif	
 }
 

@@ -19,6 +19,8 @@ public:
 	void init();
 	void cleanUp();
 
+	SDL_Window* Window2D::getWindow() const;
+
 	void update();
 	void clear();
 	void swap();

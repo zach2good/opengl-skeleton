@@ -40,6 +40,11 @@ void Window2D::cleanUp()
 	SDL_Quit();
 }
 
+SDL_Window* Window2D::getWindow() const
+{
+	return m_Window;
+}
+
 void Window2D::update()
 {
 	// Input things
