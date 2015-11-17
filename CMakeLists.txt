@@ -2,9 +2,6 @@ cmake_minimum_required(VERSION 3.0)
 project(Skeleton)
 
 option(DIRECTX OFF)
-option(SSE ON)
-option(SSE2 ON)
-option(SSEMATH ON)
 add_subdirectory(lib/sdl)
 
 option(ASSIMP_BUILD_ASSIMP_TOOLS OFF)
@@ -13,7 +10,7 @@ option(ASSIMP_BUILD_TESTS OFF)
 add_subdirectory(lib/assimp)
 
 if(MSVC)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4 /MTd -std=c++11")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4 /MTd")
 else()
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -std=c++11")
     if(NOT WIN32)

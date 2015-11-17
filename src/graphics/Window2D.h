@@ -1,26 +1,20 @@
 #pragma once
 
+#include <iostream>
+#include <string>
+#include <sstream>
+#include <vector>
+#include <iomanip>
+
 #include <SDL.h>
+#include <glad/glad.h>
 
-#ifdef EMSCRIPTEN
-	#include <emscripten.h>
-	#include <GL/glew.h>
-	#include <GL/glut.h>
-#else
-	#include <glad/glad.h>
-#endif
 
-#include <stdio.h>
-
-#include "../core/Input.h"
-
-//class Input;
-
-class Window
+class Window2D
 {
 public:
-	Window(const char* title, int width, int height);
-	~Window();
+	Window2D(const char* title, int width, int height);
+	~Window2D();
 
 	void init();
 	void cleanUp();
@@ -29,11 +23,10 @@ public:
 	void clear();
 	void swap();
 
+	void drawPixel(int x, int y, int r, int g, int b);
+
 	bool isCloseRequested();
 	void requestClose();
-
-	SDL_Window* getWindow() const;
-	SDL_GLContext getContext();
 
 	int getWidth() const { return WIDTH; }
 	int getHeight() const { return HEIGHT; }
@@ -41,8 +34,8 @@ public:
 
 private:
 	SDL_Window *m_Window;
-	SDL_GLContext m_Context;
-	Input m_Input;
+	SDL_Renderer* m_Renderer;
+	SDL_Texture* m_Screen;
 
 	const char* TITLE;
 	int HEIGHT;
