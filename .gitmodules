@@ -1,0 +1,16 @@
+[submodule "lib/glm"]
+	path = lib/glm
+	url = https://github.com/stine/glm.git
+[submodule "lib/sdl"]
+	path = lib/sdl
+	url = https://github.com/SDL-mirror/SDL.git
+[submodule "lib/assimp"]
+	path = lib/assimp
+	url = https://github.com/assimp/assimp.git
+[submodule "lib/stb"]
+	path = lib/stb
+	url = https://github.com/nothings/stb.git
+[submodule "lib/glad"]
+	path = lib/glad
+	url = https://github.com/Dav1dde/glad.git
+	branch = c
