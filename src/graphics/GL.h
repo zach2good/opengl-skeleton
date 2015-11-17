@@ -9,25 +9,6 @@
 	//#include "OpenGL/gl.h"
 	//#include "OpenGL/glext.h"
 	#include <glad/glad.h>
-#else
+#else // Windows
 	#include <glad/glad.h>
 #endif
-
-static class GL
-{
-protected:
-	inline static void init()
-	{
-		#ifdef EMSCRIPTEN
-
-		#elif  __APPLE__
-
-		#else
-
-		#endif
-	}
-
-public:
-private:
-};
-
