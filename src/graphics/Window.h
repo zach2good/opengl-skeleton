@@ -1,20 +1,8 @@
 #pragma once
 
-#include <SDL.h>
-
-#ifdef EMSCRIPTEN
-	#include <emscripten.h>
-	#include <GL/glew.h>
-	#include <GL/glut.h>
-#else
-	#include <glad/glad.h>
-#endif
-
-#include <stdio.h>
+#include "../common.h"
 
 #include "../core/Input.h"
-
-//class Input;
 
 class Window
 {

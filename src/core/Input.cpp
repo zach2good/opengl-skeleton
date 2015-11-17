@@ -32,7 +32,7 @@ void Input::pollInput()
 			keyUpEvent(e);
 			break;
 		case SDL_QUIT:
-			//m_Window->requestClose();
+
 			break;
 		default:
 			break;

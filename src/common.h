@@ -4,9 +4,12 @@
 #include <cstdlib>
 #include <cstdint>
 
-#include <vector>
-#include <map>
+#include <iostream>
 #include <string>
+#include <sstream>
+#include <vector>
+#include <iomanip>
+#include <map>
 
 #include <SDL.h>
 

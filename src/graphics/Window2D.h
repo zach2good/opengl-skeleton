@@ -1,13 +1,8 @@
 #pragma once
 
-#include <iostream>
-#include <string>
-#include <sstream>
-#include <vector>
-#include <iomanip>
+#include "../common.h"
 
-#include <SDL.h>
-#include <glad/glad.h>
+#include "../core/Input.h"
 
 
 class Window2D
@@ -38,6 +33,7 @@ private:
 	SDL_Window *m_Window;
 	SDL_Renderer* m_Renderer;
 	SDL_Texture* m_Screen;
+	Input m_Input;
 
 	const char* TITLE;
 	int HEIGHT;
