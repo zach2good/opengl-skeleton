@@ -4,6 +4,8 @@
 
 #include "../core/Input.h"
 
+#include "../core/Timer.h"
+
 class Window
 {
 public:
@@ -31,6 +33,10 @@ private:
 	SDL_Window *m_Window;
 	SDL_GLContext m_Context;
 	Input m_Input;
+
+	double startTime;
+	double endTime;
+	double renderTime;
 
 	const char* TITLE;
 	int HEIGHT;

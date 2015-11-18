@@ -79,6 +79,10 @@ void Window::init()
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+	startTime = 0;
+	endTime = 0;
+	renderTime = 0;
+
 	isRunning = true;
 }
 
@@ -122,6 +126,7 @@ void Window::update()
 
 void Window::clear()
 {
+	startTime = Timer::GetTime();
 	glViewport(0, 0, WIDTH, HEIGHT);
 	glClearColor(0.2, 0.2, 0.2, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -130,6 +135,13 @@ void Window::clear()
 void Window::swap()
 {
 	SDL_GL_SwapWindow(m_Window);
+	endTime = Timer::GetTime();
+
+	renderTime = endTime - startTime;
+
+	const char* t = TITLE;
+
+	SDL_SetWindowTitle(m_Window, std::to_string(1.0f / renderTime).c_str());
 }
 
 bool Window::isCloseRequested()
