@@ -1,18 +1,10 @@
 #pragma once
 
-#include "SDL.h"
+#include <SDL.h>
 #include <stdio.h>
 #include <string>
 
-#ifdef EMSCRIPTEN
-	#include <emscripten.h>
-	#include <GL/glew.h>
-	#include <GL/glut.h>
-
-	// #include <GLES2/gl2.h> // GLES2
-#else
-	#include <glad/glad.h>
-#endif
+#include <glad/glad.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -29,12 +21,18 @@ public:
 
 	inline void SetUniform1i(const char* name, float value)
 	{
-		glUniform1i(GetUniformLocation(name), value);
+		glUniform1i(glGetUniformLocation(GetId(), name), value);
 	}
 
 	inline void SetUniform1f(const char* name, float value)
 	{
-		glUniform1f(GetUniformLocation(name), value);
+		glUniform1f(glGetUniformLocation(GetId(), name), value);
+	}
+
+	inline void SetUniform2fv(const char* name, glm::vec2 value)
+	{
+		GLint location = glGetUniformLocation(GetId(), name);
+		glUniform2f(location, value.x, value.y);
 	}
 
 	inline void SetUniform3fv(const char* name, glm::vec3 value)
@@ -55,11 +53,4 @@ private:
 	GLuint m_fragmentShaderID;
 
 	GLuint LoadShader(const std::string& fileName, GLenum type);
-protected:
-	void BindAttribute(int attribute, const std::string& variableName);
-	GLuint GetUniformLocation(const std::string& name);
-	void LoadFloat(GLuint& location, float& value);
-	void LoadVector(GLuint& location, glm::vec3& value);
-	void LoadBool(GLuint& location, bool& value);
-	void LoadMatrix4(GLuint& location, glm::mat4& matrix);
 };
