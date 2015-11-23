@@ -4,16 +4,12 @@
 ShaderProgram::ShaderProgram(const std::string& fileName)
 {
 	// Load shaders from file
-	#ifdef EMSCRIPTEN
-	m_vertexShaderID = LoadShader(fileName + ".es2.vert", GL_VERTEX_SHADER);
-	m_fragmentShaderID = LoadShader(fileName + ".es2.frag", GL_FRAGMENT_SHADER);
-	#else
 	m_vertexShaderID = LoadShader(fileName + ".vert", GL_VERTEX_SHADER);
 	m_fragmentShaderID = LoadShader(fileName + ".frag", GL_FRAGMENT_SHADER);
-	#endif
 
 	// Create shader program
 	m_programID = glCreateProgram();
+
 	// Attach the shaders to the program
 	glAttachShader(m_programID, m_vertexShaderID);
 	glAttachShader(m_programID, m_fragmentShaderID);

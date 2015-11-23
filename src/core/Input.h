@@ -13,8 +13,6 @@ public:
 
 	void pollInput();
 
-    void beginNewFrame();
-
 	void mouseButtonDownEvent(const SDL_Event& event);
 	void mouseButtonUpEvent(const SDL_Event& event);
 
@@ -36,8 +34,14 @@ public:
 	void SetMousePosition(const vec2& pos);
 	inline vec2 GetMousePosition() const { return vec2((float)m_MouseX, (float)m_MouseY); }
 
+	bool requestQuit;
+
 private:
+	void beginNewFrame();
+
 	SDL_Event e;
+
+	
 
 	int m_MouseX;
 	int m_MouseY;

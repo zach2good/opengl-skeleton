@@ -5,12 +5,7 @@ DebugUi::DebugUi(SDL_Window* window)
 {
 	m_Window = window;
 
-	#ifdef EMSCRIPTEN
-		ImGui_ImplSdl_Init(m_Window);
-	#else
-		ImGui_ImplSdlGL3_Init(m_Window);
-	#endif
-	
+	ImGui_ImplSdlGL3_Init(m_Window);
 
 	ImGuiIO& io = ImGui::GetIO();
 	io.IniFilename = NULL; // Disables ini file output
@@ -28,20 +23,12 @@ DebugUi::~DebugUi()
 
 void DebugUi::cleanUp()
 {
-#ifdef EMSCRIPTEN
-	ImGui_ImplSdl_Shutdown();
-#else
 	ImGui_ImplSdlGL3_Shutdown();
-#endif	
 }
 
 void DebugUi::prepare()
 {
-#ifdef EMSCRIPTEN
-	ImGui_ImplSdl_NewFrame(m_Window);
-#else
 	ImGui_ImplSdlGL3_NewFrame();
-#endif
 
 	static bool opened = false;
 
@@ -97,14 +84,14 @@ void DebugUi::prepare()
 
 		if (ImGui::CollapsingHeader(vecs.at(i).title))
 		{
-			
+
 			Vec3Debug v = vecs.at(i);
 
 			// TODO: Ugly and slow, fix me
 			std::string x = std::string(v.title) + std::string("x");;
 			std::string y = std::string(v.title) + std::string("y");;
 			std::string z = std::string(v.title) + std::string("z");;
-			
+
 			ImGui::PushItemWidth(-1.0f);
 			ImGui::SliderFloat(x.c_str(), &v.val->x, -10.0f, 10.0f);
 			ImGui::PopItemWidth();
@@ -142,11 +129,7 @@ void DebugUi::prepare()
 
 void DebugUi::processEvents(SDL_Event e)
 {
-#ifdef EMSCRIPTEN
-	ImGui_ImplSdl_ProcessEvent(&e);
-#else
 	ImGui_ImplSdlGL3_ProcessEvent(&e);
-#endif	
 }
 
 void DebugUi::render()
@@ -234,7 +217,7 @@ bool DebugUi::ColorPicker(const char* label, ImColor* color)
 		picker_pos,
 		ImVec2(picker_pos.x + SV_PICKER_SIZE.x, picker_pos.y + SV_PICKER_SIZE.y),
 		ImColor(0, 0, 0),
-		ImColor(0,0,0),
+		ImColor(0, 0, 0),
 		hue_color,
 		ImColor(255, 255, 255));
 

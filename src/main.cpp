@@ -8,36 +8,41 @@
 #include "graphics/DebugUi.h"
 #include "graphics/ForwardScene.h"
 
-auto window = Window("OpenGL 2D Skeleton", 1280, 720);
-auto debug = DebugUi(window.getWindow());
-auto scene = ForwardScene();
+auto window = new Window("OpenGL Skeleton", 1280, 720);
+//auto debug = new DebugUi(window->getWindow());
+auto scene = new ForwardScene(window);
 
 void step () {
 
-	window.update();
-	scene.update();
+	window->update();
+	scene->update();
 
-	window.clear();
-	scene.render();
+	window->clear();
 
-	debug.prepare();
-	debug.render();
+	scene->render();
 
-	window.swap();
+	//debug->prepare();
+	//debug->render();
+
+	window->swap();
 }
 
 #undef main
 int main(int argc, char *argv[])
 {
-	printf("%s\n", "Entering main loop");
+	printf("%s\n", "Starting...");
 
-	scene.init();
+	scene->init();
 
-	while (!window.isCloseRequested()) {
+	while (!window->isCloseRequested()) {
 		step();	
 	}
 
-	scene.destroy();
+	scene->destroy();
+
+	delete scene;
+	//delete debug;
+	delete window;
 	
 	return 0;
 }

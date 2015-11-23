@@ -9,8 +9,5 @@ public:
 	virtual void destroy();
 
 	virtual void update();
-	virtual void render();
-
-private:
-
+	virtual void render();	
 };

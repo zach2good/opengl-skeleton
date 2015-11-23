@@ -11,6 +11,9 @@ Input::Input() :
 	held_buttons_ = std::map<Uint8, bool>();
 	pressed_buttons_ = std::map<Uint8, bool>();
 	released_buttons_ = std::map<Uint8, bool>();
+
+	requestQuit = false;
+
 }
 
 void Input::pollInput()
@@ -32,7 +35,7 @@ void Input::pollInput()
 			keyUpEvent(e);
 			break;
 		case SDL_QUIT:
-
+			requestQuit = true;
 			break;
 		default:
 			break;

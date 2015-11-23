@@ -67,13 +67,13 @@ void Window::init()
 	printf("GL_SHADING_LANGUAGE_VERSION: %s \n", glGetString(GL_SHADING_LANGUAGE_VERSION));
 
 	// Enable 3D
-	//glEnable(GL_DEPTH_TEST);
+	glEnable(GL_DEPTH_TEST);
 
-	//glEnable(GL_MULTISAMPLE);
+	glEnable(GL_MULTISAMPLE);
 
 	// Face Culling
-	//glEnable(GL_CULL_FACE);
-	//glCullFace(GL_BACK);
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
 
 	// Image Transparency
 	glEnable(GL_BLEND);
@@ -109,18 +109,6 @@ void Window::update()
 	if (m_Input.wasKeyPressed(SDL_SCANCODE_ESCAPE))
 	{
 		requestClose();
-	}
-
-	if (m_Input.wasKeyPressed(SDL_SCANCODE_SPACE))
-	{
-		printf("Space\n");
-	}
-
-	if (m_Input.wasMouseButtonPressed(SDL_BUTTON_LEFT) || 
-		m_Input.wasMouseButtonPressed(SDL_BUTTON_MIDDLE) ||
-		m_Input.wasMouseButtonPressed(SDL_BUTTON_RIGHT))
-	{
-		printf("Click\n");
 	}
 }
 

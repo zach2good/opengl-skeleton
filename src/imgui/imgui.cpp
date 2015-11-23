@@ -2186,8 +2186,9 @@ static void SaveSettings()
     for (int i = 0; i != g.Windows.Size; i++)
     {
         ImGuiWindow* window = g.Windows[i];
+
         if (window->Flags & ImGuiWindowFlags_NoSavedSettings)
-            continue;
+            break;
         ImGuiIniData* settings = FindWindowSettings(window->Name);
         settings->Pos = window->Pos;
         settings->Size = window->SizeFull;

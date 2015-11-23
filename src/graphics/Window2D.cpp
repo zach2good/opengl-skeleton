@@ -52,18 +52,6 @@ void Window2D::update()
 	{
 		requestClose();
 	}
-
-	if (m_Input.wasKeyPressed(SDL_SCANCODE_SPACE))
-	{
-		printf("Space\n");
-	}
-
-	if (m_Input.wasMouseButtonPressed(SDL_BUTTON_LEFT) ||
-		m_Input.wasMouseButtonPressed(SDL_BUTTON_MIDDLE) ||
-		m_Input.wasMouseButtonPressed(SDL_BUTTON_RIGHT))
-	{
-		printf("Click\n");
-	}
 }
 
 void Window2D::clear()

@@ -8,6 +8,7 @@ class Texture
 public:
 	GLenum Format;
 
+	Texture() {};
 	Texture(const char* filename);
 
 	inline GLuint GetTextureID() { return m_textureID; }
