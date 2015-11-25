@@ -11,8 +11,8 @@
 #include "scenes/Scene2.h"
 #include "scenes/ForwardScene.h"
 
-auto window = new Window("OpenGL Skeleton", 1280, 720);
-auto scene = new Scene2(window);
+Window* window = new Window("OpenGL Skeleton", 1280, 720);
+Scene2* scene = new Scene2(window);
 
 void step() {
 

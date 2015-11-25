@@ -50,12 +50,10 @@ void Window::init()
 	// Limit framerate to help screen tearing
 	SDL_GL_SetSwapInterval(1);
 
-#ifndef EMSCRIPTEN
 	// Load GLAD
 	if (!gladLoadGL()) {
 		printf("GLAD Error");
 	}
-#endif
 
 	// Print Info
 	printf("GL_VERSION: %s \n", glGetString(GL_VERSION));
