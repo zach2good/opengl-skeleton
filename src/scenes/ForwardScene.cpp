@@ -2,6 +2,10 @@
 
 void ForwardScene::init()
 {
+	m_Window->setGLCullFace(false);
+	m_Window->setGLDepthTest(true);
+	m_Window->setGLMultisample(true);
+
 	input = Input();
 	camera = Camera(vec3(0.0f, 0.0f, 5.0f));
 	projection = glm::perspective(45.0f, (GLfloat)m_Window->getAspect(), 0.1f, 100.0f);
@@ -34,7 +38,7 @@ void ForwardScene::update()
 
 void ForwardScene::render()
 {
-	texture->Bind();
+	texture->Bind(0);
 
 	shaders.at(0)->Bind();
 
@@ -45,7 +49,7 @@ void ForwardScene::render()
 		shaders.at(0)->SetUniform3fv("viewPos", camera.Position);
 		shaders.at(0)->SetUniform4fv("projection", projection);
 
-		shaders.at(0)->SetUniform1i("texture_0", texture->GetTextureID());
+		shaders.at(0)->SetUniform1i("texture_0", 0);
 
 		e->mesh->render();
 	}

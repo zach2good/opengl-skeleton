@@ -5,6 +5,7 @@ void Scene1::init()
 	m_Window->setGLDepthTest(false);
 	m_Window->setGLMultisample(false);
 	m_Window->setGLCullFace(false);
+	m_Window->setGLBlend(false);
 
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);

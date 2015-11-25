@@ -50,6 +50,13 @@ public:
 			glDisable(GL_CULL_FACE);
 	}
 
+	void setGLBlend(bool setting)
+	{
+		setting ?
+			glEnable(GL_BLEND) :
+			glDisable(GL_BLEND);
+	}
+
 private:
 	SDL_Window *m_Window;
 	SDL_GLContext m_Context;

@@ -8,9 +8,11 @@
 #include "graphics/DebugUi.h"
 
 #include "scenes/Scene1.h"
+#include "scenes/Scene2.h"
+#include "scenes/ForwardScene.h"
 
 auto window = new Window("OpenGL Skeleton", 1280, 720);
-auto scene = new Scene1(window);
+auto scene = new Scene2(window);
 
 void step () {
 
