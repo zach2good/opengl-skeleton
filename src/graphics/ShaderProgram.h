@@ -47,6 +47,15 @@ public:
 		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(value));
 	}
 
+	inline void SetUniformTexture(GLuint texID, const char* name, GLuint slot)
+	{
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, texID);
+		glUniform1i(glGetUniformLocation(GetId(), name), slot);
+	}
+
+	
+
 private:
 	GLuint m_programID;
 	GLuint m_vertexShaderID;

@@ -48,11 +48,8 @@ void Scene2::render()
 {
 	shader.Bind();
 
-	texture1.Bind(0);
-	shader.SetUniform1i("ourTexture1", 0);
-
-	texture2.Bind(1);
-	shader.SetUniform1i("ourTexture2", 1);
+	shader.SetUniformTexture(texture1.GetTextureID(), "ourTexture1", 0);
+	shader.SetUniformTexture(texture2.GetTextureID(), "ourTexture2", 1);
 
 	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);

@@ -14,7 +14,7 @@
 auto window = new Window("OpenGL Skeleton", 1280, 720);
 auto scene = new Scene2(window);
 
-void step () {
+void step() {
 
 	window->update();
 	scene->update();
@@ -34,13 +34,13 @@ int main(int argc, char *argv[])
 	scene->init();
 
 	while (!window->isCloseRequested()) {
-		step();	
+		step();
 	}
 
 	scene->destroy();
 
 	delete scene;
 	delete window;
-	
+
 	return 0;
 }
