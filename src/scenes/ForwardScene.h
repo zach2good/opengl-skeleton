@@ -7,13 +7,12 @@
 #include "../core/Timer.h"
 #include "../core/Util.h"
 
-#include "Window.h"
-
-#include "ShaderProgram.h"
-#include "Camera.h"
-#include "Entity.h"
-#include "Mesh.h"
-#include "Texture.h"
+#include "../graphics/Window.h"
+#include "../graphics/ShaderProgram.h"
+#include "../graphics/Camera.h"
+#include "../graphics/Entity.h"
+#include "../graphics/Mesh.h"
+#include "../graphics/Texture.h"
 
 class ForwardScene
 {

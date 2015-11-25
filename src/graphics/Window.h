@@ -29,6 +29,27 @@ public:
 	int getHeight() const { return HEIGHT; }
 	float getAspect() const	{ return float(WIDTH) / float(HEIGHT); }
 
+	void setGLDepthTest(bool setting)
+	{
+		setting ?
+		glEnable(GL_DEPTH_TEST) :
+		glDisable(GL_DEPTH_TEST);
+	}
+
+	void setGLMultisample(bool setting)
+	{
+		setting ?
+			glEnable(GL_MULTISAMPLE) :
+			glDisable(GL_MULTISAMPLE);
+	}
+
+	void setGLCullFace(bool setting)
+	{
+		setting ?
+			glEnable(GL_CULL_FACE) :
+			glDisable(GL_CULL_FACE);
+	}
+
 private:
 	SDL_Window *m_Window;
 	SDL_GLContext m_Context;

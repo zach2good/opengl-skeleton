@@ -6,11 +6,11 @@
 
 #include "graphics/Window.h"
 #include "graphics/DebugUi.h"
-#include "graphics/ForwardScene.h"
+
+#include "scenes/Scene1.h"
 
 auto window = new Window("OpenGL Skeleton", 1280, 720);
-//auto debug = new DebugUi(window->getWindow());
-auto scene = new ForwardScene(window);
+auto scene = new Scene1(window);
 
 void step () {
 
@@ -20,9 +20,6 @@ void step () {
 	window->clear();
 
 	scene->render();
-
-	//debug->prepare();
-	//debug->render();
 
 	window->swap();
 }
@@ -41,7 +38,6 @@ int main(int argc, char *argv[])
 	scene->destroy();
 
 	delete scene;
-	//delete debug;
 	delete window;
 	
 	return 0;
