@@ -116,7 +116,6 @@ void ShaderProgram::handleFileAction(FW::WatchID watchid, const FW::String& dir,
 	FW::Action action)
 {
 	std::cout << "DIR CHANGE " << dir  + filename + " has event " << action << std::endl;
-	std::cout << "Recompiling..." << std::endl;
 	RecompileShader();
 }
 

@@ -8,12 +8,13 @@
 #include "graphics/DebugUi.h"
 
 #include "scenes/ForwardScene.h"
-#include "scenes/Scene1.h"
-#include "scenes/Scene2.h"
-#include "scenes/Scene3.h"
+#include "scenes/Scene1.h" // Quad
+#include "scenes/Scene2.h" // Texture Map
+#include "scenes/Scene3.h" // 3D Textured Box
+#include "scenes/Scene4.h" // Basic Lighting
 
 Window* window = new Window("OpenGL Skeleton", 1280, 720);
-auto scene = new Scene3(window);
+auto scene = new Scene4(window);
 
 void step() {
 
