@@ -23,6 +23,8 @@ void Scene3::update()
 
 void Scene3::render()
 {
+	m_Window->clear();
+
 	shader.Bind();
 
 	shader.SetUniform4fv("model", trans.GetTransformationMatrix());

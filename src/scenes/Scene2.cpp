@@ -46,6 +46,8 @@ void Scene2::update()
 
 void Scene2::render()
 {
+	m_Window->clear();
+
 	shader.Bind();
 
 	shader.SetUniformTexture(texture1.GetTextureID(), "ourTexture1", 0);

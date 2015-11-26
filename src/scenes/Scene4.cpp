@@ -4,7 +4,7 @@ void Scene4::init()
 {
 	m_Window->setGLDepthTest(true);
 	m_Window->setGLMultisample(true);
-	m_Window->setGLCullFace(true);
+	m_Window->setGLCullFace(false);
 	m_Window->setGLBlend(true);
 
 	camera.Position = vec3(0, 0, 10);
@@ -19,11 +19,13 @@ void Scene4::destroy()
 void Scene4::update()
 {
 	shader.UpdateShader();
-	trans.ChangeRotation(vec3(0.0f, 0.3f, 0.0f));
+	trans.ChangeRotation(vec3(0.0f, 0.6f, 0.0f));
 }
 
 void Scene4::render()
 {
+	m_Window->clear();
+
 	shader.Bind();
 
 	shader.SetUniform4fv("model", trans.GetTransformationMatrix());

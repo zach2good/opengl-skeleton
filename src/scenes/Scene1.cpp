@@ -38,6 +38,8 @@ void Scene1::update()
 
 void Scene1::render()
 {
+	m_Window->clear();
+
 	shader.Bind();
 
 	glBindVertexArray(VAO);

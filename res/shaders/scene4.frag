@@ -18,7 +18,7 @@ uniform vec3 lightPos;
 
 void main()
 {
-	vec3 lightColor = vec3(1.0f);
+	vec3 lightColor = vec3(1.0f, 1.0f, 1.0f);
 
 	// Ambient
     float ambientStrength = 0.1f;

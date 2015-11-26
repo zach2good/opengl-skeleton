@@ -7,21 +7,38 @@
 #include "graphics/Window.h"
 #include "graphics/DebugUi.h"
 
-#include "scenes/ForwardScene.h"
 #include "scenes/Scene1.h" // Quad
 #include "scenes/Scene2.h" // Texture Map
 #include "scenes/Scene3.h" // 3D Textured Box
 #include "scenes/Scene4.h" // Basic Lighting
+#include "scenes/Scene5.h" // Framebuffer
 
-Window* window = new Window("OpenGL Skeleton", 1280, 720);
-auto scene = new Scene4(window);
+// Depth
+// Stencil
+// Blending
+
+// Cubemaps
+// Instanced Rendering
+// Advanced Lighting
+
+// Gamma
+// Shadows
+// Normal Mapping
+// Parallax Mapping
+
+// HDR
+// Bloom
+
+// Deferred
+// SSAO
+
+Window* window = new Window("OpenGL Skeleton", 800, 600);
+auto scene = new Scene5(window);
 
 void step() {
 
 	window->update();
 	scene->update();
-
-	window->clear();
 
 	scene->render();
 
