@@ -22,8 +22,17 @@ public:
 	void UpdateShader();
 	void RecompileShader();
 
-	inline void Bind() { glUseProgram(m_programID); }
-	inline void Unbind() { glUseProgram(0); }
+	inline void Bind() 
+	{ 
+		glUseProgram(m_programID); 
+	}
+
+	inline void Unbind() 
+	{ 
+		glBindTexture(GL_TEXTURE_2D, 0);  
+		glUseProgram(0); 
+	}
+
 	inline GLuint GetId() { return m_programID; }
 
 	inline void SetUniform1i(const char* name, float value)
@@ -56,9 +65,10 @@ public:
 
 	inline void SetUniformTexture(GLuint texID, const char* name, GLuint slot)
 	{
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texID);
-		glUniform1i(glGetUniformLocation(GetId(), name), slot);
+		GLuint loc = glGetUniformLocation(GetId(), name); // Get Location
+		glUniform1i(loc, slot); // Bind Location
+		glActiveTexture(GL_TEXTURE0 + slot); // Activate
+		glBindTexture(GL_TEXTURE_2D, texID); // Bind
 	}
 
 private:

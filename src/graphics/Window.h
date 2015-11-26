@@ -57,6 +57,13 @@ public:
 			glDisable(GL_BLEND);
 	}
 
+	void setGLGammaCorrection(bool setting)
+	{
+		setting ?
+			glEnable(GL_FRAMEBUFFER_SRGB) :
+			glDisable(GL_FRAMEBUFFER_SRGB);
+	}
+
 private:
 	SDL_Window *m_Window;
 	SDL_GLContext m_Context;

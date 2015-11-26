@@ -12,6 +12,7 @@
 #include "scenes/Scene3.h" // 3D Textured Box
 #include "scenes/Scene4.h" // Basic Lighting
 #include "scenes/Scene5.h" // Framebuffer
+#include "scenes/Scene6.h" // Blinn-Phong Shading
 
 // Depth
 // Stencil
@@ -33,7 +34,7 @@
 // SSAO
 
 Window* window = new Window("OpenGL Skeleton", 800, 600);
-auto scene = new Scene5(window);
+auto scene = new Scene6(window);
 
 void step() {
 
