@@ -13,7 +13,7 @@
 #include "scenes/Scene3.h"
 
 Window* window = new Window("OpenGL Skeleton", 1280, 720);
-auto scene = new Scene2(window);
+auto scene = new Scene3(window);
 
 void step() {
 

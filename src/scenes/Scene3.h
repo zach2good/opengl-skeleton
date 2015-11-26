@@ -10,6 +10,9 @@
 #include "../graphics/Window.h"
 #include "../graphics/ShaderProgram.h"
 #include "../graphics/Texture.h"
+#include "../graphics/Camera.h"
+#include "../graphics/Mesh.h"
+#include "../components/Transformation.h"
 
 class Scene3
 {
@@ -24,6 +27,9 @@ public:
 
 private:
 	Window* m_Window;
-
 	ShaderProgram shader = ShaderProgram("../res/shaders/scene3");
+	Camera camera;
+	Texture	texture = Texture("../res/textures/box.jpg");
+	Mesh* mesh = new Mesh("../res/models/box.obj");
+	Transformation trans;
 };
