@@ -9,10 +9,11 @@
 
 #include "scenes/Scene1.h"
 #include "scenes/Scene2.h"
+#include "scenes/Scene3.h"
 #include "scenes/ForwardScene.h"
 
 Window* window = new Window("OpenGL Skeleton", 1280, 720);
-Scene2* scene = new Scene2(window);
+auto scene = new Scene3(window);
 
 void step() {
 
@@ -39,8 +40,8 @@ int main(int argc, char *argv[])
 
 	scene->destroy();
 
-	delete scene;
-	delete window;
+	//delete scene;
+	//delete window;
 
 	return 0;
 }

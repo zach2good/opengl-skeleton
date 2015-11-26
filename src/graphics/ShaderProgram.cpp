@@ -1,6 +1,5 @@
 #include "ShaderProgram.h"
 
-
 ShaderProgram::ShaderProgram(const std::string& fileName)
 {
 	// Load shaders from file
@@ -51,7 +50,6 @@ ShaderProgram::~ShaderProgram()
 	// Delete the program
 	glDeleteProgram(m_programID);
 }
-
 
 GLuint ShaderProgram::LoadShader(const std::string& fileName, GLenum type)
 {

@@ -25,7 +25,8 @@ include_directories(include/
                     lib/glad/include/
                     lib/sdl/include/
                     lib/glm/
-                    lib/stb/)
+                    lib/stb/
+		    simplefilewatcher/include/)
 
 file(GLOB VENDORS_SOURCES lib/glad/src/glad.c)
 
@@ -42,7 +43,8 @@ file(GLOB PROJECT_SOURCES src/*.cpp
                           src/*/*.cpp
                           src/*/*/*.cpp
                           src/*/*/*/*.cpp
-                          src/imgui)
+                          src/imgui/*.cpp
+			  src/simplefilewatcher/*.cpp)
 
 file(GLOB PROJECT_SHADERS res/shaders/*.comp
                           res/shaders/*.frag
