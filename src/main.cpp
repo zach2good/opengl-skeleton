@@ -7,10 +7,10 @@
 #include "graphics/Window.h"
 #include "graphics/DebugUi.h"
 
+#include "scenes/ForwardScene.h"
 #include "scenes/Scene1.h"
 #include "scenes/Scene2.h"
 #include "scenes/Scene3.h"
-#include "scenes/ForwardScene.h"
 
 Window* window = new Window("OpenGL Skeleton", 1280, 720);
 auto scene = new Scene3(window);

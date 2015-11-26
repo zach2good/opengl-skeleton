@@ -41,7 +41,7 @@ void Scene2::destroy()
 
 void Scene2::update()
 {
-	
+	shader.UpdateShader();
 }
 
 void Scene2::render()

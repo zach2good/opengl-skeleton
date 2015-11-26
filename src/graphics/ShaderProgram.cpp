@@ -2,9 +2,12 @@
 
 ShaderProgram::ShaderProgram(const std::string& fileName)
 {
+	// save filename
+	m_Filename = fileName;
+
 	// Load shaders from file
-	m_vertexShaderID = LoadShader(fileName + ".vert", GL_VERTEX_SHADER);
-	m_fragmentShaderID = LoadShader(fileName + ".frag", GL_FRAGMENT_SHADER);
+	m_vertexShaderID = LoadShader(m_Filename + ".vert", GL_VERTEX_SHADER);
+	m_fragmentShaderID = LoadShader(m_Filename + ".frag", GL_FRAGMENT_SHADER);
 
 	// Create shader program
 	m_programID = glCreateProgram();
@@ -34,6 +37,8 @@ ShaderProgram::ShaderProgram(const std::string& fileName)
 
 		system("PAUSE");
 	}
+
+	watchID = fileWatcher.addWatch("../res/shaders/", this, true);
 }
 
 
@@ -100,4 +105,56 @@ GLuint ShaderProgram::LoadShader(const std::string& fileName, GLenum type)
 	}
 
 	return shaderID;
+}
+
+void ShaderProgram::UpdateShader()
+{
+	fileWatcher.update();
+}
+
+void ShaderProgram::handleFileAction(FW::WatchID watchid, const FW::String& dir, const FW::String& filename,
+	FW::Action action)
+{
+	std::cout << "DIR CHANGE " << dir  + filename + " has event " << action << std::endl;
+	std::cout << "Recompiling..." << std::endl;
+	RecompileShader();
+}
+
+void ShaderProgram::RecompileShader()
+{
+	// Load shaders from file
+	m_newVertexShaderID = LoadShader(m_Filename + ".vert", GL_VERTEX_SHADER);
+	m_newFragmentShaderID = LoadShader(m_Filename + ".frag", GL_FRAGMENT_SHADER);
+
+	// Create shader program
+	m_newProgramID = glCreateProgram();
+
+	// Attach the shaders to the program
+	glAttachShader(m_newProgramID, m_newVertexShaderID);
+	glAttachShader(m_newProgramID, m_newFragmentShaderID);
+
+	// Link the program
+	glLinkProgram(m_newProgramID);
+	glValidateProgram(m_newProgramID);
+
+	// Check validation status
+	GLint status;
+	glGetProgramiv(m_newProgramID, GL_VALIDATE_STATUS, &status);
+	if (status == GL_FALSE)
+	{
+		// Get info log length
+		GLint infoLogLength;
+		glGetProgramiv(m_newProgramID, GL_INFO_LOG_LENGTH, &infoLogLength);
+		// Get the info log
+		GLchar* infoLog = new GLchar[infoLogLength];
+		glGetProgramInfoLog(m_newProgramID, infoLogLength, NULL, infoLog);
+		printf("ERROR: could not validate program \n%s\n", infoLog);
+		// Delete the array
+		delete[] infoLog;
+	}
+	else
+	{
+		std::cout << "Compilation successful, using new shader" << std::endl;
+		m_programID = m_newProgramID;
+	}
 }

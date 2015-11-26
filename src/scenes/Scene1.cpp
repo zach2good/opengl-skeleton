@@ -33,7 +33,7 @@ void Scene1::destroy()
 
 void Scene1::update()
 {
-	
+	shader.UpdateShader();
 }
 
 void Scene1::render()

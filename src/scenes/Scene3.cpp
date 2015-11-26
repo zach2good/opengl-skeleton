@@ -6,8 +6,6 @@ void Scene3::init()
 	m_Window->setGLMultisample(false);
 	m_Window->setGLCullFace(false);
 	m_Window->setGLBlend(false);
-
-	FW::WatchID watchID = fileWatcher.addWatch("../res/shaders/", new UpdateListener(), true);
 }
 
 void Scene3::destroy()
@@ -17,10 +15,10 @@ void Scene3::destroy()
 
 void Scene3::update()
 {
-	fileWatcher.update();
+	shader.UpdateShader();
 }
 
 void Scene3::render()
 {
-
+	
 }

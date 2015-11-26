@@ -11,8 +11,6 @@
 #include "../graphics/ShaderProgram.h"
 #include "../graphics/Texture.h"
 
-#include "../simplefilewatcher/FileWatcher.h"
-
 class Scene3
 {
 public:
@@ -28,18 +26,4 @@ private:
 	Window* m_Window;
 
 	ShaderProgram shader = ShaderProgram("../res/shaders/scene3");
-
-	FW::FileWatcher fileWatcher;
-};
-
-/// Processes a file action
-class UpdateListener : public FW::FileWatchListener
-{
-public:
-	UpdateListener() {}
-	void handleFileAction(FW::WatchID watchid, const FW::String& dir, const FW::String& filename,
-		FW::Action action)
-	{
-		std::cout << "DIR (" << dir + ") FILE (" + filename + ") has event " << action << std::endl;
-	}
 };

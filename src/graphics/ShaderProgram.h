@@ -11,11 +11,16 @@
 
 #include <iostream>
 
-class ShaderProgram
+#include "../simplefilewatcher/FileWatcher.h"
+
+class ShaderProgram : public FW::FileWatchListener
 {
 public:
 	ShaderProgram(const std::string& fileName);
 	virtual ~ShaderProgram();
+
+	void UpdateShader();
+	void RecompileShader();
 
 	inline void Bind() { glUseProgram(m_programID); }
 	inline void Unbind() { glUseProgram(0); }
@@ -56,12 +61,23 @@ public:
 		glUniform1i(glGetUniformLocation(GetId(), name), slot);
 	}
 
-	
-
 private:
+	GLuint m_Error = 0;
+
 	GLuint m_programID;
 	GLuint m_vertexShaderID;
 	GLuint m_fragmentShaderID;
+
+	GLuint m_newProgramID;
+	GLuint m_newVertexShaderID;
+	GLuint m_newFragmentShaderID;
+
+	std::string m_Filename;
+	FW::FileWatcher fileWatcher;
+	FW::WatchID watchID;
+
+	void ShaderProgram::handleFileAction(FW::WatchID watchid, const FW::String& dir, const FW::String& filename,
+		FW::Action action);
 
 	GLuint LoadShader(const std::string& fileName, GLenum type);
 };
