@@ -71,7 +71,7 @@ vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
 
 void main()
 {
-    vec3 lightColor = vec3(1.0f, 1.0f, 1.0f);
+    vec3 lightColor = vec3(1.0f, 0.0f, 1.0f);
 
     // Ambient
     float ambientStrength = 0.1f;

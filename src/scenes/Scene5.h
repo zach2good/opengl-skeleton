@@ -29,7 +29,7 @@ public:
 private:
 	Window* m_Window;
 	ShaderProgram shader = ShaderProgram("../res/shaders/scene5");
-	ShaderProgram depthShader = ShaderProgram("../res/shaders/depth");
+	ShaderProgram edgeShader = ShaderProgram("../res/shaders/edge");
 	Camera camera;
 	Texture	texture = Texture("../res/textures/box.jpg");
 	Mesh* mesh = new Mesh("../res/models/box.obj");

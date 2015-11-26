@@ -14,6 +14,7 @@ public:
 	void Unbind();
 
 	void Render();
+	void RenderWithShader(ShaderProgram* shader);
 
 private:
 	ShaderProgram screenShader = ShaderProgram("../res/shaders/framebuffer");
@@ -27,6 +28,7 @@ private:
 	GLuint generateAttachmentTexture(GLboolean depth, GLboolean stencil);
 
 	GLuint quadVAO, quadVBO;
+
 	GLfloat quadVertices[24] = {
 		-1.0f,  1.0f,  0.0f, 1.0f,
 		-1.0f, -1.0f,  0.0f, 0.0f,

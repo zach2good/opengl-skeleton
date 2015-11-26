@@ -53,6 +53,18 @@ void Framebuffer::Unbind()
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
+void Framebuffer::RenderWithShader(ShaderProgram* shader)
+{
+	glDisable(GL_DEPTH_TEST);
+
+	shader->Bind();
+	glBindVertexArray(quadVAO);
+	glBindTexture(GL_TEXTURE_2D, textureColorbuffer);	// Use the color attachment texture as the texture of the quad plane
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+	glBindVertexArray(0);
+	shader->Unbind();
+}
+
 void Framebuffer::Render()
 {
 	glDisable(GL_DEPTH_TEST);

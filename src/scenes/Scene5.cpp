@@ -24,6 +24,7 @@ void Scene5::update()
 
 void Scene5::render()
 {
+	// Draw to Framebuffer
 	frameBuffer.Bind();
 		m_Window->clear();
 
@@ -41,5 +42,5 @@ void Scene5::render()
 		shader.Unbind();
 	frameBuffer.Unbind();
 
-	frameBuffer.Render();
+	frameBuffer.RenderWithShader(&edgeShader);
 }
