@@ -47,11 +47,7 @@ SDL_Window* Window2D::getWindow() const
 
 void Window2D::update()
 {
-	m_Input.pollInput();
-	if (m_Input.wasKeyPressed(SDL_SCANCODE_ESCAPE))
-	{
-		requestClose();
-	}
+
 }
 
 void Window2D::clear()

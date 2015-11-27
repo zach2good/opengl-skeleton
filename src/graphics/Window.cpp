@@ -1,7 +1,7 @@
 #include "Window.h"
 
 Window::Window(const char* title, int width, int height)
-	: TITLE(title), WIDTH(width), HEIGHT(height), m_Input()
+	: TITLE(title), WIDTH(width), HEIGHT(height)
 {
 	init();
 }
@@ -98,10 +98,31 @@ SDL_GLContext Window::getContext()
 
 void Window::update()
 {
-	m_Input.pollInput();
-	if (m_Input.wasKeyPressed(SDL_SCANCODE_ESCAPE))
-	{
-		requestClose();
+	Input& in = Input::instance();
+
+	while (SDL_PollEvent(&event)) {
+		switch (event.type) {
+		case SDL_MOUSEBUTTONDOWN:
+			break;
+		case SDL_KEYUP:
+			in.handleEvent(event);
+			break;
+		case SDL_KEYDOWN:
+			in.handleEvent(event);
+
+			switch (event.key.keysym.sym) {
+			case SDLK_ESCAPE: requestClose(); break;
+			default:
+				break;
+			}
+			break;
+
+		case SDL_QUIT:
+			requestClose();
+			break;
+		default:
+			break;
+		}
 	}
 }
 

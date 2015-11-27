@@ -67,7 +67,8 @@ public:
 private:
 	SDL_Window *m_Window;
 	SDL_GLContext m_Context;
-	Input m_Input;
+
+	SDL_Event event;
 
 	double startTime;
 	double endTime;

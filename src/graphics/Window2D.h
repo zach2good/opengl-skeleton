@@ -33,7 +33,6 @@ private:
 	SDL_Window *m_Window;
 	SDL_Renderer* m_Renderer;
 	SDL_Texture* m_Screen;
-	Input m_Input;
 
 	const char* TITLE;
 	int HEIGHT;

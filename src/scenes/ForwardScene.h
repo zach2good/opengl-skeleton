@@ -27,7 +27,6 @@ public:
 	void update();
 	void render();
 
-	Input input;
 	Camera camera;
 
 	glm::mat4 projection;

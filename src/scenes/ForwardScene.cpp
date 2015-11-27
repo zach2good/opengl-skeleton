@@ -6,7 +6,6 @@ void ForwardScene::init()
 	m_Window->setGLDepthTest(true);
 	m_Window->setGLMultisample(true);
 
-	input = Input();
 	camera = Camera(vec3(0.0f, 0.0f, 5.0f));
 	projection = glm::perspective(45.0f, (GLfloat)m_Window->getAspect(), 0.1f, 100.0f);
 	shaders.push_back(new ShaderProgram("../res/shaders/forward"));

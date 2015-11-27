@@ -8,6 +8,7 @@
 #include "../core/Util.h"
 
 #include "../graphics/Window.h"
+#include "../core/Input.h"
 #include "../graphics/ShaderProgram.h"
 #include "../graphics/Texture.h"
 #include "../graphics/Camera.h"
