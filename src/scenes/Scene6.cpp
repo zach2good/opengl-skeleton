@@ -19,7 +19,24 @@ void Scene6::destroy()
 void Scene6::update()
 {
 	shader.UpdateShader();
-	trans.ChangeRotation(vec3(0.0f, 0.6f, 0.0f));
+	
+	Input& input = Input::instance();
+
+	if (input.isKeyDown(SDL_SCANCODE_A)) {
+		trans.ChangeRotation(vec3(0.0f, -0.6f, 0.0f));
+	}
+
+	if (input.isKeyDown(SDL_SCANCODE_D)) {
+		trans.ChangeRotation(vec3(0.0f, 0.6f, 0.0f));
+	}
+
+	if (input.isKeyDown(SDL_SCANCODE_W)) {
+		trans.ChangeRotation(vec3(-0.6f, 0.0f, 0.0f));
+	}
+
+	if (input.isKeyDown(SDL_SCANCODE_S)) {
+		trans.ChangeRotation(vec3(0.6f, 0.0f, 0.0f));
+	}	
 }
 
 void Scene6::render()
