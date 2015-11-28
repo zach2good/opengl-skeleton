@@ -36,7 +36,13 @@ void Scene6::update()
 
 	if (input.isKeyDown(SDL_SCANCODE_S)) {
 		trans.ChangeRotation(vec3(0.6f, 0.0f, 0.0f));
-	}	
+	}
+
+	if (input.isMouseDown(1))
+	{
+		trans.ChangeRotation(vec3(input.getRelPos().y, input.getRelPos().x, 0.0f));
+	}
+	
 }
 
 void Scene6::render()

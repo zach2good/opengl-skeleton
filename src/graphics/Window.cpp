@@ -102,7 +102,14 @@ void Window::update()
 
 	while (SDL_PollEvent(&event)) {
 		switch (event.type) {
+		case SDL_MOUSEMOTION:
+			in.handleEvent(event);
+			break;
 		case SDL_MOUSEBUTTONDOWN:
+			in.handleEvent(event);
+			break;
+		case SDL_MOUSEBUTTONUP:
+			in.handleEvent(event);
 			break;
 		case SDL_KEYUP:
 			in.handleEvent(event);
