@@ -42,6 +42,11 @@ void Scene6::update()
 	{
 		trans.ChangeRotation(vec3(input.getRelPos().y, input.getRelPos().x, 0.0f));
 	}
+
+	if (input.isMouseDown(3))
+	{
+		trans.ChangePosition(vec3(input.getRelPos().x, -input.getRelPos().y, 0.0f));
+	}
 	
 }
 

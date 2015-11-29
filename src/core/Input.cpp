@@ -27,9 +27,8 @@ void Input::handleEvent(const SDL_Event& event)
 	if (event.type == SDL_MOUSEBUTTONDOWN || event.type == SDL_MOUSEBUTTONUP)
 	{
 		const bool isButtonDown = event.type == SDL_MOUSEBUTTONDOWN;
-		bool isLeft = event.button.button == SDL_BUTTON_LEFT;
-
-		button1 = isLeft == isButtonDown;
+		mouseState[event.button.button] = isButtonDown;
+		mouseStateTimestamp[event.button.button] = SDL_GetTicks();
 	}
 
 	if (event.type == SDL_MOUSEMOTION)
@@ -53,7 +52,7 @@ bool Input::isKeyUpdated(SDL_Scancode code, Uint32 timestamp) const
 
 bool Input::isMouseDown(int code) const
 {
-	return button1;
+	return mouseState[code] > 0;
 }
 
 glm::vec2 Input::getPos()
