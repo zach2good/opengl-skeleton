@@ -17,7 +17,7 @@ public:
 	void RenderWithShader(ShaderProgram* shader);
 
 private:
-	ShaderProgram screenShader = ShaderProgram("../res/shaders/framebuffer");
+	ShaderProgram* screenShader = new ShaderProgram("../res/shaders/framebuffer");
 
 	GLuint framebuffer;
 	GLuint screenWidth;

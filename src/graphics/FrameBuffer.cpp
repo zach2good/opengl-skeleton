@@ -46,6 +46,8 @@ void Framebuffer::Bind()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
 	glEnable(GL_DEPTH_TEST);
+
+
 }
 
 void Framebuffer::Unbind()
@@ -58,6 +60,11 @@ void Framebuffer::RenderWithShader(ShaderProgram* shader)
 	glDisable(GL_DEPTH_TEST);
 
 	shader->Bind();
+
+	shader->SetUniform1f("time", (float)SDL_GetTicks());
+	shader->SetUniform1f("width", (float)screenWidth);
+	shader->SetUniform1f("height", (float)screenHeight);
+
 	glBindVertexArray(quadVAO);
 	glBindTexture(GL_TEXTURE_2D, textureColorbuffer);	// Use the color attachment texture as the texture of the quad plane
 	glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -69,12 +76,17 @@ void Framebuffer::Render()
 {
 	glDisable(GL_DEPTH_TEST);
 
-	screenShader.Bind();
+	screenShader->Bind();
+
+	screenShader->SetUniform1f("time", (float)SDL_GetTicks());
+	screenShader->SetUniform1f("width", (float)screenWidth);
+	screenShader->SetUniform1f("height", (float)screenHeight);
+
 	glBindVertexArray(quadVAO);
 	glBindTexture(GL_TEXTURE_2D, textureColorbuffer);	// Use the color attachment texture as the texture of the quad plane
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 	glBindVertexArray(0);
-	screenShader.Unbind();
+	screenShader->Unbind();
 }
 
 GLuint Framebuffer::generateAttachmentTexture(GLboolean depth, GLboolean stencil)

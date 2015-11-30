@@ -38,16 +38,15 @@ void Scene6::update()
 		trans.ChangeRotation(vec3(0.6f, 0.0f, 0.0f));
 	}
 
-	if (input.isMouseDown(1))
+	if (input.isMouseDown(SDL_BUTTON_LEFT))
 	{
 		trans.ChangeRotation(vec3(input.getRelPos().y, input.getRelPos().x, 0.0f));
 	}
 
-	if (input.isMouseDown(3))
+	if (input.isMouseDown(SDL_BUTTON_RIGHT))
 	{
 		trans.ChangePosition(vec3(input.getRelPos().x, -input.getRelPos().y, 0.0f));
 	}
-	
 }
 
 void Scene6::render()

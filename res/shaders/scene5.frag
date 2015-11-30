@@ -64,6 +64,8 @@ uniform PointLight pointLights[NR_POINT_LIGHTS];
 uniform SpotLight spotLight;
 uniform Material material;
 
+uniform float time;
+
 // Function prototypes
 vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir);
 vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
@@ -71,6 +73,8 @@ vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
 
 void main()
 {
+    float sin_time = sin(time/1000.0f);
+    
     vec3 lightColor = vec3(1.0f, 0.0f, 1.0f);
 
     // Ambient
