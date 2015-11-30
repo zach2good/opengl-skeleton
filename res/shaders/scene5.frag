@@ -75,7 +75,7 @@ void main()
 {
     float sin_time = sin(time/1000.0f);
     
-    vec3 lightColor = vec3(1.0f, 0.0f, 1.0f);
+    vec3 lightColor = vec3(1.0f, 1.0f, 1.0f);
 
     // Ambient
     float ambientStrength = 0.1f;
