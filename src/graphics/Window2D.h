@@ -22,6 +22,8 @@ public:
 	void swap();
 
 	void drawPixel(int x, int y, int r, int g, int b);
+	void drawLine(int x1, int y1, int x2, int y2, int r, int g, int b);
+	void drawRect(int x1, int y1, int x2, int y2, int r, int g, int b);
 
 	bool isCloseRequested();
 	void requestClose();
@@ -34,6 +36,8 @@ private:
 	SDL_Window *m_Window;
 	SDL_Renderer* m_Renderer;
 	SDL_Texture* m_Screen;
+
+	SDL_Event event;
 
 	double startTime;
 	double endTime;

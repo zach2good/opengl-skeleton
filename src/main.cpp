@@ -8,6 +8,8 @@
 #include "graphics/Window2D.h"
 #include "graphics/DebugUi.h"
 
+#include "scenes/BoidsScene2D.h"
+
 #include "scenes/Scene1.h" // Quad
 #include "scenes/Scene2.h" // Texture Map
 #include "scenes/Scene3.h" // 3D Textured Box
@@ -40,13 +42,15 @@
 
 auto window = new Window2D("OpenGL Skeleton", 800, 600);
 //auto scene = new Scene5(window);
+auto scene = new BoidsScene2D(window);
 
 void step() {
 
 	window->update();
-	//scene->update();
+	window->clear();
 
-	//scene->render();
+	scene->update();
+	scene->render();
 
 	window->swap();
 }
@@ -56,16 +60,16 @@ int main(int argc, char *argv[])
 {
 	printf("%s\n", "Starting...");
 
-	//scene->init();
+	scene->init();
 
 	while (!window->isCloseRequested()) {
 		step();
 	}
 
-	//scene->destroy();
+	scene->destroy();
 
-	//delete scene;
-	//delete window;
+	delete scene;
+	delete window;
 
 	return 0;
 }
