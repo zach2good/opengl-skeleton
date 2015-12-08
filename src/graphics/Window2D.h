@@ -4,6 +4,7 @@
 
 #include "../core/Input.h"
 
+#include "../core/Timer.h"
 
 class Window2D
 {
@@ -33,6 +34,12 @@ private:
 	SDL_Window *m_Window;
 	SDL_Renderer* m_Renderer;
 	SDL_Texture* m_Screen;
+
+	double startTime;
+	double endTime;
+	double renderTime;
+
+	int fpsAccumulator;
 
 	const char* TITLE;
 	int HEIGHT;

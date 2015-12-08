@@ -29,6 +29,11 @@ void Window2D::init()
 
 	m_Screen = SDL_CreateTexture(m_Renderer, SDL_GetWindowPixelFormat(m_Window), 0, WIDTH, HEIGHT);
 
+	startTime = 0;
+	endTime = 0;
+	renderTime = 0;
+	fpsAccumulator = 0;
+
 	isRunning = true;
 }
 
@@ -47,7 +52,7 @@ SDL_Window* Window2D::getWindow() const
 
 void Window2D::update()
 {
-
+	startTime = Timer::GetTime();
 }
 
 void Window2D::clear()
@@ -58,7 +63,23 @@ void Window2D::clear()
 
 void Window2D::swap()
 {
-	SDL_RenderPresent(m_Renderer);
+	SDL_RenderPresent(m_Renderer);	
+
+	endTime = Timer::GetTime();
+	renderTime = endTime - startTime;
+
+	fpsAccumulator += (int)(renderTime * 1000.0f);
+
+	std::string t = TITLE;
+	std::string fpsString = std::to_string(1.0f / renderTime);
+	fpsString.resize(4);
+	std::string titleString = t + " " + fpsString + "FPS";
+
+	if (std::isgreater(fpsAccumulator, 1000))
+	{
+		SDL_SetWindowTitle(m_Window, titleString.c_str());
+		fpsAccumulator = 0;
+	}
 }
 
 void Window2D::drawPixel(int x, int y, int r, int g, int b)

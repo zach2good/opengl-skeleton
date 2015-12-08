@@ -5,6 +5,7 @@
 #include "graphics/glm.h"
 
 #include "graphics/Window.h"
+#include "graphics/Window2D.h"
 #include "graphics/DebugUi.h"
 
 #include "scenes/Scene1.h" // Quad
@@ -37,15 +38,15 @@
 // Deferred
 // SSAO
 
-Window* window = new Window("OpenGL Skeleton", 800, 600);
-auto scene = new Scene5(window);
+auto window = new Window2D("OpenGL Skeleton", 800, 600);
+//auto scene = new Scene5(window);
 
 void step() {
 
 	window->update();
-	scene->update();
+	//scene->update();
 
-	scene->render();
+	//scene->render();
 
 	window->swap();
 }
@@ -55,13 +56,13 @@ int main(int argc, char *argv[])
 {
 	printf("%s\n", "Starting...");
 
-	scene->init();
+	//scene->init();
 
 	while (!window->isCloseRequested()) {
 		step();
 	}
 
-	scene->destroy();
+	//scene->destroy();
 
 	//delete scene;
 	//delete window;

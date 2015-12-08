@@ -75,6 +75,7 @@ void Window::init()
 	startTime = 0;
 	endTime = 0;
 	renderTime = 0;
+	fpsAccumulator = 0;
 
 	isRunning = true;
 }
@@ -131,11 +132,12 @@ void Window::update()
 			break;
 		}
 	}
+
+	startTime = Timer::GetTime();
 }
 
 void Window::clear()
 {
-	startTime = Timer::GetTime();
 	glViewport(0, 0, WIDTH, HEIGHT);
 	glClearColor(0.2, 0.2, 0.2, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -144,13 +146,22 @@ void Window::clear()
 void Window::swap()
 {
 	SDL_GL_SwapWindow(m_Window);
-	endTime = Timer::GetTime();
 
+	endTime = Timer::GetTime();
 	renderTime = endTime - startTime;
 
-	const char* t = TITLE;
+	fpsAccumulator += (int)(renderTime * 1000.0f);
 
-	SDL_SetWindowTitle(m_Window, std::to_string(1.0f / renderTime).c_str());
+	std::string t = TITLE;
+	std::string fpsString = std::to_string(1.0f / renderTime);
+	fpsString.resize(4);
+	std::string titleString = t + " " + fpsString + "FPS";
+
+	if (std::isgreater(fpsAccumulator, 1000))
+	{
+		SDL_SetWindowTitle(m_Window, titleString.c_str());
+		fpsAccumulator = 0;
+	}	
 }
 
 bool Window::isCloseRequested()
