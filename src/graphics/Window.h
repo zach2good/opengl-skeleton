@@ -75,6 +75,8 @@ private:
 	double endTime;
 	double renderTime;
 
+	int fpsAccumulator;
+
 	const char* TITLE;
 	int HEIGHT;
 	int WIDTH;
