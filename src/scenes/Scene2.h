@@ -41,6 +41,6 @@ private:
 		1, 2, 3  
 	};
 
-	Texture	texture1 = Texture("../res/textures/wall.jpg");
-	Texture	texture2 = Texture("../res/textures/box.jpg");
+	Texture	texture1 = Texture("../res/textures/container.jpg");
+	Texture	texture2 = Texture("../res/textures/awesomeface.png");
 };

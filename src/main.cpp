@@ -33,12 +33,16 @@
 // Deferred
 // SSAO
 
-Window* window = new Window("OpenGL Skeleton", 800, 600);
-auto scene = new Scene6(window);
+#include "scenes/RedBook/RBScene1.h" // Quad
+
+
+Window* window = new Window("OpenGL Skeleton", 1280, 720);
+auto scene = new RBScene1(window);
 
 void step() {
 
 	window->update();
+
 	scene->update();
 
 	scene->render();

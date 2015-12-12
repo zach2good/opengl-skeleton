@@ -17,7 +17,8 @@ Texture::Texture(const char* filename)
 	{
 		m_Error = 0;
 	}
-	else {
+	else
+	{
 		printf("Error loading: %s \n", filename);
 		m_Error = -1;
 		image = stbi_load("../res/models/error.jpg", &m_Width, &m_Height, &m_Channels, 0);
@@ -44,6 +45,8 @@ Texture::Texture(const char* filename)
 	}
 
 	glTexImage2D(GL_TEXTURE_2D, 0, Format, m_Width, m_Height, 0, Format, GL_UNSIGNED_BYTE, image);
+
+	glGenerateMipmap(GL_TEXTURE_2D);
 
 	stbi_image_free(image);
 
