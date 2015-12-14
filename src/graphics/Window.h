@@ -52,6 +52,7 @@ public:
 
 	void setGLBlend(bool setting)
 	{
+		glCullFace(GL_BACK);
 		setting ?
 			glEnable(GL_BLEND) :
 			glDisable(GL_BLEND);
