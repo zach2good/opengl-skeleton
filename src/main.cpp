@@ -7,12 +7,12 @@
 #include "graphics/Window.h"
 #include "graphics/DebugUi.h"
 
-#include "scenes/Scene1.h" // Quad
-#include "scenes/Scene2.h" // Texture Map
-#include "scenes/Scene3.h" // 3D Textured Box
-#include "scenes/Scene4.h" // Basic Lighting
-#include "scenes/Scene5.h" // Framebuffer
-#include "scenes/Scene6.h" // Blinn-Phong Shading
+//#include "scenes/Scene1.h" // Quad
+//#include "scenes/Scene2.h" // Texture Map
+//#include "scenes/Scene3.h" // 3D Textured Box
+//#include "scenes/Scene4.h" // Basic Lighting
+//#include "scenes/Scene5.h" // Framebuffer
+//#include "scenes/Scene6.h" // Blinn-Phong Shading
 
 // Depth
 // Stencil
@@ -33,11 +33,12 @@
 // Deferred
 // SSAO
 
-#include "scenes/RedBook/RBScene1.h" // Quad
+//#include "scenes/RedBook/RBScene1.h" // Quad
+#include "scenes/GScene1.h" // Quad
 
 
 Window* window = new Window("OpenGL Skeleton", 1280, 720);
-auto scene = new RBScene1(window);
+auto scene = new GScene1(window);
 
 void step() {
 

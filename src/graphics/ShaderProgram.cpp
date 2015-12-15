@@ -1,5 +1,7 @@
 #include "ShaderProgram.h"
 
+using namespace std;
+
 ShaderProgram::ShaderProgram(const std::string& fileName)
 {
 	// save filename
@@ -38,7 +40,11 @@ ShaderProgram::ShaderProgram(const std::string& fileName)
 		system("PAUSE");
 	}
 
+	// Set Watch
 	watchID = fileWatcher.addWatch("../res/shaders/", this, true);
+
+	GetUniformsAndAttributes(m_Filename + ".vert");
+	GetUniformsAndAttributes(m_Filename + ".frag");
 }
 
 
@@ -155,5 +161,67 @@ void ShaderProgram::RecompileShader()
 	{
 		std::cout << "Compilation successful, using new shader" << std::endl;
 		m_programID = m_newProgramID;
+	}
+}
+
+std::string ShaderProgram::openFile(std::string input, bool newLine)
+{
+	string temp;
+	string content;
+	ifstream file(input);
+	if (file.is_open())
+	{
+		while (getline(file, temp))
+		{
+			content += temp + (newLine ? "\n" : "");
+		}
+		file.close();
+	}
+	else
+	{
+		printf("Unable to open file: %s\n", input.c_str());
+	}
+
+	return content;
+}
+
+std::vector<std::string> ShaderProgram::split(const std::string s, const std::string delims)
+{
+	std::vector<std::string> result;
+	std::string::size_type pos = 0;
+	while (std::string::npos != (pos = s.find_first_not_of(delims, pos))) {
+		auto pos2 = s.find_first_of(delims, pos);
+		result.emplace_back(s.substr(pos, std::string::npos == pos2 ? pos2 : pos2 - pos));
+		pos = pos2;
+	}
+	return result;
+}
+
+void ShaderProgram::GetUniformsAndAttributes(const std::string fileName)
+{
+	auto file_lines = split(openFile(fileName, false), ";");
+
+	printf("\nGetting Shader Uniforms: %s\n", fileName.c_str());
+	for (auto str : file_lines)
+	{
+		if (str.find("uniform") != std::string::npos)
+		{
+			auto a = split(str, " ");
+			printf("  -Found uniform: %s of type %s\n", a[2].c_str(), a[1].c_str());
+
+			m_UniformLocations[a[2]] = glGetUniformLocation(GetId(), a[2].c_str());
+		}
+	}
+
+	printf("\nGetting Shader Attributes: %s\n", fileName.c_str());
+	for (auto str : file_lines)
+	{
+		if (str.find("attribute") != std::string::npos)
+		{
+			auto a = split(str, " ");
+			printf("  -Found attribute: %s of type %s\n", a[2].c_str(), a[1].c_str());
+
+			m_AttributeLocations[a[2]] = glGetAttribLocation(GetId(), a[2].c_str());
+		}
 	}
 }

@@ -3,6 +3,11 @@
 #include <SDL.h>
 #include <stdio.h>
 #include <string>
+#include <vector>
+#include <map>
+#include <iostream>
+#include <fstream>
+#include <sstream> 
 
 #include <glad/glad.h>
 
@@ -12,6 +17,8 @@
 #include <iostream>
 
 #include "../simplefilewatcher/FileWatcher.h"
+
+
 
 class ShaderProgram : public FW::FileWatchListener
 {
@@ -37,36 +44,32 @@ public:
 
 	inline void SetUniform1i(const char* name, float value)
 	{
-		glUniform1i(glGetUniformLocation(GetId(), name), value);
+		glUniform1i(m_UniformLocations[name], value);
 	}
 
 	inline void SetUniform1f(const char* name, float value)
 	{
-		glUniform1f(glGetUniformLocation(GetId(), name), value);
+		glUniform1f(m_UniformLocations[name], value);
 	}
 
 	inline void SetUniform2fv(const char* name, glm::vec2 value)
 	{
-		GLint location = glGetUniformLocation(GetId(), name);
-		glUniform2f(location, value.x, value.y);
+		glUniform2f(m_UniformLocations[name], value.x, value.y);
 	}
 
 	inline void SetUniform3fv(const char* name, glm::vec3 value)
 	{
-		GLint location = glGetUniformLocation(GetId(), name);
-		glUniform3f(location, value.x, value.y, value.z);
+		glUniform3f(m_UniformLocations[name], value.x, value.y, value.z);
 	}
 
 	inline void SetUniform4fv(const char* name, glm::mat4 value)
 	{
-		GLint location = glGetUniformLocation(GetId(), name);
-		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(value));
+		glUniformMatrix4fv(m_UniformLocations[name], 1, GL_FALSE, glm::value_ptr(value));
 	}
 
 	inline void SetUniformTexture(GLuint texID, const char* name, GLuint slot)
 	{
-		GLuint loc = glGetUniformLocation(GetId(), name); // Get Location
-		glUniform1i(loc, slot); // Bind Location
+		glUniform1i(m_UniformLocations[name], slot); // Bind Location
 		glActiveTexture(GL_TEXTURE0 + slot); // Activate
 		glBindTexture(GL_TEXTURE_2D, texID); // Bind
 	}
@@ -90,4 +93,12 @@ private:
 		FW::Action action);
 
 	GLuint LoadShader(const std::string& fileName, GLenum type);
+
+	void GetUniformsAndAttributes(const std::string fileName);
+
+	std::string ShaderProgram::openFile(std::string input, bool newLine);
+	std::vector<std::string> ShaderProgram::split(const std::string s, const std::string delims);
+
+	std::map <std::string, GLuint> m_UniformLocations;
+	std::map <std::string, GLuint> m_AttributeLocations;
 };
