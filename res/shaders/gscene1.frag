@@ -65,9 +65,9 @@ void main()
     vec3 ambient = 0.05 * color;
 
     // Diffuse
-    vec3 lightDir = normalize(vec3(-1, 0, 3) - fs_in.FragPos);
+    vec3 lightDir = normalize(lightPos - fs_in.FragPos);
     vec3 normal = normalize(fs_in.Normal);
-    float diff = max(dot(lightDir, normal), 0.0);
+    float diff = max(dot(lightDir, normal), 0.01);
     vec3 diffuse = diff * color;
 
     // Specular
@@ -78,7 +78,7 @@ void main()
     vec3 halfwayDir = normalize(lightDir + viewDir);  
     spec = pow(max(dot(normal, halfwayDir), 0.0), 32.0);
 
-    vec3 specular = vec3(0.3) * spec; // assuming bright white light color
+    vec3 specular = vec3(0.5) * spec; // assuming bright white light color
 
     vec4 result = vec4(ambient + diffuse + specular, 1.0f);
 

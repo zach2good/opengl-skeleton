@@ -36,12 +36,22 @@ void BasicRenderer::draw(ShaderProgram* shader, Camera* camera)
 	{
 		auto g = m_gameObjects.at(i);
 
-		// M
-		auto m = g->m_Transform.GetTransformationMatrix();
-		shader->SetUniform4fv("model", m);
+		if (g->m_Mesh != NULL)
+		{
+			// M
+			auto m = g->m_Transform.GetTransformationMatrix();
+			shader->SetUniform4fv("model", m);
 
-		// Draw	
-		g->m_Mesh.render();
+			// Draw	
+			g->m_Mesh->render();
+		}
+
+		if (g->isLight)
+		{
+			auto l = g->m_Transform.GetPosition();
+			shader->SetUniform3fv("lightPos", l);
+		}
+		
 	}
 
 	shader->Unbind();

@@ -12,7 +12,9 @@ public:
 	~GameObject();
 
 	Transformation m_Transform;
-	Mesh m_Mesh = Mesh("../res/models/cube.obj");
+	Mesh* m_Mesh = nullptr;
+
+	bool isLight = false;
 
 private:
 

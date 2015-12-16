@@ -29,6 +29,11 @@ public:
 	int getHeight() const { return HEIGHT; }
 	float getAspect() const	{ return float(WIDTH) / float(HEIGHT); }
 
+	float getRenderTime()
+	{
+		return (float)renderTime;
+	}
+
 	void setGLDepthTest(bool setting)
 	{
 		setting ?

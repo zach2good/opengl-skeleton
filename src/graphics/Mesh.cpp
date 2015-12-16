@@ -166,6 +166,11 @@ void Mesh::MeshEntry::render() {
 	glBindVertexArray(0);
 }
 
+Mesh::Mesh()
+{
+
+}
+
 /**
 *	Mesh constructor, loads the specified filename if supported by Assimp
 **/

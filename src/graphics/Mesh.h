@@ -66,6 +66,8 @@ public:
 	std::vector<MeshEntry*> meshEntries;
 
 public:
+	Mesh();
+
 	Mesh(const char *filename);
 	~Mesh(void);
 
