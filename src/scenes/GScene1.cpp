@@ -9,40 +9,28 @@ void GScene1::init()
 
 	camera.Position = vec3(0, 0, 5);
 
-	m_gameObject.m_Transform.SetPosition(vec3(1, 0, 0));
-	m_gameObject.m_Transform.SetScale(vec3(0.4f));
-	m_gameObject.m_Mesh = new Mesh("../res/models/box.obj");
+	GameObject* mainModel = new GameObject();
+	mainModel->m_Model = new Model("../res/rungholt/house.obj");
+	mainModel->m_Transform.SetPosition(vec3(0, -10, -50));
+	objects.push_back(mainModel);
 
-	m_gameObject2.m_Transform.SetPosition(vec3(-1, 0, 0));
-	m_gameObject2.m_Mesh = new Mesh("../res/models/cube.obj");
+	light = new GameObject();
+	light->isLight = true;
+	objects.push_back(light);
 
-	m_gameObject3.m_Transform.SetPosition(vec3(0, 0, -1));
-	m_gameObject3.m_Transform.SetScale(vec3(0.4f));
-	m_gameObject3.m_Mesh = new Mesh("../res/models/flashlight.obj");
+	//for (int i = 0; i < 100; i++)
+	//{
+	//	GameObject* g = new GameObject();
 
-	m_lightGameObject.isLight = true;
-	m_lightGameObject.m_Transform.SetPosition(vec3(0, 1.5, 1));
-	m_lightGameObject.m_Transform.SetScale(vec3(0.05f));
-	m_lightGameObject.m_Mesh = new Mesh("../res/models/sphere.obj");
+	//	g->m_Transform.SetPosition(
+	//		vec3((rand() % 1000 - 500) / 100,
+	//			(rand() % 1000 - 500) / 100,
+	//			(rand() % 1000 - 500) / 100));
 
-	for (int i = 0; i < 100; i++)
-	{
-		GameObject* g = new GameObject();
-
-		g->m_Transform.SetPosition(
-			vec3(rand() % 4 - 2, 
-			rand() % 4 - 2, 
-			rand() % 4 - 2));
-
-		g->m_Mesh = new Mesh("../res/models/cube.obj");
-		g->m_Transform.SetScale(vec3(0.05f));
-		objects.push_back(g);
-	}
-	
-	m_floorGameObject.m_Transform.SetPosition(vec3(-10, -1, -10));
-	m_floorGameObject.m_Transform.SetRotation(vec3(90, 0, 0));
-	m_floorGameObject.m_Transform.SetScale(vec3(10, 10, 0));
-	m_floorGameObject.m_Mesh = new Mesh("../res/models/quad.obj");
+	//	g->m_Mesh = new Mesh("../res/models/cube.obj");
+	//	g->m_Transform.SetScale(vec3(0.05f));
+	//	objects.push_back(g);
+	//}
 }
 
 void GScene1::destroy()
@@ -56,7 +44,7 @@ void GScene1::update()
 
 	Input& input = Input::instance();
 
-	float speed = 0.01f;
+	float speed = 0.1f;
 
 	if (input.isKeyDown(SDL_SCANCODE_A)) {
 		camera.ProcessKeyboard(LEFT, speed);
@@ -93,9 +81,8 @@ void GScene1::update()
 
 	float ticks = ((float)SDL_GetTicks()) / 500.0f;
 	float x_mov = sinf(ticks);
-	float y = m_lightGameObject.m_Transform.GetPosition().y;
 
-	m_lightGameObject.m_Transform.SetPosition(vec3(x_mov, y, 1));
+	light->m_Transform.SetPosition(camera.Position);
 }
 
 void GScene1::render()
@@ -104,13 +91,6 @@ void GScene1::render()
 	m_Window->clear();
 
 	// Submit
-	renderer.submit(&m_gameObject);
-	renderer.submit(&m_gameObject2);
-	renderer.submit(&m_gameObject3);
-	renderer.submit(&m_lightGameObject);
-
-	renderer.submit(&m_floorGameObject);
-	
 	for (GameObject* g : objects)
 	{
 		renderer.submit(g);

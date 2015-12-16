@@ -1,75 +1,43 @@
 #pragma once
 
-/*
-From
-http://www.nexcius.net/2014/04/13/loading-meshes-using-assimp-in-opengl/
-*/
-
 #include "../common.h"
 
-#include <assimp\scene.h>
-#include <assimp\mesh.h>
-#include <assimp\Importer.hpp>
-#include <assimp\postprocess.h>
+#include <assimp/scene.h>
+#include <assimp/mesh.h>
+#include <assimp/Importer.hpp>
+#include <assimp/postprocess.h>
 
-#define NUM_BONES_PER_VEREX 4
-#define INVALID_MATERIAL 0xFFFFFFFF
+#include "TextureLoader.h"
+#include "ShaderProgram.h"
 
-struct BoneInfo
-{
-	mat4 BoneOffset;
-	mat4 FinalTransformation;
-
-	BoneInfo()
-	{
-		BoneOffset = mat4(0);
-		FinalTransformation = mat4(0);
-	}
+struct Vertex {
+	vec3 Position;
+	vec3 Normal;
+	vec2 TexCoords;
 };
 
-struct VertexBoneData
-{
-	uint IDs[NUM_BONES_PER_VEREX];
-	float Weights[NUM_BONES_PER_VEREX];
-
-	VertexBoneData()
-	{
-		Reset();
-	};
-
-	void Reset()
-	{
-	}
-
-	void AddBoneData(uint BoneID, float Weight);
+struct Texture {
+	GLuint id;
+	std::string type;
+	aiString path;
 };
 
 class Mesh
 {
 public:
-	struct MeshEntry {
-		static enum BUFFERS {
-			VERTEX_BUFFER, TEXCOORD_BUFFER, NORMAL_BUFFER, TANGENT_BUFFER, BITANGENT_BUFFER, BONE_BUFFER, INDEX_BUFFER, BUFFER_COUNT
-		};
-		GLuint vao;
-		GLuint vbo[BUFFER_COUNT];
+	std::vector<Vertex> vertices;
+	std::vector<GLuint> indices;
+	std::vector<Texture> textures;
 
-		unsigned int elementCount;
+	Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices, std::vector<Texture> textures);
+	~Mesh();
 
-		MeshEntry(aiMesh *mesh);
-		~MeshEntry();
+	void Draw(ShaderProgram shader);
 
-		void load(aiMesh *mesh);
-		void render();
-	};
+private:
+	GLuint VAO;
+	GLuint VBO;
+	GLuint EBO;
 
-	std::vector<MeshEntry*> meshEntries;
-
-public:
-	Mesh();
-
-	Mesh(const char *filename);
-	~Mesh(void);
-
-	void render();
+	void setupMesh();
 };

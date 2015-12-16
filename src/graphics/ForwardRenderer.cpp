@@ -5,6 +5,7 @@ ForwardRenderer::ForwardRenderer(Window* window) :
 {
 
 }
+
 ForwardRenderer::~ForwardRenderer()
 {
 
@@ -36,14 +37,13 @@ void ForwardRenderer::draw(ShaderProgram* shader, Camera* camera)
 	{
 		auto g = m_gameObjects.at(i);
 
-		if (g->m_Mesh != NULL)
+		if (g->m_Model != NULL)
 		{
 			// M
 			auto m = g->m_Transform.GetTransformationMatrix();
 			shader->SetUniform4fv("model", m);
 
-			// Draw	
-			g->m_Mesh->render();
+			//g->m_Model->draw(*shader);
 		}
 
 		if (g->isLight)

@@ -34,13 +34,6 @@ private:
 	
 	Camera camera;
 
-	GameObject m_gameObject;
-	GameObject m_gameObject2;
-	GameObject m_gameObject3;
-
 	std::vector<GameObject*> objects;
-
-	GameObject m_floorGameObject;
-
-	GameObject m_lightGameObject;
+	GameObject* light;
 };
