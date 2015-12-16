@@ -65,7 +65,7 @@ void main()
     vec3 ambient = 0.05 * color;
 
     // Diffuse
-    vec3 lightDir = normalize(vec3(1, 0, 3) - fs_in.FragPos);
+    vec3 lightDir = normalize(vec3(-1, 0, 3) - fs_in.FragPos);
     vec3 normal = normalize(fs_in.Normal);
     float diff = max(dot(lightDir, normal), 0.0);
     vec3 diffuse = diff * color;
