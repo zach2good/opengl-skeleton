@@ -1,9 +1,9 @@
 #pragma once
 
-class Transformation
+class Transform
 {
 public:
-	Transformation(glm::vec3 position = glm::vec3(0, 0, 0), glm::vec3 rotation = glm::vec3(0, 0, 0), glm::vec3 scale = glm::vec3(1, 1, 1))
+	Transform(glm::vec3 position = glm::vec3(0, 0, 0), glm::vec3 rotation = glm::vec3(0, 0, 0), glm::vec3 scale = glm::vec3(1, 1, 1))
 		:m_position(position), m_rotation(rotation), m_scale(scale) {};
 
 	inline void ChangePosition(glm::vec3 position) { m_position += position; }

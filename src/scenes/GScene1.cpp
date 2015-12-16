@@ -28,7 +28,12 @@ void GScene1::init()
 	for (int i = 0; i < 100; i++)
 	{
 		GameObject* g = new GameObject();
-		g->m_Transform.SetPosition(vec3(rand() % 4 - 2, rand() % 4 - 2, rand() % 4 - 2));
+
+		g->m_Transform.SetPosition(
+			vec3(rand() % 4 - 2, 
+			rand() % 4 - 2, 
+			rand() % 4 - 2));
+
 		g->m_Mesh = new Mesh("../res/models/cube.obj");
 		g->m_Transform.SetScale(vec3(0.05f));
 		objects.push_back(g);
@@ -84,12 +89,6 @@ void GScene1::update()
 	if (input.isMouseDown(SDL_BUTTON_LEFT))
 	{
 		camera.ProcessMouseMovement(input.getRelPos().x * 10.0f, -input.getRelPos().y * 10.0f);
-		//trans.ChangeRotation(vec3(input.getRelPos().y, input.getRelPos().x, 0.0f));
-	}
-
-	if (input.isMouseDown(SDL_BUTTON_RIGHT))
-	{
-		//trans.ChangePosition(vec3(input.getRelPos().x, -input.getRelPos().y, 0.0f));
 	}
 
 	float ticks = ((float)SDL_GetTicks()) / 500.0f;

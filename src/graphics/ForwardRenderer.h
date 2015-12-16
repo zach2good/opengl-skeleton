@@ -9,11 +9,11 @@
 
 #include "../core/GameObject.h"
 
-class BasicRenderer
+class ForwardRenderer
 {
 public:
-	BasicRenderer(Window* window);
-	~BasicRenderer();
+	ForwardRenderer(Window* window);
+	~ForwardRenderer();
 
 	void submit(GameObject* go);
 	void draw(ShaderProgram* shader, Camera* camera);

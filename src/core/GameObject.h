@@ -2,7 +2,7 @@
 
 #include "../common.h"
 
-#include "../components/Transformation.h"
+#include "../components/Transform.h"
 #include "../graphics/Mesh.h"
 
 class GameObject
@@ -11,7 +11,7 @@ public:
 	GameObject();
 	~GameObject();
 
-	Transformation m_Transform;
+	Transform m_Transform;
 	Mesh* m_Mesh = nullptr;
 
 	bool isLight = false;

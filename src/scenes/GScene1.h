@@ -9,11 +9,11 @@
 
 #include "../graphics/Window.h"
 #include "../core/Input.h"
-#include "../graphics/BasicRenderer.h"
+#include "../graphics/ForwardRenderer.h"
 #include "../graphics/ShaderProgram.h"
 #include "../graphics/Camera.h"
 #include "../graphics/Mesh.h"
-#include "../components/Transformation.h"
+#include "../components/Transform.h"
 
 class GScene1
 {
@@ -28,7 +28,8 @@ public:
 
 private:
 	Window* m_Window;
-	BasicRenderer renderer = BasicRenderer(m_Window);
+
+	ForwardRenderer renderer = ForwardRenderer(m_Window);
 	ShaderProgram shader = ShaderProgram("../res/shaders/gscene1");
 	
 	Camera camera;

@@ -11,7 +11,7 @@
 #include <SDL.h>
 #include <SDL_syswm.h>
 
-#include "../graphics/GL.h"
+#include "glad/glad.h"
 
 // Data
 static SDL_Window*  g_Window = NULL;

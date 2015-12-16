@@ -1,21 +1,21 @@
-#include "BasicRenderer.h"
+#include "ForwardRenderer.h"
 
-BasicRenderer::BasicRenderer(Window* window) :
+ForwardRenderer::ForwardRenderer(Window* window) :
 	m_Window(window)
 {
 
 }
-BasicRenderer::~BasicRenderer()
+ForwardRenderer::~ForwardRenderer()
 {
 
 }
 
-void BasicRenderer::submit(GameObject* go)
+void ForwardRenderer::submit(GameObject* go)
 {
 	m_gameObjects.push_back(go);
 }
 
-void BasicRenderer::draw(ShaderProgram* shader, Camera* camera)
+void ForwardRenderer::draw(ShaderProgram* shader, Camera* camera)
 {
 	// Sort by mesh 
 
