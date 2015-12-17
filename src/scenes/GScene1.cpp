@@ -4,7 +4,7 @@ void GScene1::init()
 {
 	m_Window->setGLDepthTest(true);
 	m_Window->setGLMultisample(true);
-	m_Window->setGLCullFace(false);
+	m_Window->setGLCullFace(true);
 	m_Window->setGLBlend(true);
 
 	camera.Position = vec3(0, 0, 5);
@@ -17,6 +17,8 @@ void GScene1::init()
 	light = new GameObject();
 	light->isLight = true;
 	objects.push_back(light);
+
+
 }
 
 void GScene1::destroy()
