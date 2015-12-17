@@ -49,6 +49,7 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
 	for (GLuint i = 0; i < mesh->mNumVertices; i++)
 	{
 		Vertex vertex;
+
 		glm::vec3 vector;
 
 		vector.x = mesh->mVertices[i].x;
@@ -71,6 +72,24 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
 		else
 		{
 			vertex.TexCoords = glm::vec2(0.0f, 0.0f);
+		}
+
+		if (mesh->HasTangentsAndBitangents())
+		{
+			vector.x = mesh->mTangents[i].x;
+			vector.y = mesh->mTangents[i].y;
+			vector.z = mesh->mTangents[i].z;
+			vertex.Tangent = vector;
+
+			vector.x = mesh->mBitangents[i].x;
+			vector.y = mesh->mBitangents[i].y;
+			vector.z = mesh->mBitangents[i].z;
+			vertex.Bitangent = vector;
+		}
+
+		if (mesh->HasBones())
+		{
+
 		}
 
 		vertices.push_back(vertex);
