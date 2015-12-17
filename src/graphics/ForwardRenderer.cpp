@@ -43,15 +43,14 @@ void ForwardRenderer::draw(ShaderProgram* shader, Camera* camera)
 			auto m = g->m_Transform.GetTransformationMatrix();
 			shader->SetUniform4fv("model", m);
 
-			//g->m_Model->draw(*shader);
+			g->m_Model->draw(shader);
 		}
 
 		if (g->isLight)
 		{
 			auto l = g->m_Transform.GetPosition();
 			shader->SetUniform3fv("lightPos", l);
-		}
-		
+		}	
 	}
 
 	shader->Unbind();

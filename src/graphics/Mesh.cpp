@@ -43,10 +43,12 @@ void Mesh::setupMesh()
 	glBindVertexArray(0);
 }
 
-void Mesh::Draw(ShaderProgram shader)
+void Mesh::Draw(ShaderProgram* shader)
 {
 	GLuint diffuseNr = 1;
+	GLuint normalNr = 1;
 	GLuint specularNr = 1;
+
 	for (GLuint i = 0; i < this->textures.size(); i++)
 	{
 		glActiveTexture(GL_TEXTURE0 + i); 
@@ -54,10 +56,15 @@ void Mesh::Draw(ShaderProgram shader)
 		std::stringstream ss;
 		std::string number;
 		std::string name = textures[i].type;
+
 		if (name == "texture_diffuse")
 		{
 			ss << diffuseNr++;
 		}	
+		else if (name == "texture_normal")
+		{
+			ss << normalNr++;
+		}
 		else if (name == "texture_specular")
 		{
 			ss << specularNr++;
@@ -65,23 +72,21 @@ void Mesh::Draw(ShaderProgram shader)
 			
 		number = ss.str();
 
-		glUniform1i(glGetUniformLocation(shader.GetId(), (name + number).c_str()), i);
+		glUniform1i(shader->GetUniformLocation((name + number).c_str()), i);
 
 		glBindTexture(GL_TEXTURE_2D, textures[i].id);
 	}
 
-
-	glUniform1f(glGetUniformLocation(shader.GetId(), "material.shininess"), 16.0f);
-
+	glUniform1f(glGetUniformLocation(shader->GetId(), "material.shininess"), 16.0f);
 
 	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 
 
-	for (GLuint i = 0; i < textures.size(); i++)
-	{
-		glActiveTexture(GL_TEXTURE0 + i);
-		glBindTexture(GL_TEXTURE_2D, 0);
-	}
+	//for (GLuint i = 0; i < textures.size(); i++)
+	//{
+	//	glActiveTexture(GL_TEXTURE0 + i);
+	//	glBindTexture(GL_TEXTURE_2D, 0);
+	//}
 }

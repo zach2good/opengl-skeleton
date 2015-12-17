@@ -67,6 +67,11 @@ public:
 		glUniformMatrix4fv(m_UniformLocations[name], 1, GL_FALSE, glm::value_ptr(value));
 	}
 
+	inline GLuint GetUniformLocation(const char* name)
+	{
+		return m_UniformLocations[name];
+	}
+
 	inline void SetUniformTexture(GLuint texID, const char* name, GLuint slot)
 	{
 		glUniform1i(m_UniformLocations[name], slot); // Bind Location

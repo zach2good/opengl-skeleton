@@ -32,7 +32,7 @@ public:
 	Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices, std::vector<Texture> textures);
 	~Mesh();
 
-	void Draw(ShaderProgram shader);
+	void Draw(ShaderProgram* shader);
 
 private:
 	GLuint VAO;

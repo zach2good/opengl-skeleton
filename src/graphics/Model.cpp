@@ -138,7 +138,7 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType 
 	return textures;
 }
 
-void Model::draw(ShaderProgram shader)
+void Model::draw(ShaderProgram* shader)
 {
 	for (GLuint i = 0; i < meshes.size(); i++)
 		meshes[i].Draw(shader);

@@ -17,7 +17,7 @@ public:
 	Model(std::string filename);
 	~Model();
 
-	void draw(ShaderProgram shader);
+	void draw(ShaderProgram* shader);
 
 private:
 	std::string directory;

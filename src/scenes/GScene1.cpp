@@ -17,20 +17,6 @@ void GScene1::init()
 	light = new GameObject();
 	light->isLight = true;
 	objects.push_back(light);
-
-	//for (int i = 0; i < 100; i++)
-	//{
-	//	GameObject* g = new GameObject();
-
-	//	g->m_Transform.SetPosition(
-	//		vec3((rand() % 1000 - 500) / 100,
-	//			(rand() % 1000 - 500) / 100,
-	//			(rand() % 1000 - 500) / 100));
-
-	//	g->m_Mesh = new Mesh("../res/models/cube.obj");
-	//	g->m_Transform.SetScale(vec3(0.05f));
-	//	objects.push_back(g);
-	//}
 }
 
 void GScene1::destroy()

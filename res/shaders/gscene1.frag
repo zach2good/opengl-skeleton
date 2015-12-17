@@ -1,86 +1,59 @@
 #version 330 core
 
-in VS_OUT {
-    vec3 FragPos;
-    vec3 Normal;
-    vec2 TexCoords;
-    vec3 Tangent;
-    vec3 Bitangent;
-    mat3 TBN;
-} fs_in;
+#define RAZZAMATAZZ vec3(0.89f, 0.145f, 0.42f)
+#define FIREBRICK vec3(0.698f, 0.133f, 0.133f)
 
-out vec4 FragColor;
+#define WHITE vec3(1.0f, 1.0f, 1.0f)
+#define LIGHT_GRAY vec3(0.749f, 0.749f, 0.749f)
+#define GRAY vec3(0.498f, 0.498f, 0.498f)
+#define DARK_GRAY vec3(0.247f, 0.247f, 0.247f)
+#define SLATE vec3(0.439f, 0.502f, 0.565f)
+#define BLACK vec3(0.0f, 0.0f, 0.0f)
 
-uniform vec3 viewPos;
+const float gamma = 2.2; 
+const vec3 ambientColor = vec3(0.1, 0.0, 0.0);
+const vec3 diffuseColor = vec3(0.5, 0.0, 0.0);
+const vec3 specColor = vec3(1.0, 1.0, 1.0);
+
+in vec3 FragPos;
+in vec3 Normal;
+in vec2 TexCoords;
+
+out vec4 color_out;
+
+uniform sampler2D texture_diffuse1;
+uniform sampler2D texture_specular1;
+uniform sampler2D texture_normal1;
+
 uniform vec3 lightPos;
-
-
-// https://github.com/stackgl/glsl-specular-beckmann
-float beckmannDistribution(float x, float roughness) {
-  float NdotH = max(x, 0.0001);
-  float cos2Alpha = NdotH * NdotH;
-  float tan2Alpha = (cos2Alpha - 1.0) / cos2Alpha;
-  float roughness2 = roughness * roughness;
-  float denom = 3.141592653589793 * roughness2 * cos2Alpha * cos2Alpha;
-  return exp(tan2Alpha / roughness2) / denom;
-}
-
-// https://github.com/stackgl/glsl-specular-cook-torrance
-float cookTorranceSpecular(
-  vec3 lightDirection,
-  vec3 viewDirection,
-  vec3 surfaceNormal,
-  float roughness,
-  float fresnel) {
-
-  float VdotN = max(dot(viewDirection, surfaceNormal), 0.0);
-  float LdotN = max(dot(lightDirection, surfaceNormal), 0.0);
-
-  //Half angle vector
-  vec3 H = normalize(lightDirection + viewDirection);
-
-  //Geometric termw
-  float NdotH = max(dot(surfaceNormal, H), 0.0);
-  float VdotH = max(dot(viewDirection, H), 0.000001);
-  float LdotH = max(dot(lightDirection, H), 0.000001);
-  float G1 = (2.0 * NdotH * VdotN) / VdotH;
-  float G2 = (2.0 * NdotH * LdotN) / LdotH;
-  float G = min(1.0, min(G1, G2));
-  
-  //Distribution term
-  float D = beckmannDistribution(NdotH, roughness);
-
-  //Fresnel term
-  float F = pow(1.0 - VdotN, fresnel);
-
-  //Multiply terms and done
-  return  G * F * D / max(3.14159265 * VdotN, 0.000001);
-}
+uniform vec3 viewPos;
 
 void main()
-{
-    vec3 color = vec3(1.0f);
+{    
+    vec3 lightColor = WHITE;
+    vec3 objectColor = FIREBRICK;
 
-    // Ambient
-    vec3 ambient = 0.05 * color;
-
-    // Diffuse
-    vec3 lightDir = normalize(lightPos - fs_in.FragPos);
-    vec3 normal = normalize(fs_in.Normal);
-    float diff = max(dot(lightDir, normal), 0.01);
-    vec3 diffuse = diff * color;
-
+     // Ambient
+    float ambientStrength = 0.1f;
+    vec3 ambient = ambientStrength * lightColor;
+    
+    // Diffuse 
+    vec3 norm = normalize(Normal);
+    vec3 lightDir = normalize(lightPos - FragPos);
+    float diff = max(dot(norm, lightDir), 0.0);
+    vec3 diffuse = diff * lightColor;
+    
     // Specular
-    vec3 viewDir = normalize(viewPos - fs_in.FragPos);
-    vec3 reflectDir = reflect(-lightDir, normal);
-    float spec = 0.0;
+    float specularStrength = 2.5f;
+    vec3 viewDir = normalize(viewPos - FragPos);
+    vec3 reflectDir = reflect(-lightDir, norm);  
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
+    vec3 specular = specularStrength * spec * lightColor;  
+     
+    // Linear result   
+    vec3 result = (ambient + diffuse + specular) * objectColor;   
 
-    vec3 halfwayDir = normalize(lightDir + viewDir);  
-    spec = pow(max(dot(normal, halfwayDir), 0.0), 32.0);
-
-    vec3 specular = vec3(0.5) * spec; // assuming bright white light color
-
-    vec4 result = vec4(ambient + diffuse + specular, 1.0f);
-
-    FragColor = result;
+    // Gamma
+    vec3 gammaCorrected = pow(result, vec3(1.0/gamma));
+    color_out = vec4(gammaCorrected, 1.0f);
 }
