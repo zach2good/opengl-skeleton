@@ -121,9 +121,9 @@ public:
 			this->Zoom = 45.0f;
 	}
 
-	void LookAt(glm::vec3 target)
+	glm::mat4 LookAt(glm::vec3 target)
 	{
-		glm::lookAt(Position, target, Up);
+		return glm::lookAt(Position, target, Up);
 	}
 
 	// Custom implementation of the LookAt function

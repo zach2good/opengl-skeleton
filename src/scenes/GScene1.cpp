@@ -7,7 +7,8 @@ void GScene1::init()
 	m_Window->setGLCullFace(true);
 	m_Window->setGLBlend(true);
 
-	camera.Position = vec3(0, 0, 3);
+	camera.Position = vec3(30, 30, 50);
+	camera.calculate_lookAt_matrix(camera.Position, vec3(0));
 
 	GameObject* floor = new GameObject();
 	floor->m_Model = new Model("../res/models/quad.obj");

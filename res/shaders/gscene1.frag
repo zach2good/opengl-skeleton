@@ -23,21 +23,24 @@ uniform int hasTextures;
 
 void main()
 {
+    vec3 lightColor = WHITE;
+
     vec4 mainTex = vec4(texture(texture_diffuse1, TexCoords));
+    vec4 specTex = vec4(texture(texture_specular1, TexCoords));
+    vec4 normTex = vec4(texture(texture_normal1, TexCoords));
 
-    vec3 objectColor = WHITE;
+    vec3 objectColor = WHITE; // Default
 
-    if (mainTex.a < 0.1f && hasTextures > 0)
-    {
-        discard;
-    }
-
+    // Deal with textures and alpha
     if (hasTextures > 0)
     {
         objectColor = vec3(mainTex);
-    }
-
-    vec3 lightColor = WHITE;
+        
+        if (mainTex.a < 0.1f)
+        {
+            discard;
+        }
+    }  
 
     // Ambient
     float ambientStrength = 0.1f;
