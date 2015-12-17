@@ -15,6 +15,7 @@ public:
 
 	Model* m_Model = nullptr;
 
+	// Light m_Light = nullptr;
 	bool isLight = false;
 
 private:

@@ -13,6 +13,7 @@
 #include "../graphics/ShaderProgram.h"
 #include "../graphics/Camera.h"
 #include "../graphics/Mesh.h"
+#include "../graphics/FrameBuffer.h"
 #include "../components/Transform.h"
 
 class GScene1
@@ -31,6 +32,8 @@ private:
 
 	ForwardRenderer renderer = ForwardRenderer(m_Window);
 	ShaderProgram shader = ShaderProgram("../res/shaders/gscene1");
+
+	Framebuffer frameBuffer = Framebuffer(1280, 720);
 	
 	Camera camera;
 

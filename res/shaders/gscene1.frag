@@ -19,19 +19,23 @@ uniform sampler2D texture_normal1;
 
 uniform vec3 lightPos;
 uniform vec3 viewPos;
+uniform int hasTextures;
 
 void main()
 {
     vec4 mainTex = vec4(texture(texture_diffuse1, TexCoords));
 
-    vec3 objectColor;
+    vec3 objectColor = WHITE;
 
-    if (mainTex.a < 0.1f)
+    if (mainTex.a < 0.1f && hasTextures > 0)
     {
         discard;
     }
 
-    objectColor = vec3(mainTex);
+    if (hasTextures > 0)
+    {
+        objectColor = vec3(mainTex);
+    }
 
     vec3 lightColor = WHITE;
 

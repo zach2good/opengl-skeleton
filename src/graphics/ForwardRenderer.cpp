@@ -43,6 +43,8 @@ void ForwardRenderer::draw(ShaderProgram* shader, Camera* camera)
 			auto m = g->m_Transform.GetTransformationMatrix();
 			shader->SetUniform4fv("model", m);
 
+			shader->SetUniform1i("hasTextures", (int)g->m_Model->HasTextures());
+
 			g->m_Model->draw(shader);
 		}
 

@@ -7,18 +7,23 @@ void GScene1::init()
 	m_Window->setGLCullFace(true);
 	m_Window->setGLBlend(true);
 
-	camera.Position = vec3(0, 0, 5);
+	camera.Position = vec3(0, 0, 3);
+
+	GameObject* floor = new GameObject();
+	floor->m_Model = new Model("../res/models/quad.obj");
+	floor->m_Transform.SetPosition(vec3(-500, 0, 100));
+	floor->m_Transform.SetRotation(vec3(-90, 0, 0));
+	floor->m_Transform.SetScale(vec3(1000, 1000, 1000));
+	objects.push_back(floor);
 
 	GameObject* mainModel = new GameObject();
 	mainModel->m_Model = new Model("../res/rungholt/house.obj");
-	mainModel->m_Transform.SetPosition(vec3(0, -10, -50));
+	mainModel->m_Transform.SetPosition(vec3(0, 0, 0));
 	objects.push_back(mainModel);
 
 	light = new GameObject();
 	light->isLight = true;
 	objects.push_back(light);
-
-
 }
 
 void GScene1::destroy()
@@ -75,15 +80,12 @@ void GScene1::update()
 
 void GScene1::render()
 {
-	// Clear Screen
-	m_Window->clear();
-
-	// Submit
 	for (GameObject* g : objects)
 	{
 		renderer.submit(g);
 	}
 
-	// Draw
+	m_Window->clear();
+
 	renderer.draw(&shader, &camera);
 }
