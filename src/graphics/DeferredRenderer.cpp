@@ -17,7 +17,5 @@ void DeferredRenderer::submit(GameObject* go)
 
 void DeferredRenderer::draw(ShaderProgram* shader, Camera* camera)
 {
-	
-
 	m_gameObjects.clear();
 }
