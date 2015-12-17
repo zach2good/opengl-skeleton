@@ -63,6 +63,6 @@ void main()
     vec3 result = (ambient + diffuse + specular) * objectColor;
 
     // Gamma
-    result = pow(result, vec3(1.0/gamma));
+    //result = pow(result, vec3(1.0/gamma));
     color_out = vec4(result, 1.0f);
 }

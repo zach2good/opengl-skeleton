@@ -25,8 +25,8 @@ void ForwardRenderer::draw(ShaderProgram* shader, Camera* camera)
 	shader->Bind();
 
 	// V
-	//shader->SetUniform4fv("view", camera->GetViewMatrix());
-	shader->SetUniform4fv("view", camera->LookAt(vec3(0)));
+	shader->SetUniform4fv("view", camera->GetViewMatrix());
+	//shader->SetUniform4fv("view", camera->LookAt(vec3(0)));
 	shader->SetUniform3fv("viewPos", camera->Position);
 
 	// P
