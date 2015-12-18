@@ -86,7 +86,7 @@ void GScene1::render()
 		renderer.submit(g);
 	}
 
-	m_Window->clear();
-
+	glViewport(0, 0, m_Window->getWidth(), m_Window->getHeight());
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	renderer.draw(&shader, &camera);
 }
