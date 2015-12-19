@@ -33,9 +33,9 @@ void main()
     vec4 specTex = vec4(texture(texture_specular1, TexCoords));
     vec4 normTex = vec4(texture(texture_normal1, TexCoords));
 
-    vec3 objectColor = WHITE; // Default
+    vec3 objectColor = WHITE;
 
-    // Deal with textures and alpha
+    // Deal with alpha
     if (hasTextures > 0)
     {
         objectColor = vec3(mainTex);
@@ -46,27 +46,10 @@ void main()
         }
     }  
 
-    // Ambient
-    float ambientStrength = 0.1f;
-    vec3 ambient = ambientStrength * lightColor;
-
-    // Diffuse 
-    vec3 norm = normalize(Normal);
-    vec3 lightDir = normalize(lightPos - FragPos);
-    float diff = max(dot(norm, lightDir), 0.0);
-    vec3 diffuse = diff * lightColor;
-
-    // Specular
-    float specularStrength = 0.9f;
-    vec3 viewDir = normalize(viewPos - FragPos);
-    vec3 reflectDir = reflect(-lightDir, norm);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
-    vec3 specular = specularStrength * spec * lightColor * vec3(texture(texture_specular1, TexCoords));
-
     // Linear result     
-    vec3 result = (ambient + diffuse + specular) * objectColor;
+    vec3 result = objectColor;
 
     // Gamma
     //result = pow(result, vec3(1.0/gamma));
-    color_out = vec4(result, 1.0f);
+    color_out = mainTex; //vec4(result, 1.0f);
 }

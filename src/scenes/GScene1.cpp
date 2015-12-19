@@ -21,10 +21,6 @@ void GScene1::init()
 	mainModel->m_Model = new Model("../res/rungholt/house.obj");
 	mainModel->m_Transform.SetPosition(vec3(0, 0, 0));
 	objects.push_back(mainModel);
-
-	light = new GameObject();
-	light->isLight = true;
-	objects.push_back(light);
 }
 
 void GScene1::destroy()
@@ -73,10 +69,9 @@ void GScene1::update()
 		camera.ProcessMouseMovement(input.getRelPos().x * 10.0f, -input.getRelPos().y * 10.0f);
 	}
 
-	float ticks = ((float)SDL_GetTicks()) / 500.0f;
-	float x_mov = sinf(ticks);
-
-	light->m_Transform.SetPosition(camera.Position);
+	float ticks = ((float)SDL_GetTicks()) / 100.0f;
+	
+	objects.at(1)->m_Transform.SetRotation(vec3(0, ticks, 0));
 }
 
 void GScene1::render()
@@ -86,7 +81,18 @@ void GScene1::render()
 		renderer.submit(g);
 	}
 
+	frameBuffer.Bind();
 	glViewport(0, 0, m_Window->getWidth(), m_Window->getHeight());
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glEnable(GL_DEPTH_TEST);
+
 	renderer.draw(&shader, &camera);
+	frameBuffer.Unbind();
+
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
+	glDisable(GL_DEPTH_TEST);
+
+	frameBuffer.Render();
+	frameBuffer.RenderWithShader(&sobel);
 }

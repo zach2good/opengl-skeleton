@@ -18,16 +18,17 @@ public:
 private:
 	ShaderProgram* screenShader = new ShaderProgram("../res/shaders/framebuffer");
 
-	GLuint framebuffer;
 	GLuint screenWidth;
 	GLuint screenHeight;
 
+	GLuint fbo;
+	GLuint rbo;
 	GLuint textureColorbuffer;
 
 	GLuint generateAttachmentTexture(GLboolean depth, GLboolean stencil);
 
-	GLuint quadVAO, quadVBO;
-
+	GLuint quadVAO;
+	GLuint quadVBO;
 	GLfloat quadVertices[24] = {
 		-1.0f,  1.0f,  0.0f, 1.0f,
 		-1.0f, -1.0f,  0.0f, 0.0f,

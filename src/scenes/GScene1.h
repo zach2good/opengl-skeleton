@@ -34,11 +34,12 @@ private:
 	ForwardRenderer renderer = ForwardRenderer(m_Window);
 	ShaderProgram shader = ShaderProgram("../res/shaders/gscene1");
 
+	ShaderProgram sobel = ShaderProgram("../res/shaders/sobel");
+
 	ShadowMap shadowMap = ShadowMap(1024, 1024);
 	Framebuffer frameBuffer = Framebuffer(1280, 720);
 	
 	Camera camera;
 
 	std::vector<GameObject*> objects;
-	GameObject* light;
 };
