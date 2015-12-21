@@ -10,6 +10,7 @@
 #include "../core/Util.h"
 
 #include "../graphics/Window.h"
+#include "../graphics/DebugUi.h"
 #include "../core/Input.h"
 
 //#include "../graphics/ForwardRenderer.h"
@@ -17,12 +18,16 @@
 #include "../graphics/ShaderProgram.h"
 #include "../graphics/Camera.h"
 #include "../graphics/GBuffer.h"
+#include "../graphics/FrameBuffer.h"
 
 #include "../core/GameObject.h"
 #include "../graphics/Model.h"
 #include "../components/Transform.h"
 
 #include "../graphics/TextureLoader.h"
+
+#include "../imgui/imgui.h"
+#include "../imgui/imgui_impl_sdl_gl3.h"
 
 class GScene1
 {
@@ -37,12 +42,15 @@ public:
 
 private:
 	Window* m_Window;
+	DebugUi* m_Debug;
 
 	ShaderProgram shader_GeometryPass = ShaderProgram("../res/shaders/ssao_geometry");
 	ShaderProgram shader_LightingPass = ShaderProgram("../res/shaders/ssao_lighting");
 	ShaderProgram shader_SSAO = ShaderProgram("../res/shaders/ssao");
 	ShaderProgram shader_SSAOBlur = ShaderProgram("../res/shaders/ssao_blur");
 	ShaderProgram shader_Sobel = ShaderProgram("../res/shaders/sobel");
+
+	Framebuffer frameBuffer = Framebuffer(m_Window->getWidth(), m_Window->getHeight());
 
 	GLuint gBuffer;
 	GLuint gPositionDepth, gNormal, gAlbedo;
@@ -103,6 +111,4 @@ private:
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 		glBindVertexArray(0);
 	}
-
-	bool SSAO_FLAG = true;
 };

@@ -6,12 +6,7 @@
 
 #include "../imgui/imgui.h"
 #include "../imgui/imgui_internal.h"
-
-#ifdef EMSCRIPTEN
-#include "../imgui/imgui_impl_sdlems.h"
-#else
 #include "../imgui/imgui_impl_sdl_gl3.h"
-#endif
 
 struct FloatDebug
 {
@@ -54,7 +49,8 @@ struct Vec3Debug
 class DebugUi
 {
 public:
-	explicit DebugUi(SDL_Window* window);
+	DebugUi() {}
+	DebugUi(SDL_Window* window);
 	~DebugUi();
 
 	void prepare();

@@ -5,7 +5,7 @@ DebugUi::DebugUi(SDL_Window* window)
 {
 	m_Window = window;
 
-	ImGui_ImplSdlGL3_Init(m_Window);
+	ImGui_ImplSdlGL3_Init(window);
 
 	ImGuiIO& io = ImGui::GetIO();
 	io.IniFilename = NULL; // Disables ini file output
@@ -30,7 +30,7 @@ void DebugUi::prepare()
 {
 	ImGui_ImplSdlGL3_NewFrame();
 
-	static bool opened = false;
+	static bool opened = true;
 
 	ImGui::SetNextWindowPos(ImVec2(10, 10), 0);
 	//ImGui::SetNextWindowSize(ImVec2(250, 300), 0);

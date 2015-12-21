@@ -8,6 +8,8 @@ void GScene1::init()
 	m_Window->setGLCullFace(true);
 	m_Window->setGLBlend(true);
 
+	m_Debug = new DebugUi(m_Window->getWindow());
+
 	// Set up Shaders
 	shader_LightingPass.Bind();
 	glUniform1i(shader_LightingPass.GetUniformLocation("gPositionDepth"), 0);
@@ -172,23 +174,8 @@ void GScene1::init()
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 
-	// Sobel
-	glBindFramebuffer(GL_FRAMEBUFFER, finalFBO);
-
-	glGenTextures(1, &finalColorBuffer);
-	glBindTexture(GL_TEXTURE_2D, finalColorBuffer);
-
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_Window->getWidth(), m_Window->getHeight(), 0, GL_RGB, GL_FLOAT, NULL);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, finalColorBuffer, 0);
-
-	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-	{
-		printf("SSAO Blur Framebuffer not complete!\n");
-	}
+	// Set up Debug vars
+	m_Debug->addColor("Light Color", &lightColor);
 }
 
 void GScene1::destroy()
@@ -232,17 +219,12 @@ void GScene1::update()
 	}
 
 	if (input.isKeyDown(SDL_SCANCODE_SPACE)) {
-		camera.LookAt(vec3(0));
-	}
-
-	if (input.isMouseDown(SDL_BUTTON_LEFT))
-	{
-		camera.ProcessMouseMovement(input.getRelPos().x * 10.0f, -input.getRelPos().y * 10.0f);
+		lightPos = camera.Position;
 	}
 
 	if (input.isMouseDown(SDL_BUTTON_RIGHT))
 	{
-		lightPos = camera.Position;
+		camera.ProcessMouseMovement(input.getRelPos().x * 10.0f, -input.getRelPos().y * 10.0f);
 	}
 
 	float ticks = ((float)SDL_GetTicks()) / 100.0f;
@@ -263,10 +245,6 @@ void GScene1::render()
 	glUniform1i(shader_SSAO.GetUniformLocation("gNormal"), 1);
 	glUniform1i(shader_SSAO.GetUniformLocation("texNoise"), 2);
 	shader_SSAO.Unbind();
-
-	shader_Sobel.Bind();
-	glUniform1i(shader_SSAO.GetUniformLocation("finalColorBuffer"), 0);
-	shader_Sobel.Unbind();
 
 	// 1. Geometry Pass: render scene's geometry/color data into gbuffer
 	glBindFramebuffer(GL_FRAMEBUFFER, gBuffer);
@@ -362,4 +340,11 @@ void GScene1::render()
 	glUniform1i(glGetUniformLocation(shader_LightingPass.GetId(), "draw_mode"), 1);
 
 	RenderQuad();
+
+	m_Debug->prepare();
+	m_Debug->render();
+
+	//ImGui_ImplSdlGL3_NewFrame();
+	//ImGui::Text("Hello, world!");
+	//ImGui::Render();
 }
