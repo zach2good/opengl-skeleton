@@ -1,45 +1,28 @@
 #pragma once
 
 #include "../common.h"
-#include "../graphics/ShaderProgram.h"
 
 class GBuffer
 {
 public:
+	GBuffer::GBuffer() {};
 	GBuffer::GBuffer(GLuint w, GLuint h);
 	~GBuffer();
 
-	void BindForGeometryPass();
-	void BindForLightingPass();
+	void Bind();
 	void Unbind();
-
-	void Render();
-
-private:
-	ShaderProgram* screenShader = new ShaderProgram("../res/shaders/framebuffer");
-
-	GLuint screenWidth;
-	GLuint screenHeight;
 
 	GLuint gBuffer;
 
-	GLuint gPosition;
+	GLuint gPositionDepth;
 	GLuint gNormal;
-	GLuint gAlbedoSpec;
+	GLuint gAlbedo;
+
+private:
+	GLuint screenWidth;
+	GLuint screenHeight;
+
+	GLuint attachments[3] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 };
 
 	GLuint rboDepth;
-
-	GLuint generateAttachmentTexture(GLboolean depth, GLboolean stencil);
-
-	GLuint quadVAO;
-	GLuint quadVBO;
-	GLfloat quadVertices[24] = {
-		-1.0f,  1.0f,  0.0f, 1.0f,
-		-1.0f, -1.0f,  0.0f, 0.0f,
-		1.0f, -1.0f,  1.0f, 0.0f,
-
-		-1.0f,  1.0f,  0.0f, 1.0f,
-		1.0f, -1.0f,  1.0f, 0.0f,
-		1.0f,  1.0f,  1.0f, 1.0f
-	};
 };

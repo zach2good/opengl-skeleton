@@ -19,11 +19,6 @@ public:
 
 	void draw(ShaderProgram* shader);
 
-	inline bool HasTextures()
-	{
-		return texturesLoaded.size() > 0;
-	}
-
 private:
 	std::string directory;
 
