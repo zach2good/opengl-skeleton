@@ -42,15 +42,15 @@ private:
 	ShaderProgram shader_LightingPass = ShaderProgram("../res/shaders/ssao_lighting");
 	ShaderProgram shader_SSAO = ShaderProgram("../res/shaders/ssao");
 	ShaderProgram shader_SSAOBlur = ShaderProgram("../res/shaders/ssao_blur");
-	//ShaderProgram shader_Sobel = ShaderProgram("../res/shaders/sobel");
+	ShaderProgram shader_Sobel = ShaderProgram("../res/shaders/sobel");
 
 	GLuint gBuffer;
 	GLuint gPositionDepth, gNormal, gAlbedo;
 	GLuint attachments[3] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 };
 	GLuint rboDepth;
 
-	GLuint ssaoFBO, ssaoBlurFBO, sobelFBO;
-	GLuint ssaoColorBuffer, ssaoColorBufferBlur, sobelColorBuffer;
+	GLuint ssaoFBO, ssaoBlurFBO, finalFBO;
+	GLuint ssaoColorBuffer, ssaoColorBufferBlur, finalColorBuffer;
 
 	GLuint noiseTexture;
 

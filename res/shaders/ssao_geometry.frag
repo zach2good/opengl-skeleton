@@ -19,6 +19,8 @@ uniform sampler2D texture_diffuse1;
 uniform sampler2D texture_specular1;
 uniform sampler2D texture_normal1;
 
+uniform bool hasTextures;
+
 void main()
 {    
     vec4 mainTex = vec4(texture(texture_diffuse1, TexCoords));
@@ -34,16 +36,19 @@ void main()
     // Also store the per-fragment normals into the gbuffer
     gNormal = normalize(Normal);
 
-    if (mainTex.rgb == vec3(0))
+    // Geometry color, white if no textures loaded
+    if (hasTextures)
     {
-        mainTex.rgb = vec3(1.0);
-    }
+		gAlbedoSpec.rgb = mainTex.rgb;
 
-    if (mainTex.a < 0.1f)
+		if (mainTex.a < 0.1f)
+		{
+			discard;
+		}
+    }
+    else
     {
-        discard;
+     	gAlbedoSpec.rgb = vec3(1.0f);
     }
-
-    // And the diffuse per-fragment color
-    gAlbedoSpec.rgb = mainTex.rgb; // Currently all objects have constant albedo color
+   
 }

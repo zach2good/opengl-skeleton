@@ -23,28 +23,28 @@ void GScene1::init()
 	shader_SSAO.Unbind();
 
 	// Set up Camera
-	camera.Position = vec3(0, 0, 50);
-
-	// Set up Model GameObject
-	sphere = new GameObject();
-	sphere->m_Model = new Model("../res/models/sphere.obj");
-	sphere->m_Transform.SetPosition(vec3(0));
-	sphere->m_Transform.SetScale(vec3(0.2));
-	objects.push_back(sphere);
+	camera.Position = vec3(4.5, 7, 25);
 
 	// Set up Model GameObject
 	GameObject* mainModel = new GameObject();
-	mainModel->m_Model = new Model("../res/rungholt/house.obj");
-	mainModel->m_Transform.SetPosition(vec3(0));
-	mainModel->m_Transform.SetScale(vec3(0.25f));
+	mainModel->m_Model = new Model("../res/models/predator.obj");
+	mainModel->m_Transform.SetPosition(vec3(0, 0, 0));
+	mainModel->m_Transform.SetScale(vec3(0.10f));
 	objects.push_back(mainModel);
 
-	// Set up Model GameObject
-	GameObject* mainModel2 = new GameObject();
-	mainModel2->m_Model = new Model("../res/models/predator.obj");
-	mainModel2->m_Transform.SetPosition(vec3(10, 0, 0));
-	mainModel2->m_Transform.SetScale(vec3(0.10f));
-	objects.push_back(mainModel2);
+	// Set up Wall GameObject
+	GameObject* wallModel = new GameObject();
+	wallModel->m_Model = new Model("../res/models/box.obj");
+	wallModel->m_Transform.SetPosition(vec3(0, 0, -5));
+	wallModel->m_Transform.SetScale(vec3(100, 100, 0.1));
+	objects.push_back(wallModel);
+
+	// Set up House GameObject
+	GameObject* houseModel = new GameObject();
+	houseModel->m_Model = new Model("../res/rungholt/house.obj");
+	houseModel->m_Transform.SetPosition(vec3(15, 0, 0));
+	houseModel->m_Transform.SetScale(vec3(0.05f));
+	objects.push_back(houseModel);
 
 	// Init GBuffer	
 	glGenFramebuffers(1, &gBuffer);
@@ -173,17 +173,17 @@ void GScene1::init()
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 	// Sobel
-	glBindFramebuffer(GL_FRAMEBUFFER, sobelFBO);
+	glBindFramebuffer(GL_FRAMEBUFFER, finalFBO);
 
-	glGenTextures(1, &sobelColorBuffer);
-	glBindTexture(GL_TEXTURE_2D, sobelColorBuffer);
+	glGenTextures(1, &finalColorBuffer);
+	glBindTexture(GL_TEXTURE_2D, finalColorBuffer);
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, m_Window->getWidth(), m_Window->getHeight(), 0, GL_RGB, GL_FLOAT, NULL);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_Window->getWidth(), m_Window->getHeight(), 0, GL_RGB, GL_FLOAT, NULL);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, sobelColorBuffer, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, finalColorBuffer, 0);
 
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 	{
@@ -243,7 +243,6 @@ void GScene1::update()
 	if (input.isMouseDown(SDL_BUTTON_RIGHT))
 	{
 		lightPos = camera.Position;
-		sphere->m_Transform.SetPosition(camera.Position);
 	}
 
 	float ticks = ((float)SDL_GetTicks()) / 100.0f;
@@ -265,6 +264,10 @@ void GScene1::render()
 	glUniform1i(shader_SSAO.GetUniformLocation("texNoise"), 2);
 	shader_SSAO.Unbind();
 
+	shader_Sobel.Bind();
+	glUniform1i(shader_SSAO.GetUniformLocation("finalColorBuffer"), 0);
+	shader_Sobel.Unbind();
+
 	// 1. Geometry Pass: render scene's geometry/color data into gbuffer
 	glBindFramebuffer(GL_FRAMEBUFFER, gBuffer);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -279,6 +282,8 @@ void GScene1::render()
 	for (GameObject* g : objects)
 	{
 		glUniformMatrix4fv(glGetUniformLocation(shader_GeometryPass.GetId(), "model"), 1, GL_FALSE, glm::value_ptr(g->m_Transform.GetTransformationMatrix()));
+		glUniform1i(glGetUniformLocation(shader_GeometryPass.GetId(), "hasTextures"), g->m_Model->hasTextures());
+		
 		g->m_Model->draw(&shader_GeometryPass);
 	}
 
@@ -357,14 +362,4 @@ void GScene1::render()
 	glUniform1i(glGetUniformLocation(shader_LightingPass.GetId(), "draw_mode"), 1);
 
 	RenderQuad();
-	//// Sobel Filter
-	//glBindFramebuffer(GL_FRAMEBUFFER, sobelFBO);
-	//glClear(GL_COLOR_BUFFER_BIT);
-
-	//shader_Sobel.Bind();
-
-	//glActiveTexture(GL_TEXTURE0);
-	//glBindTexture(GL_TEXTURE_2D, sobelColorBuffer);
-
-	//RenderQuad();
 }
