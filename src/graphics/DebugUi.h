@@ -60,6 +60,9 @@ public:
 
 	void render();
 
+	int* renderTarget = nullptr;
+	void addRenderingWidget(int* in);
+
 	void addFloat(const char* title, float* var);
 	void addFloat(const char* title, float* var, float min, float max);
 

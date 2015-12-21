@@ -111,4 +111,17 @@ private:
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 		glBindVertexArray(0);
 	}
+
+	enum drawMode
+	{
+		null_draw = 0,
+		full_draw = 1,
+		pos_draw = 2,
+		norm_draw = 3,
+		diffuse_draw = 4,
+		ssao_draw = 5,
+		num_modes
+	};
+
+	int draw_mode = drawMode::full_draw;
 };

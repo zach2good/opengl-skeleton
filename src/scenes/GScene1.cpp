@@ -34,19 +34,19 @@ void GScene1::init()
 	mainModel->m_Transform.SetScale(vec3(0.10f));
 	objects.push_back(mainModel);
 
-	// Set up Wall GameObject
-	GameObject* wallModel = new GameObject();
-	wallModel->m_Model = new Model("../res/models/box.obj");
-	wallModel->m_Transform.SetPosition(vec3(0, 0, -5));
-	wallModel->m_Transform.SetScale(vec3(100, 100, 0.1));
-	objects.push_back(wallModel);
+	//// Set up Wall GameObject
+	//GameObject* wallModel = new GameObject();
+	//wallModel->m_Model = new Model("../res/models/box.obj");
+	//wallModel->m_Transform.SetPosition(vec3(0, 0, -5));
+	//wallModel->m_Transform.SetScale(vec3(100, 100, 0.1));
+	//objects.push_back(wallModel);
 
-	// Set up House GameObject
-	GameObject* houseModel = new GameObject();
-	houseModel->m_Model = new Model("../res/rungholt/house.obj");
-	houseModel->m_Transform.SetPosition(vec3(15, 0, 0));
-	houseModel->m_Transform.SetScale(vec3(0.05f));
-	objects.push_back(houseModel);
+	//// Set up House GameObject
+	//GameObject* houseModel = new GameObject();
+	//houseModel->m_Model = new Model("../res/rungholt/house.obj");
+	//houseModel->m_Transform.SetPosition(vec3(15, 0, 0));
+	//houseModel->m_Transform.SetScale(vec3(0.05f));
+	//objects.push_back(houseModel);
 
 	// Init GBuffer	
 	glGenFramebuffers(1, &gBuffer);
@@ -175,7 +175,7 @@ void GScene1::init()
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 	// Set up Debug vars
-	m_Debug->addColor("Light Color", &lightColor);
+	m_Debug->addRenderingWidget(&draw_mode);
 }
 
 void GScene1::destroy()
@@ -337,14 +337,11 @@ void GScene1::render()
 	glUniform1f(glGetUniformLocation(shader_LightingPass.GetId(), "light.Linear"), linear);
 	glUniform1f(glGetUniformLocation(shader_LightingPass.GetId(), "light.Quadratic"), quadratic);
 
-	glUniform1i(glGetUniformLocation(shader_LightingPass.GetId(), "draw_mode"), 1);
+	glUniform1i(glGetUniformLocation(shader_LightingPass.GetId(), "draw_mode"), draw_mode);
 
 	RenderQuad();
 
 	m_Debug->prepare();
-	m_Debug->render();
 
-	//ImGui_ImplSdlGL3_NewFrame();
-	//ImGui::Text("Hello, world!");
-	//ImGui::Render();
+	m_Debug->render();
 }

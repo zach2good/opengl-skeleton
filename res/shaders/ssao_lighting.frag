@@ -16,8 +16,12 @@ struct Light {
 };
 uniform Light light;
 
+uniform int draw_mode;
+
 void main()
-{             
+{      
+    if (draw_mode == 0) return;
+
     vec3 FragPos = texture(gPositionDepth, TexCoords).rgb;
     vec3 Normal = texture(gNormal, TexCoords).rgb;
     vec3 Diffuse = texture(gAlbedo, TexCoords).rgb;
@@ -44,5 +48,13 @@ void main()
     specular *= attenuation;
     lighting += diffuse + specular;
 
-    FragColor = vec4(lighting, 1.0);
+    switch(draw_mode)
+    {
+        case 1: FragColor = vec4(lighting, 1.0); break; // Full
+        case 2: FragColor = vec4(FragPos, 1.0); break; // Position
+        case 3: FragColor = vec4(Normal, 1.0); break; // Normals
+        case 4: FragColor = vec4(Diffuse, 1.0); break; // Diffuse
+        case 5: FragColor = vec4(vec3(1.0f) * AmbientOcclusion, 1.0); break; // AO
+    }
+    
 }

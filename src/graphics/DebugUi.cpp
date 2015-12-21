@@ -62,23 +62,33 @@ void DebugUi::prepare()
 		ImGui::Text("GL_SHADING_LANGUAGE_VERSION: %s \n", glGetString(GL_SHADING_LANGUAGE_VERSION));
 	}
 
-	if (ImGui::CollapsingHeader("Floats"))
+	if (ImGui::CollapsingHeader("Render Mode"))
 	{
-		for (int i = 0; i < floats.size(); i++) {
-			FloatDebug fd = floats.at(i);
-			ImGui::Text(fd.title);
-			ImGui::PushItemWidth(-1.0f);
-			ImGui::SliderFloat(fd.title, fd.value, fd.min, fd.max);
-			ImGui::PopItemWidth();
-		}
+		ImGui::RadioButton("Null", renderTarget, 0);
+		ImGui::RadioButton("Full", renderTarget, 1);
+		ImGui::RadioButton("Position", renderTarget, 2);
+		ImGui::RadioButton("Normals", renderTarget, 3);
+		ImGui::RadioButton("Diffuse", renderTarget, 4);
+		ImGui::RadioButton("SSAO", renderTarget, 5);
 	}
 
-	if (ImGui::CollapsingHeader("Bools"))
-	{
-		for (int i = 0; i < bools.size(); i++) {
-			ImGui::Checkbox(bools.at(i).title, bools.at(i).value);
-		}
-	}
+	//if (ImGui::CollapsingHeader("Floats"))
+	//{
+	//	for (int i = 0; i < floats.size(); i++) {
+	//		FloatDebug fd = floats.at(i);
+	//		ImGui::Text(fd.title);
+	//		ImGui::PushItemWidth(-1.0f);
+	//		ImGui::SliderFloat(fd.title, fd.value, fd.min, fd.max);
+	//		ImGui::PopItemWidth();
+	//	}
+	//}
+
+	//if (ImGui::CollapsingHeader("Bools"))
+	//{
+	//	for (int i = 0; i < bools.size(); i++) {
+	//		ImGui::Checkbox(bools.at(i).title, bools.at(i).value);
+	//	}
+	//}
 
 	for (int i = 0; i < vecs.size(); i++) {
 
@@ -135,6 +145,11 @@ void DebugUi::processEvents(SDL_Event e)
 void DebugUi::render()
 {
 	ImGui::Render();
+}
+
+void DebugUi::addRenderingWidget(int* in)
+{
+	renderTarget = in;
 }
 
 void DebugUi::addFloat(const char* title, float* var)
