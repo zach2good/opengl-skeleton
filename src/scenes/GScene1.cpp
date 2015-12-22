@@ -37,33 +37,44 @@ void GScene1::init()
 	// Set up Model GameObject
 	GameObject* mainModel = new GameObject("Chocobo");
 	mainModel->m_Model = new Model("../res/models/Chocobo/chocobo.obj");
-	mainModel->m_Transform.SetPosition(vec3(-10, 0, 0));
-	mainModel->m_Transform.SetRotation(vec3(0, 0, 180));
-	mainModel->m_Transform.SetScale(vec3(0.05f));
+	mainModel->m_Transform.m_position = (vec3(-10, 0, 0));
+	mainModel->m_Transform.m_rotation = (vec3(0, 0, 180));
+	mainModel->m_Transform.m_scale = (vec3(0.05f));
 	objects.push_back(mainModel);
 
 	// Set up Model GameObject
 	GameObject* mainModel2 = new GameObject("Mandragora");
 	mainModel2->m_Model = new Model("../res/models/Mandragora/0075_player50out.dae");
-	mainModel2->m_Transform.SetPosition(vec3(0, 0, 0));
-	mainModel2->m_Transform.SetRotation(vec3(0, 0, 180));
-	mainModel2->m_Transform.SetScale(vec3(0.05f));
+	mainModel2->m_Transform.m_position = (vec3(0, 0, 0));
+	mainModel2->m_Transform.m_rotation = (vec3(0, 0, 180));
+	mainModel2->m_Transform.m_scale = (vec3(0.05f));
 	objects.push_back(mainModel2);
 
 	// Set up Model GameObject
 	GameObject* mainModel3 = new GameObject("Vivi");
 	mainModel3->m_Model = new Model("../res/models/Vivi/0044_player05out.dae");
-	mainModel3->m_Transform.SetPosition(vec3(10, 0, 0));
-	mainModel3->m_Transform.SetRotation(vec3(0, 0, 180));
-	mainModel3->m_Transform.SetScale(vec3(0.05f));
+	mainModel3->m_Transform.m_position = (vec3(10, 0, 0));
+	mainModel3->m_Transform.m_rotation = (vec3(0, 0, 180));
+	mainModel3->m_Transform.m_scale = (vec3(0.05f));
 	objects.push_back(mainModel3);
 
 	// Set up Wall GameObject
 	GameObject* floorModel = new GameObject("Floor");
 	floorModel->m_Model = new Model("../res/models/box.obj");
-	floorModel->m_Transform.SetPosition(vec3(0, 0, 0));
-	floorModel->m_Transform.SetScale(vec3(100, 0.1, 100));
+	floorModel->m_Transform.m_position = (vec3(0, 0, 0));
+	floorModel->m_Transform.m_scale = (vec3(100, 0.1, 100));
 	objects.push_back(floorModel);
+
+	// Lights
+	GameObject* light1 = new GameObject("Light 1");
+	light1->isLight = true;
+	light1->m_Transform.m_position = (vec3(10, 2, 0));
+	objects.push_back(light1);
+
+	GameObject* light2 = new GameObject("Light 2");
+	light2->isLight = true;
+	light2->m_Transform.m_position = (vec3(-10, 2, 0));
+	objects.push_back(light2);
 
 	// Init GBuffer	
 	glGenFramebuffers(1, &gBuffer);
@@ -254,30 +265,50 @@ void GScene1::update()
 		camera.ProcessMouseMovement(input.getRelPos().x * 10.0f, -input.getRelPos().y * 10.0f);
 	}
 
-	float ticks = ((float)SDL_GetTicks()) / 100.0f;
+	ticks += m_Window->getDelta() * 10.0f;
+
+	objects.at(0)->m_Transform.m_position.x += 2.0f * direction * m_Window->getDelta();
+
+	if (objects.at(0)->m_Transform.m_position.x > -10)
+	{
+		direction = -1;
+	}
+
+	if (objects.at(0)->m_Transform.m_position.x < -30)
+	{
+		direction = 1;
+	}
+
+	objects.at(1)->m_Transform.m_position.z = -5 + sinf(ticks);
+	objects.at(1)->m_Transform.m_position.x = cosf(ticks);
+
+
+
+	objects.at(2)->m_Transform.m_rotation.y = 2 * ticks;
+
 }
 
 void GScene1::render()
 {
 	// Set up Shaders
 	shader_LightingPass.Bind();
-		glUniform1i(shader_LightingPass.GetUniformLocation("gPositionDepth"), 0);
-		glUniform1i(shader_LightingPass.GetUniformLocation("gNormal"), 1);
-		glUniform1i(shader_LightingPass.GetUniformLocation("gAlbedo"), 2);
-		glUniform1i(shader_LightingPass.GetUniformLocation("ssao"), 3);
+	glUniform1i(shader_LightingPass.GetUniformLocation("gPositionDepth"), 0);
+	glUniform1i(shader_LightingPass.GetUniformLocation("gNormal"), 1);
+	glUniform1i(shader_LightingPass.GetUniformLocation("gAlbedo"), 2);
+	glUniform1i(shader_LightingPass.GetUniformLocation("ssao"), 3);
 	shader_LightingPass.Unbind();
 
 	shader_SSAO.Bind();
-		glUniform1i(shader_SSAO.GetUniformLocation("gPositionDepth"), 0);
-		glUniform1i(shader_SSAO.GetUniformLocation("gNormal"), 1);
-		glUniform1i(shader_SSAO.GetUniformLocation("texNoise"), 2);
+	glUniform1i(shader_SSAO.GetUniformLocation("gPositionDepth"), 0);
+	glUniform1i(shader_SSAO.GetUniformLocation("gNormal"), 1);
+	glUniform1i(shader_SSAO.GetUniformLocation("texNoise"), 2);
 
-		glUniform1i(shader_SSAO.GetUniformLocation("kernelSize"), kernelSize);
-		glUniform1f(shader_SSAO.GetUniformLocation("radius"), radius);
+	glUniform1i(shader_SSAO.GetUniformLocation("kernelSize"), kernelSize);
+	glUniform1f(shader_SSAO.GetUniformLocation("radius"), radius);
 	shader_SSAO.Unbind();
 
 	shader_SSAOBlur.Bind();
-		glUniform1i(shader_SSAO.GetUniformLocation("blurSize"), blurSize);
+	glUniform1i(shader_SSAO.GetUniformLocation("blurSize"), blurSize);
 	shader_SSAOBlur.Unbind();
 
 	// Geometry Pass
@@ -291,15 +322,24 @@ void GScene1::render()
 	glUniformMatrix4fv(glGetUniformLocation(shader_GeometryPass.GetId(), "projection"), 1, GL_FALSE, glm::value_ptr(projection));
 	glUniformMatrix4fv(glGetUniformLocation(shader_GeometryPass.GetId(), "view"), 1, GL_FALSE, glm::value_ptr(view));
 
+	lights.clear();
 	for (GameObject* g : objects)
 	{
-		glUniformMatrix4fv(glGetUniformLocation(shader_GeometryPass.GetId(), "model"), 1, GL_FALSE, glm::value_ptr(g->m_Transform.GetTransformationMatrix()));
+		if (g->m_Model)
+		{
+			glUniformMatrix4fv(glGetUniformLocation(shader_GeometryPass.GetId(), "model"), 1, GL_FALSE, glm::value_ptr(g->m_Transform.GetTransformationMatrix()));
 
-		glUniform1i(glGetUniformLocation(shader_GeometryPass.GetId(), "useTextures"), g->m_Model->hasTextures && useTextures);
-		glUniform1i(glGetUniformLocation(shader_GeometryPass.GetId(), "useNormalMaps"), g->m_Model->hasNormalMaps && useNormalMaps);
-		glUniform1i(glGetUniformLocation(shader_GeometryPass.GetId(), "useSpecularMaps"), g->m_Model->hasSpecularMaps && useSpecularMaps);
-		
-		g->m_Model->draw(&shader_GeometryPass);
+			glUniform1i(glGetUniformLocation(shader_GeometryPass.GetId(), "useTextures"), g->m_Model->hasTextures && useTextures);
+			glUniform1i(glGetUniformLocation(shader_GeometryPass.GetId(), "useNormalMaps"), g->m_Model->hasNormalMaps && useNormalMaps);
+			glUniform1i(glGetUniformLocation(shader_GeometryPass.GetId(), "useSpecularMaps"), g->m_Model->hasSpecularMaps && useSpecularMaps);
+
+			g->m_Model->draw(&shader_GeometryPass);
+		}
+
+		if (g->isLight)
+		{
+			lights.push_back(g);
+		}
 	}
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -349,6 +389,7 @@ void GScene1::render()
 	const GLfloat constant = 1.0;
 	const GLfloat linear = 0.09;
 	const GLfloat quadratic = 0.032;
+
 	glm::vec3 lightPosView;
 
 	glActiveTexture(GL_TEXTURE0);
@@ -363,16 +404,19 @@ void GScene1::render()
 	glActiveTexture(GL_TEXTURE3);
 	glBindTexture(GL_TEXTURE_2D, ssaoColorBufferBlur);
 
-	lightPosView = glm::vec3(camera.GetViewMatrix() * glm::vec4(lightPos, 1.0));
-	glUniform3fv(glGetUniformLocation(shader_LightingPass.GetId(), "light.Position"), 1, &lightPosView[0]);
-	glUniform3fv(glGetUniformLocation(shader_LightingPass.GetId(), "light.Color"), 1, &lightColor[0]);
-
-	glUniform1f(glGetUniformLocation(shader_LightingPass.GetId(), "light.Constant"), constant);
-	glUniform1f(glGetUniformLocation(shader_LightingPass.GetId(), "light.Linear"), linear);
-	glUniform1f(glGetUniformLocation(shader_LightingPass.GetId(), "light.Quadratic"), quadratic);
-
 	glUniform1i(glGetUniformLocation(shader_LightingPass.GetId(), "draw_mode"), draw_mode);
 	glUniform1f(glGetUniformLocation(shader_LightingPass.GetId(), "ambientLevel"), ambientLevel);
+
+	for (int i = 0; i < lights.size(); i++)
+	{
+		lightPosView = glm::vec3(camera.GetViewMatrix() * glm::vec4(lights.at(i)->m_Transform.m_position, 1.0));
+		glUniform3fv(glGetUniformLocation(shader_LightingPass.GetId(), ("lights[" + std::to_string(i) + "].Position").c_str()), 1, &lightPosView[0]);
+		glUniform3fv(glGetUniformLocation(shader_LightingPass.GetId(), ("lights[" + std::to_string(i) + "].Color").c_str()), 1, &lightColor[0]);
+
+		glUniform1f(glGetUniformLocation(shader_LightingPass.GetId(), ("lights[" + std::to_string(i) + "].Constant").c_str()), constant);
+		glUniform1f(glGetUniformLocation(shader_LightingPass.GetId(), ("lights[" + std::to_string(i) + "].Linear").c_str()), linear);
+		glUniform1f(glGetUniformLocation(shader_LightingPass.GetId(), ("lights[" + std::to_string(i) + "].Quadratic").c_str()), quadratic);
+	}
 
 	RenderQuad();
 

@@ -35,7 +35,7 @@ void ForwardRenderer::draw(ShaderProgram* shader, Camera* camera)
 
 		if (g->isLight)
 		{
-			auto l = g->m_Transform.GetPosition();
+			auto l = g->m_Transform.m_position;
 			shader->SetUniform3fv("lightPos", l);
 		}
 	}

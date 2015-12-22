@@ -18,8 +18,6 @@ public:
 	int m_Id;
 	Transform m_Transform;
 	Model* m_Model = nullptr;
-
-	// Light m_Light = nullptr;
 	bool isLight = false;
 
 private:

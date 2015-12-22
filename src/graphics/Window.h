@@ -71,6 +71,16 @@ public:
 			glDisable(GL_FRAMEBUFFER_SRGB);
 	}
 
+	float getFPS()
+	{
+		return 1.0 / renderTime;
+	}
+
+	float getDelta()
+	{
+		return renderTime;
+	}
+
 private:
 	SDL_Window *m_Window;
 	SDL_GLContext m_Context;

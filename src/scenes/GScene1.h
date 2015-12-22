@@ -70,7 +70,7 @@ private:
 	Camera camera;
 
 	std::vector<GameObject*> objects;
-	std::vector<glm::vec3> lights;
+	std::vector<GameObject*> lights;
 
 	glm::vec3 lightPos = glm::vec3(2.0, 4.0, 2.0);
 	glm::vec3 lightColor = glm::vec3(1.0f);
@@ -110,7 +110,7 @@ private:
 	bool useSpecularMaps = false; 
 
 	// SSAO Uniforms
-	int kernelSize = 10;
+	int kernelSize = 64;
 	float radius = 6.0f;
 
 	// Blur Uniforms
@@ -132,4 +132,8 @@ private:
 
 	int draw_mode = drawMode::full_draw;
 	float ambientLevel = 0.5f;
+
+	// Demo Variables
+	int direction = 1;
+	int ticks = 0;
 };
