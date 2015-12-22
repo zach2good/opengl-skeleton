@@ -35,7 +35,7 @@ void GScene1::init()
 	camera.Position = vec3(4.5, 7, 25);
 
 	// Set up Model GameObject
-	GameObject* mainModel = new GameObject();
+	GameObject* mainModel = new GameObject("Chocobo");
 	mainModel->m_Model = new Model("../res/models/Chocobo/chocobo.obj");
 	mainModel->m_Transform.SetPosition(vec3(-10, 0, 0));
 	mainModel->m_Transform.SetRotation(vec3(0, 0, 180));
@@ -43,7 +43,7 @@ void GScene1::init()
 	objects.push_back(mainModel);
 
 	// Set up Model GameObject
-	GameObject* mainModel2 = new GameObject();
+	GameObject* mainModel2 = new GameObject("Mandragora");
 	mainModel2->m_Model = new Model("../res/models/Mandragora/0075_player50out.dae");
 	mainModel2->m_Transform.SetPosition(vec3(0, 0, 0));
 	mainModel2->m_Transform.SetRotation(vec3(0, 0, 180));
@@ -51,7 +51,7 @@ void GScene1::init()
 	objects.push_back(mainModel2);
 
 	// Set up Model GameObject
-	GameObject* mainModel3 = new GameObject();
+	GameObject* mainModel3 = new GameObject("Vivi");
 	mainModel3->m_Model = new Model("../res/models/Vivi/0044_player05out.dae");
 	mainModel3->m_Transform.SetPosition(vec3(10, 0, 0));
 	mainModel3->m_Transform.SetRotation(vec3(0, 0, 180));
@@ -59,11 +59,11 @@ void GScene1::init()
 	objects.push_back(mainModel3);
 
 	// Set up Wall GameObject
-	GameObject* wallModel = new GameObject();
-	wallModel->m_Model = new Model("../res/models/box.obj");
-	wallModel->m_Transform.SetPosition(vec3(0, 0, 0));
-	wallModel->m_Transform.SetScale(vec3(100, 0.1, 100));
-	objects.push_back(wallModel);
+	GameObject* floorModel = new GameObject("Floor");
+	floorModel->m_Model = new Model("../res/models/box.obj");
+	floorModel->m_Transform.SetPosition(vec3(0, 0, 0));
+	floorModel->m_Transform.SetScale(vec3(100, 0.1, 100));
+	objects.push_back(floorModel);
 
 	// Init GBuffer	
 	glGenFramebuffers(1, &gBuffer);
@@ -189,6 +189,7 @@ void GScene1::init()
 
 	// Set up Debug vars
 	m_Debug->addRenderingWidget(&draw_mode);
+	m_Debug->addGOVector(&objects);
 
 	m_Debug->addBool("Texture Maps", &useTextures);
 	m_Debug->addBool("Normal Maps", &useNormalMaps);

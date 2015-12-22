@@ -9,10 +9,13 @@ class GameObject
 {
 public:
 	GameObject();
+	GameObject(std::string name) : m_Name(name) {};
 	~GameObject();
 
 	void Update();
 
+	std::string m_Name;
+	int m_Id;
 	Transform m_Transform;
 	Model* m_Model = nullptr;
 

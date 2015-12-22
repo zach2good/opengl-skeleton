@@ -77,88 +77,166 @@ void DebugUi::prepare()
 		ImGui::RadioButton("SSAO", renderTarget, 7);
 	}
 
-	if (floats.size() > 0)
+	if (gos->size() > 0)
 	{
-		if (ImGui::CollapsingHeader("Floats"))
+		if (ImGui::CollapsingHeader("Scene"))
 		{
-			for (int i = 0; i < floats.size(); i++) {
-				FloatDebug fd = floats.at(i);
-				ImGui::Text(fd.title);
+			for (int i = 0; i < gos->size(); i++) {
+				auto go = gos->at(i);
+				if (ImGui::TreeNode((void*)(intptr_t)i, go->m_Name.c_str()))
+				{
+					if (ImGui::TreeNode("##Transform", "Transform"))
+					{
+						auto t = &go->m_Transform;
+
+						if (ImGui::TreeNode("##Position", "Position"))
+						{
+							//ImGui::PushItemWidth(-1.0f);
+							ImGui::SliderFloat("##xi", &t->m_position.x, -20.0f, 20.0f);
+							//ImGui::PopItemWidth();
+
+							//ImGui::PushItemWidth(-1.0f);
+							ImGui::SliderFloat("##yi", &t->m_position.y, -20.0f, 20.0f);
+							//ImGui::PopItemWidth();
+
+							//ImGui::PushItemWidth(-1.0f);
+							ImGui::SliderFloat("##zi", &t->m_position.z, -20.0f, 20.0f);
+							//ImGui::PopItemWidth();
+
+							ImGui::TreePop();
+						}
+
+						if (ImGui::TreeNode("##Rotation", "Rotation"))
+						{
+							//ImGui::PushItemWidth(-1.0f);
+							ImGui::SliderFloat("##xi", &t->m_rotation.x, -180.0f, 180.0f);
+							//ImGui::PopItemWidth();
+
+							//ImGui::PushItemWidth(-1.0f);
+							ImGui::SliderFloat("##yi", &t->m_rotation.y, -180.0f, 180.0f);
+							//ImGui::PopItemWidth();
+
+							//ImGui::PushItemWidth(-1.0f);
+							ImGui::SliderFloat("##zi", &t->m_rotation.z, -180.0f, 180.0f);
+							//ImGui::PopItemWidth();
+
+							ImGui::TreePop();
+						}
+
+						if (ImGui::TreeNode("##Scale", "Scale"))
+						{
+							//ImGui::PushItemWidth(-1.0f);
+							ImGui::SliderFloat("##xi", &t->m_scale.x, -20.0f, 20.0f);
+							//ImGui::PopItemWidth();
+
+							//ImGui::PushItemWidth(-1.0f);
+							ImGui::SliderFloat("##yi", &t->m_scale.y, -20.0f, 20.0f);
+							//ImGui::PopItemWidth();
+
+							//ImGui::PushItemWidth(-1.0f);
+							ImGui::SliderFloat("##zi", &t->m_scale.z, -20.0f, 20.0f);
+							//ImGui::PopItemWidth();
+
+							ImGui::TreePop();
+						}
+
+						ImGui::TreePop();
+					}
+
+					ImGui::TreePop();
+				}
+			}
+		}
+	}
+	if (ImGui::CollapsingHeader("Variables"))
+	{
+		if (floats.size() > 0)
+		{
+			if (ImGui::TreeNode("Floats"))
+			{
+				for (int i = 0; i < floats.size(); i++) {
+					FloatDebug fd = floats.at(i);
+					ImGui::Text(fd.title);
+					ImGui::PushItemWidth(-1.0f);
+					ImGui::SliderFloat(fd.title, fd.value, fd.min, fd.max);
+					ImGui::PopItemWidth();
+				}
+				ImGui::TreePop();
+			}
+		}
+
+		if (ints.size() > 0)
+		{
+			if (ImGui::TreeNode("Ints"))
+			{
+				for (int i = 0; i < ints.size(); i++) {
+					IntDebug id = ints.at(i);
+					ImGui::Text(id.title);
+					ImGui::PushItemWidth(-1.0f);
+					ImGui::SliderInt(id.title, id.value, id.min, id.max);
+					ImGui::PopItemWidth();
+				}
+				ImGui::TreePop();
+			}
+		}
+
+		if (bools.size() > 0)
+		{
+			if (ImGui::TreeNode("Bools"))
+			{
+				for (int i = 0; i < bools.size(); i++) {
+					ImGui::Checkbox(bools.at(i).title, bools.at(i).value);
+				}
+				ImGui::TreePop();
+			}
+		}
+
+		for (int i = 0; i < vecs.size(); i++)
+		{
+			if (ImGui::TreeNode(vecs.at(i).title))
+			{
+				Vec3Debug v = vecs.at(i);
+
+				// TODO: Ugly and slow, fix me
+				std::string x = std::string(v.title) + std::string("x");;
+				std::string y = std::string(v.title) + std::string("y");;
+				std::string z = std::string(v.title) + std::string("z");;
+
 				ImGui::PushItemWidth(-1.0f);
-				ImGui::SliderFloat(fd.title, fd.value, fd.min, fd.max);
+				ImGui::SliderFloat(x.c_str(), &v.val->x, -20.0f, 20.0f);
 				ImGui::PopItemWidth();
-			}
-		}
-	}
 
-	if (ints.size() > 0)
-	{
-		if (ImGui::CollapsingHeader("Ints"))
-		{
-			for (int i = 0; i < ints.size(); i++) {
-				IntDebug id = ints.at(i);
-				ImGui::Text(id.title);
 				ImGui::PushItemWidth(-1.0f);
-				ImGui::SliderInt(id.title, id.value, id.min, id.max);
+				ImGui::SliderFloat(y.c_str(), &v.val->y, -20.0f, 20.0f);
 				ImGui::PopItemWidth();
+
+				ImGui::PushItemWidth(-1.0f);
+				ImGui::SliderFloat(z.c_str(), &v.val->z, -20.0f, 20.0f);
+				ImGui::PopItemWidth();
+
+				ImGui::TreePop();
 			}
 		}
-	}
 
-	if (bools.size() > 0)
-	{
-		if (ImGui::CollapsingHeader("Bools"))
+		for (int i = 0; i < colors.size(); i++)
 		{
-			for (int i = 0; i < bools.size(); i++) {
-				ImGui::Checkbox(bools.at(i).title, bools.at(i).value);
+			if (ImGui::TreeNode(colors.at(i).title))
+			{
+				// TODO: This is ugly and hard to understand, fix this
+				// ...but it works...
+				ColorDebug col = colors.at(i);
+				ImColor icol = ImColor(col.col->r, col.col->g, col.col->b, 0.0f);
+
+				ColorPicker(colors.at(i).title, &icol);
+
+				col.col->r = icol.Value.x;
+				col.col->g = icol.Value.y;
+				col.col->b = icol.Value.z;
 			}
 		}
+
+		ImGui::TreePop();
 	}
-
-	for (int i = 0; i < vecs.size(); i++)
-	{
-
-		if (ImGui::CollapsingHeader(vecs.at(i).title))
-		{
-			Vec3Debug v = vecs.at(i);
-
-			// TODO: Ugly and slow, fix me
-			std::string x = std::string(v.title) + std::string("x");;
-			std::string y = std::string(v.title) + std::string("y");;
-			std::string z = std::string(v.title) + std::string("z");;
-
-			ImGui::PushItemWidth(-1.0f);
-			ImGui::SliderFloat(x.c_str(), &v.val->x, -20.0f, 20.0f);
-			ImGui::PopItemWidth();
-
-			ImGui::PushItemWidth(-1.0f);
-			ImGui::SliderFloat(y.c_str(), &v.val->y, -20.0f, 20.0f);
-			ImGui::PopItemWidth();
-
-			ImGui::PushItemWidth(-1.0f);
-			ImGui::SliderFloat(z.c_str(), &v.val->z, -20.0f, 20.0f);
-			ImGui::PopItemWidth();
-		}
-	}
-
-
-	for (int i = 0; i < colors.size(); i++)
-	{
-		if (ImGui::CollapsingHeader(colors.at(i).title))
-		{
-			// TODO: This is ugly and hard to understand, fix this
-			// ...but it works...
-			ColorDebug col = colors.at(i);
-			ImColor icol = ImColor(col.col->r, col.col->g, col.col->b, 0.0f);
-
-			ColorPicker(colors.at(i).title, &icol);
-
-			col.col->r = icol.Value.x;
-			col.col->g = icol.Value.y;
-			col.col->b = icol.Value.z;
-		}
-	}
-
 	ImGui::End();
 
 }
@@ -316,4 +394,9 @@ bool DebugUi::ColorPicker(const char* label, ImColor* color)
 	*color = ImColor::HSV(hue, saturation, value);
 
 	return value_changed | ImGui::ColorEdit3(label, &color->Value.x);
+}
+
+void DebugUi::addGOVector(std::vector<GameObject*>* in)
+{
+	gos = in;
 }

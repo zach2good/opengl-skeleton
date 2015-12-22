@@ -8,6 +8,8 @@
 #include "../imgui/imgui_internal.h"
 #include "../imgui/imgui_impl_sdl_gl3.h"
 
+#include "../core/GameObject.h"
+
 struct FloatDebug
 {
 	FloatDebug(const char* title, float* value, float min, float max) :
@@ -86,11 +88,15 @@ public:
 
 	void addVec3(const char* title, vec3* val);
 
+	void addGOVector(std::vector<GameObject*>* in);
+
 	std::vector<FloatDebug> floats;
 	std::vector<IntDebug> ints;
 	std::vector<BoolDebug> bools;
 	std::vector<ColorDebug> colors;
 	std::vector<Vec3Debug> vecs;
+
+	std::vector<GameObject*>* gos;
 
 	SDL_Window* m_Window;
 
