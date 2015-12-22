@@ -75,8 +75,6 @@ private:
 	glm::vec3 lightPos = glm::vec3(2.0, 4.0, 2.0);
 	glm::vec3 lightColor = glm::vec3(1.0f);
 
-	// RenderQuad() Renders a 1x1 quad in NDC, best used for framebuffer color targets
-	// and post-processing effects.
 	GLuint quadVAO = 0;
 	GLuint quadVBO;
 	void RenderQuad()
@@ -84,11 +82,11 @@ private:
 		if (quadVAO == 0)
 		{
 			GLfloat quadVertices[] = {
-				// Positions        // Texture Coords
-				-1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
-				-1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
-				1.0f, 1.0f, 0.0f, 1.0f, 1.0f,
-				1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+				// Positions			// Texture Coords
+				-1.0f, 1.0f, 0.0f,		0.0f, 1.0f,
+				-1.0f, -1.0f, 0.0f,		0.0f, 0.0f,
+				1.0f, 1.0f, 0.0f,		1.0f, 1.0f,
+				1.0f, -1.0f, 0.0f,		 1.0f, 0.0f,
 			};
 			// Setup plane VAO
 			glGenVertexArrays(1, &quadVAO);
@@ -105,6 +103,11 @@ private:
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 		glBindVertexArray(0);
 	}
+
+	// Geometry Uniforms
+	bool useTextures = true;
+	bool useNormalMaps = false;
+	bool useSpecularMaps = false; 
 
 	// SSAO Uniforms
 	int kernelSize = 10;

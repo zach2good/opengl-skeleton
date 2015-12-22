@@ -34,15 +34,9 @@ void GScene1::init()
 	// Set up Camera
 	camera.Position = vec3(4.5, 7, 25);
 
-	//// Set up Model GameObject
-	//GameObject* mainModel = new GameObject();
-	//mainModel->m_Model = new Model("../res/models/predator.obj");
-	//mainModel->m_Transform.SetScale(vec3(0.05f));
-	//objects.push_back(mainModel);
-
 	// Set up Model GameObject
 	GameObject* mainModel = new GameObject();
-	mainModel->m_Model = new Model("../res/models/Chocobo/0053_player14out.dae");
+	mainModel->m_Model = new Model("../res/models/Chocobo/chocobo.obj");
 	mainModel->m_Transform.SetPosition(vec3(-10, 0, 0));
 	mainModel->m_Transform.SetRotation(vec3(0, 0, 180));
 	mainModel->m_Transform.SetScale(vec3(0.05f));
@@ -75,7 +69,7 @@ void GScene1::init()
 	glGenFramebuffers(1, &gBuffer);
 	glBindFramebuffer(GL_FRAMEBUFFER, gBuffer);
 
-	// - Position + linear depth color buffer
+	// Position + Depth
 	glGenTextures(1, &gPositionDepth);
 	glBindTexture(GL_TEXTURE_2D, gPositionDepth);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, m_Window->getWidth(), m_Window->getHeight(), 0, GL_RGBA, GL_FLOAT, NULL);
@@ -88,7 +82,7 @@ void GScene1::init()
 
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, gPositionDepth, 0);
 
-	// - Normal color buffer
+	// Normals
 	glGenTextures(1, &gNormal);
 	glBindTexture(GL_TEXTURE_2D, gNormal);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_Window->getWidth(), m_Window->getHeight(), 0, GL_RGB, GL_FLOAT, NULL);
@@ -96,7 +90,7 @@ void GScene1::init()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, gNormal, 0);
 
-	// - Albedo color buffer
+	// Albedo
 	glGenTextures(1, &gAlbedo);
 	glBindTexture(GL_TEXTURE_2D, gAlbedo);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_Window->getWidth(), m_Window->getHeight(), 0, GL_RGBA, GL_FLOAT, NULL);
@@ -104,16 +98,15 @@ void GScene1::init()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, gAlbedo, 0);
 
-	// - Tell OpenGL which color attachments we'll use (of this framebuffer) for rendering 
+	// Attach
 	glDrawBuffers(3, attachments);
 
-	// - Create and attach depth buffer (renderbuffer)
+	// Depth Buffer
 	glGenRenderbuffers(1, &rboDepth);
 	glBindRenderbuffer(GL_RENDERBUFFER, rboDepth);
 	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, m_Window->getWidth(), m_Window->getHeight());
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboDepth);
 
-	// - Finally check if framebuffer is complete
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 	{
 		printf("GBuffer Framebuffer not complete!\n");
@@ -123,7 +116,6 @@ void GScene1::init()
 	glGenFramebuffers(1, &ssaoFBO);  glGenFramebuffers(1, &ssaoBlurFBO);
 	glBindFramebuffer(GL_FRAMEBUFFER, ssaoFBO);
 
-	// - SSAO color buffer
 	glGenTextures(1, &ssaoColorBuffer);
 	glBindTexture(GL_TEXTURE_2D, ssaoColorBuffer);
 
@@ -139,7 +131,7 @@ void GScene1::init()
 		printf("SSAO Framebuffer not complete!\n");
 	}
 
-	// - and blur stage
+	// Init Blur Stage
 	glBindFramebuffer(GL_FRAMEBUFFER, ssaoBlurFBO);
 
 	glGenTextures(1, &ssaoColorBufferBlur);
@@ -160,7 +152,7 @@ void GScene1::init()
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	// Sample kernel
-	std::uniform_real_distribution<GLfloat> randomFloats(0.0, 1.0); // generates random floats between 0.0 and 1.0
+	std::uniform_real_distribution<GLfloat> randomFloats(0.0, 1.0);
 	for (GLuint i = 0; i < 64; ++i)
 	{
 		glm::vec3 sample(randomFloats(generator) * 2.0 - 1.0, randomFloats(generator) * 2.0 - 1.0, randomFloats(generator));
@@ -198,6 +190,10 @@ void GScene1::init()
 	// Set up Debug vars
 	m_Debug->addRenderingWidget(&draw_mode);
 
+	m_Debug->addBool("Texture Maps", &useTextures);
+	m_Debug->addBool("Normal Maps", &useNormalMaps);
+	m_Debug->addBool("Specular Maps", &useSpecularMaps);
+
 	m_Debug->addFloat("SSAO Radius", &radius, 1, 50);
 	m_Debug->addInt("SSAO Kernel Size", &kernelSize, 1, 128);
 
@@ -206,7 +202,6 @@ void GScene1::init()
 	m_Debug->addColor("Light Color", &lightColor);
 	m_Debug->addVec3("Light Position", &lightPos);
 	m_Debug->addFloat("Ambient Light Amount", &ambientLevel, 0, 1);
-	
 }
 
 void GScene1::destroy()
@@ -284,7 +279,7 @@ void GScene1::render()
 		glUniform1i(shader_SSAO.GetUniformLocation("blurSize"), blurSize);
 	shader_SSAOBlur.Unbind();
 
-	// 1. Geometry Pass: render scene's geometry/color data into gbuffer
+	// Geometry Pass
 	glBindFramebuffer(GL_FRAMEBUFFER, gBuffer);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glm::mat4 projection = glm::perspective(camera.Zoom, (GLfloat)m_Window->getAspect(), 0.1f, 1000.0f);
@@ -298,14 +293,17 @@ void GScene1::render()
 	for (GameObject* g : objects)
 	{
 		glUniformMatrix4fv(glGetUniformLocation(shader_GeometryPass.GetId(), "model"), 1, GL_FALSE, glm::value_ptr(g->m_Transform.GetTransformationMatrix()));
-		glUniform1i(glGetUniformLocation(shader_GeometryPass.GetId(), "hasTextures"), g->m_Model->hasTextures());
+
+		glUniform1i(glGetUniformLocation(shader_GeometryPass.GetId(), "useTextures"), g->m_Model->hasTextures && useTextures);
+		glUniform1i(glGetUniformLocation(shader_GeometryPass.GetId(), "useNormalMaps"), g->m_Model->hasNormalMaps && useNormalMaps);
+		glUniform1i(glGetUniformLocation(shader_GeometryPass.GetId(), "useSpecularMaps"), g->m_Model->hasSpecularMaps && useSpecularMaps);
 		
 		g->m_Model->draw(&shader_GeometryPass);
 	}
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-	// 2. Create SSAO texture
+	// SSAO Pass
 	glBindFramebuffer(GL_FRAMEBUFFER, ssaoFBO);
 	glClear(GL_COLOR_BUFFER_BIT);
 
@@ -320,7 +318,6 @@ void GScene1::render()
 	glActiveTexture(GL_TEXTURE2);
 	glBindTexture(GL_TEXTURE_2D, noiseTexture);
 
-	// Send kernel + rotation 
 	for (GLuint i = 0; i < 64; ++i)
 	{
 		glUniform3fv(glGetUniformLocation(shader_SSAO.GetId(), ("samples[" + std::to_string(i) + "]").c_str()), 1, &ssaoKernel[i][0]);
@@ -331,7 +328,7 @@ void GScene1::render()
 	RenderQuad();
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-	// 3. Blur SSAO texture to remove noise
+	// Blur SSAO Pass
 	glBindFramebuffer(GL_FRAMEBUFFER, ssaoBlurFBO);
 	glClear(GL_COLOR_BUFFER_BIT);
 
@@ -343,7 +340,7 @@ void GScene1::render()
 	RenderQuad();
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-	// 4. Lighting Pass: traditional deferred Blinn-Phong lighting now with added screen-space ambient occlusion
+	// Lighting Pass
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	shader_LightingPass.Bind();
@@ -378,6 +375,7 @@ void GScene1::render()
 
 	RenderQuad();
 
+	// Debug overlay
 	m_Debug->prepare();
 	m_Debug->render();
 }
