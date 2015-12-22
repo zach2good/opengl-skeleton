@@ -22,31 +22,54 @@ void GScene1::init()
 	glUniform1i(shader_SSAO.GetUniformLocation("gPositionDepth"), 0);
 	glUniform1i(shader_SSAO.GetUniformLocation("gNormal"), 1);
 	glUniform1i(shader_SSAO.GetUniformLocation("texNoise"), 2);
+
+	glUniform1i(shader_SSAO.GetUniformLocation("kernelSize"), kernelSize);
+	glUniform1f(shader_SSAO.GetUniformLocation("radius"), radius);
 	shader_SSAO.Unbind();
+
+	shader_SSAOBlur.Bind();
+	glUniform1i(shader_SSAO.GetUniformLocation("blurSize"), blurSize);
+	shader_SSAOBlur.Unbind();
 
 	// Set up Camera
 	camera.Position = vec3(4.5, 7, 25);
 
+	//// Set up Model GameObject
+	//GameObject* mainModel = new GameObject();
+	//mainModel->m_Model = new Model("../res/models/predator.obj");
+	//mainModel->m_Transform.SetScale(vec3(0.05f));
+	//objects.push_back(mainModel);
+
 	// Set up Model GameObject
 	GameObject* mainModel = new GameObject();
-	mainModel->m_Model = new Model("../res/models/predator.obj");
-	mainModel->m_Transform.SetPosition(vec3(0, 0, 0));
-	mainModel->m_Transform.SetScale(vec3(0.10f));
+	mainModel->m_Model = new Model("../res/models/Chocobo/0053_player14out.dae");
+	mainModel->m_Transform.SetPosition(vec3(-10, 0, 0));
+	mainModel->m_Transform.SetRotation(vec3(0, 0, 180));
+	mainModel->m_Transform.SetScale(vec3(0.05f));
 	objects.push_back(mainModel);
 
-	//// Set up Wall GameObject
-	//GameObject* wallModel = new GameObject();
-	//wallModel->m_Model = new Model("../res/models/box.obj");
-	//wallModel->m_Transform.SetPosition(vec3(0, 0, -5));
-	//wallModel->m_Transform.SetScale(vec3(100, 100, 0.1));
-	//objects.push_back(wallModel);
+	// Set up Model GameObject
+	GameObject* mainModel2 = new GameObject();
+	mainModel2->m_Model = new Model("../res/models/Mandragora/0075_player50out.dae");
+	mainModel2->m_Transform.SetPosition(vec3(0, 0, 0));
+	mainModel2->m_Transform.SetRotation(vec3(0, 0, 180));
+	mainModel2->m_Transform.SetScale(vec3(0.05f));
+	objects.push_back(mainModel2);
 
-	//// Set up House GameObject
-	//GameObject* houseModel = new GameObject();
-	//houseModel->m_Model = new Model("../res/rungholt/house.obj");
-	//houseModel->m_Transform.SetPosition(vec3(15, 0, 0));
-	//houseModel->m_Transform.SetScale(vec3(0.05f));
-	//objects.push_back(houseModel);
+	// Set up Model GameObject
+	GameObject* mainModel3 = new GameObject();
+	mainModel3->m_Model = new Model("../res/models/Vivi/0044_player05out.dae");
+	mainModel3->m_Transform.SetPosition(vec3(10, 0, 0));
+	mainModel3->m_Transform.SetRotation(vec3(0, 0, 180));
+	mainModel3->m_Transform.SetScale(vec3(0.05f));
+	objects.push_back(mainModel3);
+
+	// Set up Wall GameObject
+	GameObject* wallModel = new GameObject();
+	wallModel->m_Model = new Model("../res/models/box.obj");
+	wallModel->m_Transform.SetPosition(vec3(0, 0, 0));
+	wallModel->m_Transform.SetScale(vec3(100, 0.1, 100));
+	objects.push_back(wallModel);
 
 	// Init GBuffer	
 	glGenFramebuffers(1, &gBuffer);
@@ -55,7 +78,7 @@ void GScene1::init()
 	// - Position + linear depth color buffer
 	glGenTextures(1, &gPositionDepth);
 	glBindTexture(GL_TEXTURE_2D, gPositionDepth);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, m_Window->getWidth(), m_Window->getHeight(), 0, GL_RGB, GL_FLOAT, NULL);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, m_Window->getWidth(), m_Window->getHeight(), 0, GL_RGBA, GL_FLOAT, NULL);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -172,10 +195,18 @@ void GScene1::init()
 
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
-	glBindTexture(GL_TEXTURE_2D, 0);
-
 	// Set up Debug vars
 	m_Debug->addRenderingWidget(&draw_mode);
+
+	m_Debug->addFloat("SSAO Radius", &radius, 1, 50);
+	m_Debug->addInt("SSAO Kernel Size", &kernelSize, 1, 128);
+
+	m_Debug->addInt("Blur Size", &blurSize, 1, 20);
+
+	m_Debug->addColor("Light Color", &lightColor);
+	m_Debug->addVec3("Light Position", &lightPos);
+	m_Debug->addFloat("Ambient Light Amount", &ambientLevel, 0, 1);
+	
 }
 
 void GScene1::destroy()
@@ -234,17 +265,24 @@ void GScene1::render()
 {
 	// Set up Shaders
 	shader_LightingPass.Bind();
-	glUniform1i(shader_LightingPass.GetUniformLocation("gPositionDepth"), 0);
-	glUniform1i(shader_LightingPass.GetUniformLocation("gNormal"), 1);
-	glUniform1i(shader_LightingPass.GetUniformLocation("gAlbedo"), 2);
-	glUniform1i(shader_LightingPass.GetUniformLocation("ssao"), 3);
+		glUniform1i(shader_LightingPass.GetUniformLocation("gPositionDepth"), 0);
+		glUniform1i(shader_LightingPass.GetUniformLocation("gNormal"), 1);
+		glUniform1i(shader_LightingPass.GetUniformLocation("gAlbedo"), 2);
+		glUniform1i(shader_LightingPass.GetUniformLocation("ssao"), 3);
 	shader_LightingPass.Unbind();
 
 	shader_SSAO.Bind();
-	glUniform1i(shader_SSAO.GetUniformLocation("gPositionDepth"), 0);
-	glUniform1i(shader_SSAO.GetUniformLocation("gNormal"), 1);
-	glUniform1i(shader_SSAO.GetUniformLocation("texNoise"), 2);
+		glUniform1i(shader_SSAO.GetUniformLocation("gPositionDepth"), 0);
+		glUniform1i(shader_SSAO.GetUniformLocation("gNormal"), 1);
+		glUniform1i(shader_SSAO.GetUniformLocation("texNoise"), 2);
+
+		glUniform1i(shader_SSAO.GetUniformLocation("kernelSize"), kernelSize);
+		glUniform1f(shader_SSAO.GetUniformLocation("radius"), radius);
 	shader_SSAO.Unbind();
+
+	shader_SSAOBlur.Bind();
+		glUniform1i(shader_SSAO.GetUniformLocation("blurSize"), blurSize);
+	shader_SSAOBlur.Unbind();
 
 	// 1. Geometry Pass: render scene's geometry/color data into gbuffer
 	glBindFramebuffer(GL_FRAMEBUFFER, gBuffer);
@@ -293,7 +331,6 @@ void GScene1::render()
 	RenderQuad();
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-
 	// 3. Blur SSAO texture to remove noise
 	glBindFramebuffer(GL_FRAMEBUFFER, ssaoBlurFBO);
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -304,7 +341,6 @@ void GScene1::render()
 	glBindTexture(GL_TEXTURE_2D, ssaoColorBuffer);
 
 	RenderQuad();
-
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	// 4. Lighting Pass: traditional deferred Blinn-Phong lighting now with added screen-space ambient occlusion
@@ -338,10 +374,10 @@ void GScene1::render()
 	glUniform1f(glGetUniformLocation(shader_LightingPass.GetId(), "light.Quadratic"), quadratic);
 
 	glUniform1i(glGetUniformLocation(shader_LightingPass.GetId(), "draw_mode"), draw_mode);
+	glUniform1f(glGetUniformLocation(shader_LightingPass.GetId(), "ambientLevel"), ambientLevel);
 
 	RenderQuad();
 
 	m_Debug->prepare();
-
 	m_Debug->render();
 }

@@ -19,6 +19,17 @@ struct FloatDebug
 	float max;
 };
 
+struct IntDebug
+{
+	IntDebug(const char* title, int* value, int min, int max) :
+		title(title), value(value), min(min), max(max) {}
+
+	const char* title;
+	int* value;
+	int min;
+	int max;
+};
+
 struct BoolDebug
 {
 	BoolDebug(const char* title, bool* value) :
@@ -66,6 +77,9 @@ public:
 	void addFloat(const char* title, float* var);
 	void addFloat(const char* title, float* var, float min, float max);
 
+	void addInt(const char* title, int* var);
+	void addInt(const char* title, int* var, int min, int max);
+
 	void addBool(const char* title, bool* var);
 
 	void addColor(const char* title, vec3* val);
@@ -73,6 +87,7 @@ public:
 	void addVec3(const char* title, vec3* val);
 
 	std::vector<FloatDebug> floats;
+	std::vector<IntDebug> ints;
 	std::vector<BoolDebug> bools;
 	std::vector<ColorDebug> colors;
 	std::vector<Vec3Debug> vecs;

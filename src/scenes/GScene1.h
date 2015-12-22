@@ -48,17 +48,14 @@ private:
 	ShaderProgram shader_LightingPass = ShaderProgram("../res/shaders/ssao_lighting");
 	ShaderProgram shader_SSAO = ShaderProgram("../res/shaders/ssao");
 	ShaderProgram shader_SSAOBlur = ShaderProgram("../res/shaders/ssao_blur");
-	ShaderProgram shader_Sobel = ShaderProgram("../res/shaders/sobel");
-
-	Framebuffer frameBuffer = Framebuffer(m_Window->getWidth(), m_Window->getHeight());
 
 	GLuint gBuffer;
 	GLuint gPositionDepth, gNormal, gAlbedo;
 	GLuint attachments[3] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 };
 	GLuint rboDepth;
 
-	GLuint ssaoFBO, ssaoBlurFBO, finalFBO;
-	GLuint ssaoColorBuffer, ssaoColorBufferBlur, finalColorBuffer;
+	GLuint ssaoFBO, ssaoBlurFBO;
+	GLuint ssaoColorBuffer, ssaoColorBufferBlur;
 
 	GLuint noiseTexture;
 
@@ -77,9 +74,6 @@ private:
 
 	glm::vec3 lightPos = glm::vec3(2.0, 4.0, 2.0);
 	glm::vec3 lightColor = glm::vec3(1.0f);
-
-	// Set up Model GameObject
-	GameObject* sphere;
 
 	// RenderQuad() Renders a 1x1 quad in NDC, best used for framebuffer color targets
 	// and post-processing effects.
@@ -112,6 +106,14 @@ private:
 		glBindVertexArray(0);
 	}
 
+	// SSAO Uniforms
+	int kernelSize = 10;
+	float radius = 6.0f;
+
+	// Blur Uniforms
+	int blurSize = 4;
+
+	// Lighting Uniforms
 	enum drawMode
 	{
 		null_draw = 0,
@@ -119,9 +121,12 @@ private:
 		pos_draw = 2,
 		norm_draw = 3,
 		diffuse_draw = 4,
-		ssao_draw = 5,
+		depth_draw = 5,
+		phong_draw = 6,
+		ssao_draw = 7,
 		num_modes
 	};
 
 	int draw_mode = drawMode::full_draw;
+	float ambientLevel = 0.5f;
 };

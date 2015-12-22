@@ -17,6 +17,16 @@ struct Light {
 uniform Light light;
 
 uniform int draw_mode;
+uniform float ambientLevel;
+
+float LinearizeDepth(float depth)
+{
+    float NEAR = 0.1f;
+    float FAR = 1000.0f;
+
+    float z = depth * 2.0 - 1.0; // Back to NDC 
+    return (2.0 * NEAR * FAR) / (FAR + NEAR - z * (FAR - NEAR));    
+}
 
 void main()
 {      
@@ -25,11 +35,13 @@ void main()
     vec3 FragPos = texture(gPositionDepth, TexCoords).rgb;
     vec3 Normal = texture(gNormal, TexCoords).rgb;
     vec3 Diffuse = texture(gAlbedo, TexCoords).rgb;
+
+    float Depth = LinearizeDepth(texture(gPositionDepth, TexCoords).a);
     float AmbientOcclusion = texture(ssao, TexCoords).r;
     
-    vec3 ambient = Diffuse * AmbientOcclusion * 0.8;
-    vec3 lighting  = ambient; 
-    vec3 viewDir  = normalize(-FragPos);
+    vec3 ambient = Diffuse * AmbientOcclusion * ambientLevel;
+    vec3 lighting = ambient; 
+    vec3 viewDir = normalize(-FragPos);
 
     // Diffuse
     vec3 lightDir = normalize(light.Position - FragPos);
@@ -37,7 +49,7 @@ void main()
 
     // Specular
     vec3 halfwayDir = normalize(lightDir + viewDir);  
-    float spec = pow(max(dot(Normal, halfwayDir), 0.0), 8.0);
+    float spec = pow(max(dot(Normal, halfwayDir), 0.0), 32.0f);
     vec3 specular = light.Color * spec;
 
     // Attenuation
@@ -54,7 +66,9 @@ void main()
         case 2: FragColor = vec4(FragPos, 1.0); break; // Position
         case 3: FragColor = vec4(Normal, 1.0); break; // Normals
         case 4: FragColor = vec4(Diffuse, 1.0); break; // Diffuse
-        case 5: FragColor = vec4(vec3(1.0f) * AmbientOcclusion, 1.0); break; // AO
+        case 5: FragColor = vec4(vec3(Depth), 1.0); break; // Depth
+        case 6: FragColor = vec4(diffuse + specular, 1.0); break; // Phong
+        case 7: FragColor = vec4(vec3(1.0f) * AmbientOcclusion, 1.0); break; // AO
     }
     
 }

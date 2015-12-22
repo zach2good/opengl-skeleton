@@ -9,6 +9,7 @@ in vec3 Normal;
 
 const float NEAR = 0.1; // Projection matrix's near plane distance
 const float FAR = 1000.0f; // Projection matrix's far plane distance
+
 float LinearizeDepth(float depth)
 {
     float z = depth * 2.0 - 1.0; // Back to NDC 
