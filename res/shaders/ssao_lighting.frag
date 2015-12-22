@@ -8,14 +8,24 @@ uniform sampler2D gNormal;
 uniform sampler2D gAlbedo;
 uniform sampler2D ssao;
 
-const int NR_LIGHTS = 32;
+const int NR_LIGHTS = 64;
 struct Light {
+    int Type;
+
     vec3 Position;
     vec3 Color; 
 
     float Constant;
     float Linear;
     float Quadratic;
+
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+
+    vec3 Direction;
+    float CutOff;
+    float OuterCutOff;
 };
 uniform Light lights[NR_LIGHTS];
 
@@ -40,6 +50,8 @@ void main()
     vec3 phongResult;
     for(int i = 0; i < NR_LIGHTS; ++i)
     {
+        if (lights[i].Type == 0) // Points
+        {
         // Diffuse
         vec3 lightDir = normalize(lights[i].Position - FragPos);
         vec3 diffuse = max(dot(Normal, lightDir), 0.0) * Diffuse * lights[i].Color;
@@ -58,6 +70,7 @@ void main()
         lighting += diffuse + specular;
 
         phongResult += diffuse + specular;
+        }
     } 
 
     switch(draw_mode)

@@ -48,6 +48,7 @@ private:
 	ShaderProgram shader_LightingPass = ShaderProgram("../res/shaders/ssao_lighting");
 	ShaderProgram shader_SSAO = ShaderProgram("../res/shaders/ssao");
 	ShaderProgram shader_SSAOBlur = ShaderProgram("../res/shaders/ssao_blur");
+	ShaderProgram shader_Gizmo = ShaderProgram("../res/shaders/gizmo");
 
 	GLuint gBuffer;
 	GLuint gPositionDepth, gNormal, gAlbedo;
