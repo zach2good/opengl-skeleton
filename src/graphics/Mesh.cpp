@@ -40,14 +40,6 @@ void Mesh::setupMesh()
 	glEnableVertexAttribArray(2);
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, TexCoords));
 
-	// Tangents
-	glEnableVertexAttribArray(3);
-	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, Tangent));
-
-	// Bitangents
-	glEnableVertexAttribArray(4);
-	glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, Bitangent));
-
 	glBindVertexArray(0);
 }
 
@@ -80,7 +72,7 @@ void Mesh::Draw(ShaderProgram* shader)
 			
 		number = ss.str();
 
-		glUniform1i(shader->GetUniformLocation((name + number).c_str()), i);
+		glUniform1i(glGetUniformLocation(shader->GetId(), (name + number).c_str()), i);
 
 		glBindTexture(GL_TEXTURE_2D, textures[i].id);
 	}

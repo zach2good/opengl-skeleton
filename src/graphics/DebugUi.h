@@ -6,12 +6,7 @@
 
 #include "../imgui/imgui.h"
 #include "../imgui/imgui_internal.h"
-
-#ifdef EMSCRIPTEN
-#include "../imgui/imgui_impl_sdlems.h"
-#else
 #include "../imgui/imgui_impl_sdl_gl3.h"
-#endif
 
 struct FloatDebug
 {
@@ -22,6 +17,17 @@ struct FloatDebug
 	float* value;
 	float min;
 	float max;
+};
+
+struct IntDebug
+{
+	IntDebug(const char* title, int* value, int min, int max) :
+		title(title), value(value), min(min), max(max) {}
+
+	const char* title;
+	int* value;
+	int min;
+	int max;
 };
 
 struct BoolDebug
@@ -54,7 +60,8 @@ struct Vec3Debug
 class DebugUi
 {
 public:
-	explicit DebugUi(SDL_Window* window);
+	DebugUi() {}
+	DebugUi(SDL_Window* window);
 	~DebugUi();
 
 	void prepare();
@@ -64,8 +71,14 @@ public:
 
 	void render();
 
+	int* renderTarget = nullptr;
+	void addRenderingWidget(int* in);
+
 	void addFloat(const char* title, float* var);
 	void addFloat(const char* title, float* var, float min, float max);
+
+	void addInt(const char* title, int* var);
+	void addInt(const char* title, int* var, int min, int max);
 
 	void addBool(const char* title, bool* var);
 
@@ -74,6 +87,7 @@ public:
 	void addVec3(const char* title, vec3* val);
 
 	std::vector<FloatDebug> floats;
+	std::vector<IntDebug> ints;
 	std::vector<BoolDebug> bools;
 	std::vector<ColorDebug> colors;
 	std::vector<Vec3Debug> vecs;

@@ -6,6 +6,7 @@
 
 #include "../core/Timer.h"
 
+
 class Window
 {
 public:

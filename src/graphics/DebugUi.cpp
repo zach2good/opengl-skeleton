@@ -5,7 +5,7 @@ DebugUi::DebugUi(SDL_Window* window)
 {
 	m_Window = window;
 
-	ImGui_ImplSdlGL3_Init(m_Window);
+	ImGui_ImplSdlGL3_Init(window);
 
 	ImGuiIO& io = ImGui::GetIO();
 	io.IniFilename = NULL; // Disables ini file output
@@ -30,22 +30,25 @@ void DebugUi::prepare()
 {
 	ImGui_ImplSdlGL3_NewFrame();
 
-	static bool opened = false;
+	static bool opened = true;
 
 	ImGui::SetNextWindowPos(ImVec2(10, 10), 0);
 	//ImGui::SetNextWindowSize(ImVec2(250, 300), 0);
+
 	ImGui::Begin("Debug Window", &opened, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoSavedSettings);
 
 	static ImVector<float> values;
 
 	values.push_back(ImGui::GetIO().Framerate);
 
-	if (values.size() > 100) {
+	if (values.size() > 100)
+	{
 		values.erase(values.begin());
 	}
 
 	float arr[100];
 	std::copy(values.begin(), values.end(), arr);
+
 	if (ImGui::CollapsingHeader("Frame Info"))
 	{
 		ImGui::Text("%.3f ms/frame | %.1f FPS", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
@@ -62,29 +65,61 @@ void DebugUi::prepare()
 		ImGui::Text("GL_SHADING_LANGUAGE_VERSION: %s \n", glGetString(GL_SHADING_LANGUAGE_VERSION));
 	}
 
-	if (ImGui::CollapsingHeader("Floats"))
+	if (ImGui::CollapsingHeader("Render Mode"))
 	{
-		for (int i = 0; i < floats.size(); i++) {
-			FloatDebug fd = floats.at(i);
-			ImGui::Text(fd.title);
-			ImGui::PushItemWidth(-1.0f);
-			ImGui::SliderFloat(fd.title, fd.value, fd.min, fd.max);
-			ImGui::PopItemWidth();
+		ImGui::RadioButton("Null", renderTarget, 0);
+		ImGui::RadioButton("Full", renderTarget, 1);
+		ImGui::RadioButton("Position", renderTarget, 2);
+		ImGui::RadioButton("Normals", renderTarget, 3);
+		ImGui::RadioButton("Diffuse", renderTarget, 4);
+		ImGui::RadioButton("Depth", renderTarget, 5);
+		ImGui::RadioButton("Phong", renderTarget, 6);
+		ImGui::RadioButton("SSAO", renderTarget, 7);
+	}
+
+	if (floats.size() > 0)
+	{
+		if (ImGui::CollapsingHeader("Floats"))
+		{
+			for (int i = 0; i < floats.size(); i++) {
+				FloatDebug fd = floats.at(i);
+				ImGui::Text(fd.title);
+				ImGui::PushItemWidth(-1.0f);
+				ImGui::SliderFloat(fd.title, fd.value, fd.min, fd.max);
+				ImGui::PopItemWidth();
+			}
 		}
 	}
 
-	if (ImGui::CollapsingHeader("Bools"))
+	if (ints.size() > 0)
 	{
-		for (int i = 0; i < bools.size(); i++) {
-			ImGui::Checkbox(bools.at(i).title, bools.at(i).value);
+		if (ImGui::CollapsingHeader("Ints"))
+		{
+			for (int i = 0; i < ints.size(); i++) {
+				IntDebug id = ints.at(i);
+				ImGui::Text(id.title);
+				ImGui::PushItemWidth(-1.0f);
+				ImGui::SliderInt(id.title, id.value, id.min, id.max);
+				ImGui::PopItemWidth();
+			}
 		}
 	}
 
-	for (int i = 0; i < vecs.size(); i++) {
+	if (bools.size() > 0)
+	{
+		if (ImGui::CollapsingHeader("Bools"))
+		{
+			for (int i = 0; i < bools.size(); i++) {
+				ImGui::Checkbox(bools.at(i).title, bools.at(i).value);
+			}
+		}
+	}
+
+	for (int i = 0; i < vecs.size(); i++)
+	{
 
 		if (ImGui::CollapsingHeader(vecs.at(i).title))
 		{
-
 			Vec3Debug v = vecs.at(i);
 
 			// TODO: Ugly and slow, fix me
@@ -93,21 +128,22 @@ void DebugUi::prepare()
 			std::string z = std::string(v.title) + std::string("z");;
 
 			ImGui::PushItemWidth(-1.0f);
-			ImGui::SliderFloat(x.c_str(), &v.val->x, -10.0f, 10.0f);
+			ImGui::SliderFloat(x.c_str(), &v.val->x, -20.0f, 20.0f);
 			ImGui::PopItemWidth();
 
 			ImGui::PushItemWidth(-1.0f);
-			ImGui::SliderFloat(y.c_str(), &v.val->y, -10.0f, 10.0f);
+			ImGui::SliderFloat(y.c_str(), &v.val->y, -20.0f, 20.0f);
 			ImGui::PopItemWidth();
 
 			ImGui::PushItemWidth(-1.0f);
-			ImGui::SliderFloat(z.c_str(), &v.val->z, -10.0f, 10.0f);
+			ImGui::SliderFloat(z.c_str(), &v.val->z, -20.0f, 20.0f);
 			ImGui::PopItemWidth();
 		}
 	}
 
 
-	for (int i = 0; i < colors.size(); i++) {
+	for (int i = 0; i < colors.size(); i++)
+	{
 		if (ImGui::CollapsingHeader(colors.at(i).title))
 		{
 			// TODO: This is ugly and hard to understand, fix this
@@ -137,6 +173,11 @@ void DebugUi::render()
 	ImGui::Render();
 }
 
+void DebugUi::addRenderingWidget(int* in)
+{
+	renderTarget = in;
+}
+
 void DebugUi::addFloat(const char* title, float* var)
 {
 	floats.push_back(FloatDebug(title, var, 0.0f, 10.0f));
@@ -145,6 +186,16 @@ void DebugUi::addFloat(const char* title, float* var)
 void DebugUi::addFloat(const char* title, float* var, float min, float max)
 {
 	floats.push_back(FloatDebug(title, var, min, max));
+}
+
+void DebugUi::addInt(const char* title, int* var)
+{
+	ints.push_back(IntDebug(title, var, 0.0f, 10.0f));
+}
+
+void DebugUi::addInt(const char* title, int* var, int min, int max)
+{
+	ints.push_back(IntDebug(title, var, min, max));
 }
 
 void DebugUi::addBool(const char* title, bool* var)
