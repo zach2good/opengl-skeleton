@@ -19,10 +19,9 @@ public:
 
 	void draw(ShaderProgram* shader);
 
-	inline bool HasTextures()
-	{
-		return texturesLoaded.size() > 0;
-	}
+	bool hasTextures = false;
+	bool hasNormalMaps = false;
+	bool hasSpecularMaps = false;
 
 private:
 	std::string directory;

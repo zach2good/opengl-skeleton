@@ -13,7 +13,7 @@ Model::~Model()
 void Model::loadModel(std::string& path)
 {
 	Assimp::Importer importer;
-	const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
+	const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenNormals | aiProcess_OptimizeMeshes | aiProcess_CalcTangentSpace);
 
 	if (!scene || scene->mFlags == AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 	{
@@ -63,7 +63,7 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
 			vector.y = mesh->mNormals[i].y;
 			vector.z = mesh->mNormals[i].z;
 			vertex.Normal = vector;
-		}	
+		}
 		else
 		{
 			vertex.Normal = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -93,10 +93,9 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
 			vector.z = mesh->mBitangents[i].z;
 			vertex.Bitangent = vector;
 		}
-
-		if (mesh->HasBones())
+		else
 		{
-
+			vertex.TexCoords = glm::vec2(0.0f, 0.0f);
 		}
 
 		vertices.push_back(vertex);
@@ -119,14 +118,26 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
 		std::vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
 		textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
 
-		std::vector<Texture> normalMaps = loadMaterialTextures(material, aiTextureType_NORMALS, "texture_normal");
+		if (diffuseMaps.size() > 0)
+		{
+			hasTextures = true;
+		}
+
+		std::vector<Texture> normalMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");
 		textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
 
-		std::vector<Texture> bumpMaps = loadMaterialTextures(material, aiTextureType_DISPLACEMENT, "texture_bump");
-		textures.insert(textures.end(), bumpMaps.begin(), bumpMaps.end());
+		if (normalMaps.size() > 0)
+		{
+			hasNormalMaps = true;
+		}
 
 		std::vector<Texture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
 		textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
+
+		if (specularMaps.size() > 0)
+		{
+			hasSpecularMaps = true;
+		}
 	}
 
 	return Mesh(vertices, indices, textures);
