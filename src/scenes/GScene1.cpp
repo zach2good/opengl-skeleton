@@ -411,18 +411,6 @@ void GScene1::render()
 	{
 		int lightType = 0; // lights.at(i)-> Type?
 
-		switch (lightType)
-		{
-		case 0: // Point
-			break;
-
-		case 1:	// Directional
-			break;
-
-		case 2:	// Spot
-			break;
-
-		}
 		glUniform1i(glGetUniformLocation(shader_LightingPass.GetId(), ("lights[" + std::to_string(i) + "].Type").c_str()), lightType);
 
 		lightPosView = glm::vec3(camera.GetViewMatrix() * glm::vec4(lights.at(i)->m_Transform.m_position, 1.0));

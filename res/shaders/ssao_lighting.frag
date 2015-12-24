@@ -50,8 +50,6 @@ void main()
     vec3 phongResult;
     for(int i = 0; i < NR_LIGHTS; ++i)
     {
-        if (lights[i].Type == 0) // Points
-        {
         // Diffuse
         vec3 lightDir = normalize(lights[i].Position - FragPos);
         vec3 diffuse = max(dot(Normal, lightDir), 0.0) * Diffuse * lights[i].Color;
@@ -70,7 +68,6 @@ void main()
         lighting += diffuse + specular;
 
         phongResult += diffuse + specular;
-        }
     } 
 
     switch(draw_mode)

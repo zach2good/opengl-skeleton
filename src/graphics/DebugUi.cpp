@@ -234,11 +234,8 @@ void DebugUi::prepare()
 				col.col->b = icol.Value.z;
 			}
 		}
-
-		ImGui::TreePop();
 	}
 	ImGui::End();
-
 }
 
 void DebugUi::processEvents(SDL_Event e)
