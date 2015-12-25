@@ -6,7 +6,7 @@
 class Framebuffer
 {
 public:
-	Framebuffer::Framebuffer(GLuint w, GLuint h);
+	Framebuffer(GLuint w, GLuint h);
 	~Framebuffer();
 
 	void Bind();

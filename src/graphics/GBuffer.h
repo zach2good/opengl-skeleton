@@ -5,8 +5,8 @@
 class GBuffer
 {
 public:
-	GBuffer::GBuffer() {};
-	GBuffer::GBuffer(GLuint w, GLuint h);
+	GBuffer() {};
+	GBuffer(GLuint w, GLuint h);
 	~GBuffer();
 
 	void Bind();

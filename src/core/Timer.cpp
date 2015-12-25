@@ -28,8 +28,7 @@
 #endif
 
 #ifdef OS_OTHER_CPP11
-	#include <chrono>
-	static std::chrono::system_clock::time_point m_epoch = std::chrono::high_resolution_clock::now();
+    #include <SDL.h>
 #endif
 
 double Timer::GetTime()
@@ -59,7 +58,7 @@ double Timer::GetTime()
 	#endif
 
 	#ifdef OS_OTHER_CPP11
-		return std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now() - m_epoch).count() / 1000000000.0;
+    return (double)SDL_GetTicks()/1000.0;
 	#endif
 
 	#ifdef OS_OTHER

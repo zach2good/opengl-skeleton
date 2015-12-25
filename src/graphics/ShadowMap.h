@@ -5,7 +5,7 @@
 class ShadowMap
 {
 public:
-	ShadowMap::ShadowMap(GLuint w, GLuint h);
+	ShadowMap(GLuint w, GLuint h);
 	~ShadowMap();
 
 	void Bind();

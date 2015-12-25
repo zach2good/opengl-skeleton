@@ -1,7 +1,7 @@
 #pragma once
 
 #include "SDL.h"
-#include "glm\glm.hpp"
+#include "glm/glm.hpp"
 #include <assert.h>
 #include <array>
 
@@ -26,12 +26,12 @@ private:
 	Input();
 
 	// Keys
-	std::array<bool, SDL_NUM_SCANCODES> keyState = std::array<bool, SDL_NUM_SCANCODES>{ false };
-	std::array<Uint32, SDL_NUM_SCANCODES> keyStateTimestamp = std::array<Uint32, SDL_NUM_SCANCODES> { 0 };
+	std::array<bool, SDL_NUM_SCANCODES> keyState = std::array<bool, SDL_NUM_SCANCODES>{ {false} };
+	std::array<Uint32, SDL_NUM_SCANCODES> keyStateTimestamp = std::array<Uint32, SDL_NUM_SCANCODES> { {0} };
 
 	// Mouse
-	std::array<bool, 10> mouseState = std::array<bool, 10>{ false };
-	std::array<Uint32, 10> mouseStateTimestamp = std::array<Uint32, 10> { 0 };
+	std::array<bool, 10> mouseState = std::array<bool, 10>{ {false} };
+	std::array<Uint32, 10> mouseStateTimestamp = std::array<Uint32, 10> { {0} };
 
 	// Mouse
 	float mag = 0.010f;

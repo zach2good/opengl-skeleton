@@ -1,5 +1,3 @@
-#pragma once
-
 #include "TextureLoader.h"
 
 #ifndef STB_IMAGE_IMPLEMENTATION
@@ -31,7 +29,7 @@ GLuint TextureLoader::loadTexture(std::string filename)
 	}
 	else
 	{
-		printf("Error loading: %s \n", filename);
+		printf("Error loading: %s \n", filename.c_str());
 		m_Error = -1;
 		image = stbi_load("../res/textures/error.jpg", &m_Width, &m_Height, &m_Channels, 0);
 	}

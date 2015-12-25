@@ -94,15 +94,14 @@ private:
 	FW::FileWatcher fileWatcher;
 	FW::WatchID watchID;
 
-	void ShaderProgram::handleFileAction(FW::WatchID watchid, const FW::String& dir, const FW::String& filename,
-		FW::Action action);
+	void handleFileAction(FW::WatchID watchid, const FW::String& dir, const FW::String& filename, FW::Action action);
 
 	GLuint LoadShader(const std::string& fileName, GLenum type);
 
 	void GetUniformsAndAttributes(const std::string fileName);
 
-	std::string ShaderProgram::openFile(std::string input, bool newLine);
-	std::vector<std::string> ShaderProgram::split(const std::string s, const std::string delims);
+	std::string openFile(std::string input, bool newLine);
+	std::vector<std::string> split(const std::string s, const std::string delims);
 
 	std::map <std::string, GLuint> m_UniformLocations;
 	std::map <std::string, GLuint> m_AttributeLocations;
