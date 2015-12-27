@@ -8,7 +8,7 @@ uniform sampler2D gNormal;
 uniform sampler2D gAlbedo;
 uniform sampler2D ssao;
 
-const int NR_LIGHTS = 64;
+const int NR_LIGHTS = 2;
 struct Light {
     int Type;
 
