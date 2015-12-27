@@ -92,15 +92,15 @@ void DebugUi::prepare()
 						if (ImGui::TreeNode("##Position", "Position"))
 						{
 							//ImGui::PushItemWidth(-1.0f);
-							ImGui::SliderFloat("##xi", &t->m_position.x, -20.0f, 20.0f);
+							ImGui::SliderFloat("##xi", &t->m_position.x, -100.0f, 100.0f);
 							//ImGui::PopItemWidth();
 
 							//ImGui::PushItemWidth(-1.0f);
-							ImGui::SliderFloat("##yi", &t->m_position.y, -20.0f, 20.0f);
+							ImGui::SliderFloat("##yi", &t->m_position.y, -100.0f, 100.0f);
 							//ImGui::PopItemWidth();
 
 							//ImGui::PushItemWidth(-1.0f);
-							ImGui::SliderFloat("##zi", &t->m_position.z, -20.0f, 20.0f);
+							ImGui::SliderFloat("##zi", &t->m_position.z, -100.0f, 100.0f);
 							//ImGui::PopItemWidth();
 
 							ImGui::TreePop();

@@ -12,8 +12,15 @@
 #include <vector>
 #include <string>
 
+#include <iostream>
+#include <fstream>
+
+using namespace std;
+
 namespace Util
 {
 	void Sleep(int milliseconds);
-	std::vector<std::string> Split(const std::string &s, char delim);
+	bool FileExists(const std::string& name);
+	std::string OpenFile(std::string input, bool newLine = true);
+	std::vector<std::string> Split(const std::string &s, const std::string &delims);
 };

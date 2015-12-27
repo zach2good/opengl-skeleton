@@ -76,6 +76,15 @@ void GScene1::init()
 	light2->m_Transform.m_position = (vec3(-10, 2, 0));
 	objects.push_back(light2);
 
+	if (Util::FileExists("../res/models/crytek-sponza/sponza.obj"))
+	{
+		GameObject* sponza = new GameObject("Sponza");
+		sponza->m_Model = new Model("../res/models/crytek-sponza/sponza.obj");
+		sponza->m_Transform.m_position = (vec3(0, 0, 0));
+		sponza->m_Transform.m_scale = (vec3(0.1f));
+		objects.push_back(sponza);
+	}
+
 	// Init GBuffer	
 	glGenFramebuffers(1, &gBuffer);
 	glBindFramebuffer(GL_FRAMEBUFFER, gBuffer);
@@ -211,8 +220,6 @@ void GScene1::init()
 
 	m_Debug->addInt("Blur Size", &blurSize, 1, 20);
 
-	m_Debug->addColor("Light Color", &lightColor);
-	m_Debug->addVec3("Light Position", &lightPos);
 	m_Debug->addFloat("Ambient Light Amount", &ambientLevel, 0, 1);
 }
 
