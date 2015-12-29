@@ -67,12 +67,12 @@ void GScene1::init()
 
 	// Lights
 	GameObject* light1 = new GameObject("Light 1");
-	light1->isLight = true;
+	light1->m_PointLight = new PointLight();
 	light1->m_Transform.m_position = (vec3(10, 2, 0));
 	objects.push_back(light1);
 
 	GameObject* light2 = new GameObject("Light 2");
-	light2->isLight = true;
+	light2->m_PointLight = new PointLight();
 	light2->m_Transform.m_position = (vec3(-10, 2, 0));
 	objects.push_back(light2);
 
@@ -110,7 +110,7 @@ void GScene1::init()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, gNormal, 0);
 
-	// Albedo
+	// Albedo + Spec
 	glGenTextures(1, &gAlbedo);
 	glBindTexture(GL_TEXTURE_2D, gAlbedo);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_Window->getWidth(), m_Window->getHeight(), 0, GL_RGBA, GL_FLOAT, NULL);
@@ -319,6 +319,11 @@ void GScene1::render()
 	shader_SSAOBlur.Unbind();
 
 	// Geometry Pass
+	glDisable(GL_CULL_FACE);
+	glDepthMask(GL_TRUE);
+	glEnable(GL_DEPTH_TEST);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 	glBindFramebuffer(GL_FRAMEBUFFER, gBuffer);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glm::mat4 projection = glm::perspective(camera.Zoom, (GLfloat)m_Window->getAspect(), 0.1f, 1000.0f);
@@ -343,7 +348,7 @@ void GScene1::render()
 			g->m_Model->draw(&shader_GeometryPass);
 		}
 
-		if (g->isLight)
+		if (g->m_PointLight)
 		{
 			lights.push_back(g);
 		}
@@ -418,8 +423,6 @@ void GScene1::render()
 	{
 		int lightType = 0; // lights.at(i)-> Type?
 
-		glUniform1i(glGetUniformLocation(shader_LightingPass.GetId(), ("lights[" + std::to_string(i) + "].Type").c_str()), lightType);
-
 		lightPosView = glm::vec3(camera.GetViewMatrix() * glm::vec4(lights.at(i)->m_Transform.m_position, 1.0));
 		glUniform3fv(glGetUniformLocation(shader_LightingPass.GetId(), ("lights[" + std::to_string(i) + "].Position").c_str()), 1, &lightPosView[0]);
 		glUniform3fv(glGetUniformLocation(shader_LightingPass.GetId(), ("lights[" + std::to_string(i) + "].Color").c_str()), 1, &lightColor[0]);
@@ -427,11 +430,6 @@ void GScene1::render()
 		glUniform1f(glGetUniformLocation(shader_LightingPass.GetId(), ("lights[" + std::to_string(i) + "].Constant").c_str()), constant);
 		glUniform1f(glGetUniformLocation(shader_LightingPass.GetId(), ("lights[" + std::to_string(i) + "].Linear").c_str()), linear);
 		glUniform1f(glGetUniformLocation(shader_LightingPass.GetId(), ("lights[" + std::to_string(i) + "].Quadratic").c_str()), quadratic);
-
-		// Spotlight Only
-		glUniform3fv(glGetUniformLocation(shader_LightingPass.GetId(), ("lights[" + std::to_string(i) + "].Direction").c_str()), 1, &lightColor[0]);
-		glUniform1f(glGetUniformLocation(shader_LightingPass.GetId(), ("lights[" + std::to_string(i) + "].CutOff").c_str()), constant);
-		glUniform1f(glGetUniformLocation(shader_LightingPass.GetId(), ("lights[" + std::to_string(i) + "].OuterCutOff").c_str()), constant);
 	}
 
 	RenderQuad();

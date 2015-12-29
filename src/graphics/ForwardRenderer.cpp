@@ -33,7 +33,7 @@ void ForwardRenderer::draw(ShaderProgram* shader, Camera* camera)
 	{
 		auto g = m_gameObjects.at(i);
 
-		if (g->isLight)
+		if (g)
 		{
 			auto l = g->m_Transform.m_position;
 			shader->SetUniform3fv("lightPos", l);

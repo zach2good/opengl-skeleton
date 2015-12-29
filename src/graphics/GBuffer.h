@@ -12,11 +12,16 @@ public:
 	void Bind();
 	void Unbind();
 
+	void BindForGeometryPass();
+	void BindForPointLightPass();
+	void BindForFinalPass();
+
 	GLuint gBuffer;
 
-	GLuint gPositionDepth;
-	GLuint gNormal;
-	GLuint gAlbedo;
+	GLuint gPositionDepth; //RGBA: RGB = Pos, A = Depth
+	GLuint gNormal; // RGB = Normal 
+	GLuint gAlbedoSpec; // RGBA: RGB = Color, A = Specular
+
 
 private:
 	GLuint screenWidth;
