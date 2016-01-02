@@ -96,6 +96,38 @@ void GBuffer::BindForPointLightPass()
 
 }
 
+void GBuffer::BindForDirectionalLightPass()
+{
+
+}
+void GBuffer::BindForSpotLightPass()
+{
+
+}
+
+void GBuffer::BindForPointShadowPass()
+{
+
+}
+void GBuffer::BindForDirectionalShadowPass()
+{
+
+}
+void GBuffer::BindForSpotShadowPass()
+{
+
+}
+
+void GBuffer::BindForPostProcessingPass()
+{
+
+}
+
+void GBuffer::BindForGUIPass()
+{
+
+}
+
 void GBuffer::BindForFinalPass()
 {
 
