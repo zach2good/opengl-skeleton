@@ -29,6 +29,8 @@
 #include "../imgui/imgui.h"
 #include "../imgui/imgui_impl_sdl_gl3.h"
 
+#include "../core/Octree.h"
+
 class GScene1
 {
 public:
@@ -136,4 +138,6 @@ private:
 	// Demo Variables
 	int direction = 1;
 	int ticks = 0;
+
+	PointOctree octree = PointOctree();
 };

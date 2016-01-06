@@ -293,6 +293,21 @@ void GScene1::update()
 
 	objects.at(2)->m_Transform.m_rotation.y = 2 * ticks;
 
+	octree.Clear();
+
+	for (auto go : objects)
+	{
+		octree.AddPoint(go->m_Transform.m_position);
+	}	
+
+	for (auto go : objects)
+	{
+		auto neighbors = octree.GetNeighbors(go->m_Transform.m_position);
+
+		// Do physics on neighbors
+	}
+
+
 }
 
 void GScene1::render()
