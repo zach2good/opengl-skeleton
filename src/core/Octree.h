@@ -1,19 +1,32 @@
 #pragma once
 
 #include "../common.h"
+#include "GameObject.h"
 
-class PointOctree
+class Octree
 {
 public:
-	PointOctree();
-	~PointOctree();
+	Octree(const glm::vec3& origin, const glm::vec3& halfDimension);
+	Octree(const Octree& copy);
+	~Octree();
+
+	int GetOctantContainingGameObject(const GameObject& go) const;
+
+	bool IsLeafNode() const;
+
+	bool IsTopLevel() const;
+
+	void Insert(GameObject* go);
 
 	void Clear();
 
-	void AddPoint(glm::vec3& point);
-
-	std::vector<glm::vec3> GetNeighbors(glm::vec3& point);
+	void GetGameObjectsInsideBox(const glm::vec3& bmin, const glm::vec3& bmax, std::vector<GameObject*>& results);
 
 private:
-	std::vector<glm::vec3> m_Points = std::vector<glm::vec3>();
+	glm::vec3 m_Origin;
+	glm::vec3 m_HalfDimension;
+
+	Octree* m_Parent;
+	Octree* m_Children[8];
+	GameObject* m_Data;
 };

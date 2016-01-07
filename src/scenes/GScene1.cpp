@@ -289,25 +289,15 @@ void GScene1::update()
 	objects.at(1)->m_Transform.m_position.z = -5 + sinf(ticks);
 	objects.at(1)->m_Transform.m_position.x = cosf(ticks);
 
-
-
 	objects.at(2)->m_Transform.m_rotation.y = 2 * ticks;
 
-	octree.Clear();
-
+	// TODO: Fix clear. This is awful.
+	delete octree;
+	octree = new Octree(vec3(0), vec3(100));
 	for (auto go : objects)
 	{
-		octree.AddPoint(go->m_Transform.m_position);
+		octree->Insert(go);
 	}	
-
-	for (auto go : objects)
-	{
-		auto neighbors = octree.GetNeighbors(go->m_Transform.m_position);
-
-		// Do physics on neighbors
-	}
-
-
 }
 
 void GScene1::render()

@@ -139,5 +139,5 @@ private:
 	int direction = 1;
 	int ticks = 0;
 
-	PointOctree octree = PointOctree();
+	Octree* octree = new Octree(vec3(0), vec3(100));
 };
