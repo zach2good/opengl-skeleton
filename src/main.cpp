@@ -1,4 +1,5 @@
 #include <stdio.h>
+
 #include <SDL.h>
 
 #include "graphics/Window.h"

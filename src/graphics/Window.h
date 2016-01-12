@@ -6,7 +6,6 @@
 
 #include "../core/Timer.h"
 
-
 class Window
 {
 public:
@@ -82,7 +81,7 @@ public:
 	}
 
 private:
-	SDL_Window *m_Window;
+	SDL_Window* m_Window;
 	SDL_GLContext m_Context;
 
 	SDL_Event event;

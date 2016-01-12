@@ -6,23 +6,18 @@ Octree::Octree(const glm::vec3& origin, const glm::vec3& halfDimension) :
 	m_Data(NULL),
 	m_Parent(NULL)
 {
-	for (int i = 0; i < 8; ++i)
-	{
-		m_Children[i] = NULL;
-	}
 }
 
 Octree::Octree(const Octree& copy) :
 	m_Origin(copy.m_Origin),
 	m_HalfDimension(copy.m_HalfDimension),
-	m_Data(copy.m_Data) { }
+	m_Data(copy.m_Data),
+	m_Parent(copy.m_Parent)
+{ }
 
 Octree::~Octree()
 {
-	for (int i = 0; i < 8; ++i)
-	{
-		delete m_Children[i];
-	}
+	m_Children.clear();
 }
 
 int Octree::GetOctantContainingGameObject(const GameObject & go) const
@@ -45,7 +40,7 @@ bool Octree::IsTopLevel() const
 
 bool Octree::IsLeafNode() const
 {
-	return m_Children[0] == NULL;
+	return m_Children.size() == 0;
 }
 
 void Octree::Insert(GameObject* point)
@@ -71,7 +66,7 @@ void Octree::Insert(GameObject* point)
 				newOrigin.y += m_HalfDimension.y * (i & 2 ? .5f : -.5f);
 				newOrigin.z += m_HalfDimension.z * (i & 1 ? .5f : -.5f);
 
-				m_Children[i] = new Octree(newOrigin, m_HalfDimension * 0.5f);
+				m_Children.push_back(new Octree(newOrigin, m_HalfDimension * 0.5f));
 			}
 
 			m_Children[GetOctantContainingGameObject(*oldPoint)]->Insert(oldPoint);
@@ -89,7 +84,7 @@ void Octree::Clear()
 {
 	if (IsLeafNode())
 	{
-		delete this;
+		m_Children.clear();
 	}
 	else
 	{

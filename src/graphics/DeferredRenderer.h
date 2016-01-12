@@ -21,5 +21,11 @@ public:
 private:
 	Window* m_Window;
 
-	std::vector<GameObject*> m_gameObjects;
+	Camera* m_Camera;
+
+	std::vector<GameObject*> m_GameObjects;
+
+	std::vector<PointLight*> m_PointLights;
+	std::vector<DirectionalLight*> m_DirectionalLights;
+	std::vector<SpotLight*> m_SpotLights;
 };

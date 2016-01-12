@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <cstdint>
 
+#include <memory>
 #include <string>
 #include <fstream>
 #include <sstream>
@@ -34,7 +35,6 @@ using namespace glm;
 #include <assimp/postprocess.h>
 
 #include <../core/Util.h>
-
 
 
 

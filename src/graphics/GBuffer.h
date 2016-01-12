@@ -12,6 +12,9 @@ public:
 	void Bind();
 	void Unbind();
 
+	void StartFrame();
+	void EndFrame();
+
 	void BindForGeometryPass();
 
 	void BindForPointLightPass();

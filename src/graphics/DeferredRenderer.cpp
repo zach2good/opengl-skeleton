@@ -12,7 +12,7 @@ DeferredRenderer::~DeferredRenderer()
 
 void DeferredRenderer::submit(GameObject* go)
 {
-	m_gameObjects.push_back(go);
+	m_GameObjects.push_back(go);
 }
 
 void DeferredRenderer::draw(ShaderProgram* shader, Camera* camera)
@@ -37,5 +37,5 @@ void DeferredRenderer::draw(ShaderProgram* shader, Camera* camera)
 
 	// Post-Processing Pass
 
-	m_gameObjects.clear();
+	m_GameObjects.clear();
 }

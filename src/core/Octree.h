@@ -26,7 +26,13 @@ private:
 	glm::vec3 m_Origin;
 	glm::vec3 m_HalfDimension;
 
+	int depth = 0;
+	int maxDepth = 5;
+
 	Octree* m_Parent;
-	Octree* m_Children[8];
+	std::vector<Octree*> m_Children;
+
 	GameObject* m_Data;
+
+
 };
