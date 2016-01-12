@@ -1,15 +1,12 @@
 #include <stdio.h>
-
-#include <SDL.h>
+#include <memory>
 
 #include "graphics/Window.h"
 #include "graphics/DebugUi.h"
-
 #include "scenes/GScene1.h"
 
-
-Window* window = new Window("OpenGL Skeleton", 1280, 720);
-auto scene = new GScene1(window);
+std::unique_ptr<Window> window(new Window("OpenGL Skeleton", 1280, 720));
+std::unique_ptr<GScene1> scene(new GScene1(window.get()));
 
 void step() {
 
@@ -34,9 +31,6 @@ int main(int argc, char *argv[])
 	}
 
 	scene->destroy();
-
-	delete scene;
-	delete window;
 
 	return 0;
 }
